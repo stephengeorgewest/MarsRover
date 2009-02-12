@@ -1,0 +1,53 @@
+package rover;
+
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.JPanel;
+
+public class ImagePanel extends JPanel{
+
+	Image image = null;
+	
+	ImagePanel.Mode m;
+	public void setImage(Image i){
+		image = i;
+	}
+	
+	public void setMode(ImagePanel.Mode m){
+		this.m = m;
+	}
+	
+	protected void paintComponent(Graphics g)
+    {
+        if (image == null) return;
+
+        Dimension d = getSize();
+        double iheight = image.getHeight(null);
+        double iwidth = image.getWidth(null);
+        System.out.println("height = " + iheight + " width = " + iwidth);
+        switch(m){
+	        case SKEW_STRETCH:
+	        	g.drawImage(image, 0, 0, d.width, d.height, null);
+	        break;
+	        case CONST_ASPECT_STRETCH:
+	        	if(d.height/iheight > d.width/iwidth){
+	        		double wscale = d.width/iwidth;
+	        		
+	        	}
+	        	
+	        	g.drawImage(image, 0, 0, d.width, d.height, null);
+	        break;
+        
+        }
+        
+       
+    }
+	
+	public enum Mode{
+		SKEW_STRETCH, 
+		CONST_ASPECT_STRETCH;
+	}
+
+}

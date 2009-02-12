@@ -1,0 +1,13 @@
+package rover;
+
+import javax.swing.UIManager;
+
+public class Main {
+
+	public static void main(String[] args){
+		
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		MainGUI BaseStation = new MainGUI();
+	}
+	
+}

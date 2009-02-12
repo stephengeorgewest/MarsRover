@@ -1,0 +1,87 @@
+package rover;
+
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+
+import java.awt.Frame;
+import java.awt.BorderLayout;
+import javax.swing.JDialog;
+import java.awt.Dimension;
+import java.util.ArrayList;
+
+import javax.swing.JSpinner;
+import java.awt.GridLayout;
+
+public class ServoPortal extends Portal {
+
+	public static int CHANNELS = 10;
+	private static final long serialVersionUID = 1L;
+	private JPanel jContentPane = null;
+	
+	ArrayList<JSpinner> spinlist = null;  //  @jve:decl-index=0:
+	ArrayList<JSlider> slidelist = null;
+
+	int channels = 0;
+	
+	/**
+	 * @param owner
+	 */
+	public ServoPortal(Frame owner) {
+		super(owner);
+		initialize(CHANNELS);
+	}
+
+	/**
+	 * This method initializes this
+	 * 
+	 * @return void
+	 */
+	private void initialize(int channels) {
+		this.channels = channels;
+		this.setSize(305, 302);
+		this.setContentPane(getJContentPane());
+		
+		spinlist = new ArrayList<JSpinner>();
+		slidelist = new ArrayList<JSlider>();
+		
+		for(int i = 0;i<channels;i++){
+			JSpinner spinner = new JSpinner();
+			JSlider slider = new JSlider();
+			
+			//do some configuration here
+			
+			
+			spinlist.add(spinner);
+			slidelist.add(slider);
+			jContentPane.add(slider);
+			jContentPane.add(spinner);
+			
+			
+		}
+		
+		
+	}
+
+	/**
+	 * This method initializes jContentPane
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJContentPane() {
+		if (jContentPane == null) {
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.setColumns(2);
+			gridLayout.setRows(channels);
+			jContentPane = new JPanel();
+			jContentPane.setLayout(gridLayout);
+		}
+		return jContentPane;
+	}
+
+	@Override
+	protected void Shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}  //  @jve:decl-index=0:visual-constraint="10,10"

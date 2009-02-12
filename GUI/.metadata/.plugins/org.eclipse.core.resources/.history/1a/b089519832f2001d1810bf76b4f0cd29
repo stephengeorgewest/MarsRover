@@ -1,0 +1,47 @@
+package rover;
+
+import java.awt.Image;
+import java.awt.Transparency;
+import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.SampleModel;
+import java.awt.image.WritableRaster;
+
+public class Bitmap {
+
+	byte[] rgb = null;
+	int width = -1;
+	int height = -1;
+	
+	public Bitmap(int width, int height){
+		this.width = width;
+		this.height = height;
+		rgb = new byte[width*height*3];
+	}
+	
+	public Bitmap(byte[] rgb, int width, int height){
+		this.width = width;
+		this.height = height;
+		this.rgb = rgb;
+	}
+	
+	public BufferedImage getImage(){
+
+        ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+        int[] nBits = {1, 1, 1};
+        ColorModel cm = new ComponentColorModel(cs, nBits, false, true, Transparency.OPAQUE, DataBuffer.TYPE_BYTE);
+        SampleModel sm = cm.createCompatibleSampleModel(width, height);
+        DataBufferByte db = new DataBufferByte(rgb, width*height);
+        WritableRaster raster = Raster.createWritableRaster(sm, db, null);
+        BufferedImage bm = new BufferedImage(cm, raster, false, null);
+       
+		return bm;
+	}
+	
+	
+}

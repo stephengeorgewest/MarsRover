@@ -1,0 +1,87 @@
+package rover;
+
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import java.awt.GridBagLayout;
+import javax.swing.JButton;
+import java.awt.GridBagConstraints;
+import javax.swing.JSlider;
+import java.awt.Dimension;
+
+public class test extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel jContentPane = null;
+	private JButton jButton = null;
+	private JSlider jSlider = null;
+
+	/**
+	 * This is the default constructor
+	 */
+	public test() {
+		super();
+		initialize();
+	}
+
+	/**
+	 * This method initializes this
+	 * 
+	 * @return void
+	 */
+	private void initialize() {
+		this.setSize(250, 250);
+		this.setMaximumSize(new Dimension(300, 300));
+		this.setContentPane(getJContentPane());
+		this.setTitle("JFrame");
+	}
+
+	/**
+	 * This method initializes jContentPane
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJContentPane() {
+		if (jContentPane == null) {
+			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+			gridBagConstraints1.fill = GridBagConstraints.VERTICAL;
+			gridBagConstraints1.gridy = 0;
+			gridBagConstraints1.weightx = 1.0;
+			gridBagConstraints1.gridx = 0;
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.gridx = 1;
+			gridBagConstraints.gridy = 0;
+			jContentPane = new JPanel();
+			jContentPane.setLayout(new GridBagLayout());
+			jContentPane.add(getJButton(), gridBagConstraints);
+			jContentPane.add(getJSlider(), gridBagConstraints1);
+		}
+		return jContentPane;
+	}
+
+	/**
+	 * This method initializes jButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJButton() {
+		if (jButton == null) {
+			jButton = new JButton();
+		}
+		return jButton;
+	}
+
+	/**
+	 * This method initializes jSlider	
+	 * 	
+	 * @return javax.swing.JSlider	
+	 */
+	private JSlider getJSlider() {
+		if (jSlider == null) {
+			jSlider = new JSlider();
+			jSlider.setMaximum(100);
+		}
+		return jSlider;
+	}
+
+}  //  @jve:decl-index=0:visual-constraint="10,10"

@@ -1,0 +1,8 @@
+package rover;
+
+import java.awt.BorderLayout;
+import javax.swing.JDialog;
+
+public class Portal extends JDialog {
+
+}

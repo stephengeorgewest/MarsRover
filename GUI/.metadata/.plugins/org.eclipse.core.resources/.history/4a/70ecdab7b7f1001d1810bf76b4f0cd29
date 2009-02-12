@@ -1,0 +1,47 @@
+package rover;
+
+import javax.swing.JPanel;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
+import javax.swing.JDialog;
+
+public abstract class Portal extends JDialog {
+
+
+	public Portal(Frame owner) {
+		super(owner);
+		
+		
+		
+	}
+
+	@Override
+    public void paint(Graphics g) {
+       Dimension d = getSize();
+       Dimension m = getMaximumSize();
+       boolean resize = d.width > m.width || d.height > m.height;
+       d.width = Math.min(m.width, d.width);
+       d.height = Math.min(m.height, d.height);
+       if (resize) {
+          Point p = getLocation();
+          setVisible(false);
+          setSize(d);
+          setLocation(p);
+          setVisible(true);
+       }
+       super.paint(g);
+    }
+	
+	protected abstract void Shutdown();
+	
+
+}

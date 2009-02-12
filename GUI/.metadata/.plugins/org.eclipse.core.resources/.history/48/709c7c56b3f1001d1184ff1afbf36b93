@@ -1,0 +1,19 @@
+package rover;
+
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+
+public class test extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel jContentPane = null;
+	/**
+	 * This is the default constructor
+	 */
+	public test() {
+		super();
+		initialize();
+	}
+
+}

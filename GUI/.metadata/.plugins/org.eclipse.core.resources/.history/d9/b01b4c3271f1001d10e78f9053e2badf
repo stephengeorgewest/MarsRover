@@ -1,0 +1,57 @@
+package rover;
+
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import java.awt.Dimension;
+
+public class MainGUI extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel jContentPane = null;
+	private VideoPortal vp = null;
+	private VideoPortal vp2 = null;
+	private ServoPortal sp = null;
+	private ServoPortal sp2 = null;
+
+	/**
+	 * This is the default constructor
+	 */
+	public MainGUI() {
+		super();
+		initialize();
+		vp = new VideoPortal();
+		vp.setVisible(true);
+		sp = new ServoPortal(this);
+		sp.setVisible(true);
+		sp2 = new ServoPortal(this);
+		sp2.setVisible(true);
+		vp2 = new VideoPortal();
+		vp2.setVisible(true);
+	}
+
+	/**
+	 * This method initializes this
+	 * 
+	 * @return void
+	 */
+	private void initialize() {
+		this.setSize(455, 365);
+		this.setContentPane(getJContentPane());
+		this.setTitle("BaseStation 2009");
+	}
+
+	/**
+	 * This method initializes jContentPane
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJContentPane() {
+		if (jContentPane == null) {
+			jContentPane = new JPanel();
+			jContentPane.setLayout(new BorderLayout());
+		}
+		return jContentPane;
+	}
+
+}  //  @jve:decl-index=0:visual-constraint="10,10"

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<change:ChangeDescription xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:change="http://www.eclipse.org/emf/2003/Change" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.jem.internal.beaninfo.beaninfo="http:///org/eclipse/jem/internal/beaninfo/beaninfo.ecore" xmlns:org.eclipse.jem.java="java.xmi">
+  <objectChanges xsi:type="change:EObjectToChangesMapEntry" key="org.eclipse.jem.java:JavaClass java:/javax.swing#JSlider">
+    <value xsi:type="change:FeatureChange" featureName="eAnnotations">
+      <listChanges xsi:type="change:ListChange" referenceValues="#//@objectsToAttach.0"/>
+    </value>
+    <value xsi:type="change:FeatureChange" featureName="eStructuralFeatures">
+      <listChanges xsi:type="change:ListChange" referenceValues="#//@objectsToAttach.1 #//@objectsToAttach.2 #//@objectsToAttach.3 #//@objectsToAttach.4 #//@objectsToAttach.5 #//@objectsToAttach.6 #//@objectsToAttach.7 #//@objectsToAttach.8 #//@objectsToAttach.9 #//@objectsToAttach.10 #//@objectsToAttach.11 #//@objectsToAttach.12 #//@objectsToAttach.13 #//@objectsToAttach.14 #//@objectsToAttach.15 #//@objectsToAttach.16"/>
+    </value>
+    <value xsi:type="change:FeatureChange" featureName="events">
+      <listChanges xsi:type="change:ListChange" referenceValues="#//@objectsToAttach.17"/>
+    </value>
+  </objectChanges>
+  <objectsToAttach xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:BeanDecorator" shortDescription="Allows selection of a value by sliding a knob" implicitlySetBits="6773413839565225998" implicitDecoratorFlag="IMPLICIT_DECORATOR" mergeSuperMethods="false">
+    <attributes xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:FeatureAttributeMapEntry" key="ICON_COLOR_32x32" value="implicit,&quot;icons/jslide32.gif&quot;"/>
+    <attributes xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:FeatureAttributeMapEntry" key="ICON_COLOR_16x16" value="implicit,&quot;icons/jslide16.gif&quot;"/>
+    <notInheritedPropertyNames>layout</notInheritedPropertyNames>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="UI" eType="org.eclipse.jem.java:JavaClass java:/javax.swing.plaf#SliderUI" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Slider UI" expert="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getUI(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setUI(javax.swing.plaf.SliderUI"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="extent" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Size of the range covered by the knob" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getExtent(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setExtent(int"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="inverted" eType="org.eclipse.jem.java:JavaDataType java:/#boolean" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Reverse the value range shown" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getInverted(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setInverted(boolean"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="layout" eType="org.eclipse.jem.java:JavaClass java:/java.awt#LayoutManager" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Layout for container" hidden="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" readMethod="org.eclipse.jem.java:Method java:/java.awt#Container.getLayout(" writeMethod="org.eclipse.jem.java:Method java:/java.awt#Container.setLayout(java.awt.LayoutManager"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="majorTickSpacing" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Number of pixels between major tick marks" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getMajorTickSpacing(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setMajorTickSpacing(int"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="maximum" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="The maximum value of the slider" preferred="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getMaximum(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setMaximum(int"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="minimum" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="The minimum value of the slider" preferred="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getMinimum(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setMinimum(int"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="minorTickSpacing" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Number of pixels between minor tick marks" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getMinorTickSpacing(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setMinorTickSpacing(int"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="model" eType="org.eclipse.jem.java:JavaClass java:/javax.swing#BoundedRangeModel" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="The data model that handles slider properties" expert="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getModel(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setModel(javax.swing.BoundedRangeModel"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="orientation" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Orientation of the slider" implicitlySetBits="6773413839565226044" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getOrientation(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setOrientation(int">
+      <attributes xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:FeatureAttributeMapEntry" key="enumerationValues" value="implicit,[6]{&quot;HORIZONTAL&quot;,0,&quot;javax.swing.JSlider.HORIZONTAL&quot;,&quot;VERTICAL&quot;,1,&quot;javax.swing.JSlider.VERTICAL&quot;}"/>
+    </eAnnotations>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="paintLabels" eType="org.eclipse.jem.java:JavaDataType java:/#boolean" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Whether the labels are painted on the slider" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getPaintLabels(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setPaintLabels(boolean"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="paintTicks" eType="org.eclipse.jem.java:JavaDataType java:/#boolean" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Whether the tick marks are painted on the slider" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getPaintTicks(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setPaintTicks(boolean"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="paintTrack" eType="org.eclipse.jem.java:JavaDataType java:/#boolean" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Whether the track is painted on the slider" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getPaintTrack(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setPaintTrack(boolean"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="snapToTicks" eType="org.eclipse.jem.java:JavaDataType java:/#boolean" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Whether to snap the knob to closest tick mark" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getSnapToTicks(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setSnapToTicks(boolean"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="value" eType="org.eclipse.jem.java:JavaDataType java:/#int" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Current value of the slider" preferred="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" bound="true" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getValue(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setValue(int"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="ecore:EReference" name="valueIsAdjusting" eType="org.eclipse.jem.java:JavaDataType java:/#boolean" unsettable="true">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:PropertyDecorator" shortDescription="Whether a single event will be generated when all of the selection events have finished" expert="true" implicitlySetBits="6629298651489370172" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" readMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.getValueIsAdjusting(" writeMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.setValueIsAdjusting(boolean"/>
+  </objectsToAttach>
+  <objectsToAttach xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:BeanEvent" name="change">
+    <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:EventSetDecorator" displayName="Change" shortDescription="All change events" implicitlySetBits="-2594073385365405571" implicitDecoratorFlag="IMPLICIT_DECORATOR_AND_FEATURE" inDefaultEventSet="true" addListenerMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.addChangeListener(javax.swing.event.ChangeListener" listenerType="org.eclipse.jem.java:JavaClass java:/javax.swing.event#ChangeListener" removeListenerMethod="org.eclipse.jem.java:Method java:/javax.swing#JSlider.removeChangeListener(javax.swing.event.ChangeListener">
+      <serListMthd xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:MethodProxy" name="stateChanged" method="org.eclipse.jem.java:Method java:/javax.swing.event#ChangeListener.stateChanged(javax.swing.event.ChangeEvent">
+        <eAnnotations xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:MethodDecorator" shortDescription="Event fired when slider value has changed" preferred="true" implicitlySetBits="6629298651489370113">
+          <serParmDesc xsi:type="org.eclipse.jem.internal.beaninfo.beaninfo:ParameterDecorator" implicitlySetBits="2017612633061982209" name="stateChangeEvent"/>
+        </eAnnotations>
+      </serListMthd>
+    </eAnnotations>
+  </objectsToAttach>
+</change:ChangeDescription>

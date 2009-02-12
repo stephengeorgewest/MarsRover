@@ -1,0 +1,100 @@
+package rover;
+
+import java.awt.BorderLayout;
+import java.awt.Frame;
+
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import java.awt.Dimension;
+import javax.swing.BoxLayout;
+import java.awt.GridBagLayout;
+import java.awt.Rectangle;
+import javax.swing.JLabel;
+
+public class VideoPortal extends Portal {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel jContentPane = null;
+	private JPanel picturePane = null;
+	private JPanel videoPanel = null;
+	private JPanel displayPanel = null;
+	private JLabel jLabel = null;
+	private JLabel jLabel1 = null;
+
+	/**
+	 * This is the default constructor
+	 */
+	public VideoPortal(Frame owner) {
+		super(owner);
+		initialize();
+	}
+
+	/**
+	 * This method initializes this
+	 * 
+	 * @return void
+	 */
+	private void initialize() {
+		this.setSize(350, 300);
+		this.setContentPane(getJContentPane());
+		this.setTitle("Video");
+	}
+
+	/**
+	 * This method initializes jContentPane
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJContentPane() {
+		if (jContentPane == null) {
+			jContentPane = new JPanel();
+			jContentPane.setLayout(new BoxLayout(getJContentPane(), BoxLayout.Y_AXIS));
+			jContentPane.add(getVideoPanel(), null);
+			jContentPane.add(getDisplayPanel(), null);
+		}
+		return jContentPane;
+	}
+
+	@Override
+	protected void Shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * This method initializes videoPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getVideoPanel() {
+		if (videoPanel == null) {
+			videoPanel = new JPanel();
+			videoPanel.setLayout(null);
+		}
+		return videoPanel;
+	}
+
+	/**
+	 * This method initializes displayPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getDisplayPanel() {
+		if (displayPanel == null) {
+			jLabel1 = new JLabel();
+			jLabel1.setBounds(new Rectangle(19, 47, 50, 23));
+			jLabel1.setText("Height:");
+			jLabel = new JLabel();
+			jLabel.setBounds(new Rectangle(20, 14, 46, 23));
+			jLabel.setText("Width:");
+			displayPanel = new JPanel();
+			displayPanel.setPreferredSize(new Dimension(300, 100));
+			displayPanel.setMaximumSize(new Dimension(2000, 100));
+			displayPanel.setLayout(null);
+			displayPanel.add(jLabel, null);
+			displayPanel.add(jLabel1, null);
+		}
+		return displayPanel;
+	}
+
+}  //  @jve:decl-index=0:visual-constraint="10,10"
