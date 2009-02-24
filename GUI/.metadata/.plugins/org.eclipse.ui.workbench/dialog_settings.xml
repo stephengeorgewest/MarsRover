@@ -10,6 +10,24 @@
 			<item value="org.eclipse.jdt.ui.java"/>
 		</list>
 	</section>
+	<section name="ZipFileExportWizard">
+		<item value="true" key="WizardZipFileResourceExportPage1.STORE_CREATE_STRUCTURE_ID"/>
+		<item value="true" key="WizardZipFileResourceExportPage1.STORE_COMPRESS_CONTENTS_ID"/>
+		<list key="WizardZipFileResourceExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="C:\Documents and Settings\Travix\Desktop\MARS ROVER\Rover Code 2009\trunk\GUI\BaseStation2009\lib\JOGL\JOGL_src.zip"/>
+			<item value="C:\Documents and Settings\Travix\Desktop\MARS ROVER\Rover Code 2009\trunk\GUI\BaseStation2009\lib\JOGL\JOGL_docs.zip"/>
+			<item value="C:\Documents and Settings\Travix\Desktop\MARS ROVER\Rover Code 2009\trunk\GUI\BaseStation2009\lib\JInput\JInput_src.zip"/>
+			<item value="JInput_docs.zip"/>
+		</list>
+	</section>
 	<section name="EditorSelectionDialog">
+		<item value="false" key="EditorSelectionDialog.STORE_ID_INTERNAL_EXTERNAL"/>
+	</section>
+	<section name="ImportExportAction">
+		<item value="org.eclipse.ui.wizards.export.ZipFile" key="ImportExportPage.STORE_SELECTED_EXPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_EXPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+			<item value="org.eclipse.jdt.ui.Java"/>
+		</list>
 	</section>
 </section>

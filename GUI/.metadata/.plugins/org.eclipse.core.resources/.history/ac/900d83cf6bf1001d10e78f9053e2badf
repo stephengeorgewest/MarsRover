@@ -1,7 +1,0 @@
-package rover;
-
-import javax.swing.JDialog;
-
-public class ServoPortal extends JDialog {
-
-}

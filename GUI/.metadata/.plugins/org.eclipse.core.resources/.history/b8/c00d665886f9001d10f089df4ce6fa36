@@ -1,0 +1,33 @@
+package rover;
+
+import java.net.InetAddress;
+
+public class NetworkInterface {
+
+	private InetAddress send_address;
+	private int send_port;
+	private InetAddress rec_address;
+	private int rec_port;
+	
+	
+	private Thread sendThread;
+	private Thread recThread;
+	
+	public NetworkInterface(){
+		
+	}
+
+	public void setSend(InetAddress send_address, int send_port){
+		this.send_address = send_address;
+		this.send_port = send_port;
+	}
+	
+	public void setRec(InetAddress rec_address, int rec_port){
+		this.rec_address = rec_address;
+		this.rec_port = rec_port;
+	}
+	
+	
+	
+	
+}

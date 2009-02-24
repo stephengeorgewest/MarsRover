@@ -1,0 +1,56 @@
+package rover;
+
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.util.Queue;
+
+public class MulticastQueue extends Thread{
+
+	MulticastSocket s;
+	private InetAddress mc_address;
+	private int mc_port;
+
+	private Queue = null;
+	
+	public MulticastQueue(InetAddress address, int port){
+		this.mc_address = address;
+		this.mc_port = port;
+		this.setDaemon(true);
+	}
+	
+	public void Enqueue(Packet p){
+		
+		
+	}
+	
+	public void run(){
+		
+		while(true){
+			try{
+				if(s == null){
+					s = new MulticastSocket(mc_port);
+					s.joinGroup(mc_address);
+					
+				}else{
+					byte[] buf = new byte[65000];
+					DatagramPacket recv = new DatagramPacket(buf, buf.length);
+//					System.out.println("Listening for packets");
+					s.receive(recv);
+//					System.out.println("Packet Received");
+					Packet p = new Packet(recv.getData(), recv.getLength());
+					packetReceived(p);
+					
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+			
+			
+		}
+	}
+	
+	
+}
+
+}

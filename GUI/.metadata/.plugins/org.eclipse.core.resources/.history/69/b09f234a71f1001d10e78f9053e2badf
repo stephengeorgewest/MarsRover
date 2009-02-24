@@ -1,7 +1,0 @@
-package rover;
-
-import javax.swing.JDialog;
-
-public class Portal extends JDialog {
-
-}
