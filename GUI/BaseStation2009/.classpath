@@ -3,5 +3,17 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="SWT_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/JInput/jinput.jar" sourcepath="lib/JInput/JInput_src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/BaseStation2009/lib/JInput/JInput_docs.zip!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BaseStation2009/lib/JInput"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JOGL/jogl.jar" sourcepath="lib/JOGL/JOGL_src.zip">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BaseStation2009/lib/JOGL"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JOGL/gluegen-rt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

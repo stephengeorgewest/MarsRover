@@ -1,4 +1,4 @@
-package rover;
+package rover.portal;
 
 import javax.swing.JPanel;
 
@@ -24,7 +24,7 @@ public abstract class Portal extends JDialog {
 
 	
 	
-	protected abstract void Shutdown();
+	public abstract void Shutdown();
 	
 
 }

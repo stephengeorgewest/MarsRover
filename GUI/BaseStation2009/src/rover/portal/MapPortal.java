@@ -1,10 +1,12 @@
-package rover;
+package rover.portal;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+
+
 import java.awt.Dimension;
 
 public class MapPortal extends Portal {
@@ -45,7 +47,7 @@ public class MapPortal extends Portal {
 	}
 
 	@Override
-	protected void Shutdown() {
+	public void Shutdown() {
 		// TODO Auto-generated method stub
 		
 	}

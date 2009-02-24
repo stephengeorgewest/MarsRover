@@ -1,6 +1,8 @@
-package rover;
+package rover.network;
 
 import java.awt.image.BufferedImage;
+
+import rover.utils.Bitmap;
 
 public class VideoPacketBuffer
 {
@@ -52,7 +54,7 @@ public class VideoPacketBuffer
 
         buffer[p.PacketNumber-1] = p;
 
-        System.out.println("Received " + p.PacketNumber + "/" + currentPacketCount);
+        //System.out.println("Received " + p.PacketNumber + "/" + currentPacketCount);
 
         boolean allPacketsReceived = true;
         for (int i = 0; i < currentPacketCount; i++)
@@ -70,7 +72,7 @@ public class VideoPacketBuffer
         int cols = buffer[0].Width;
 
         //merge the packets together to create a new image
-        System.out.println("rows = " + rows + "cols = " + cols);
+        //System.out.println("rows = " + rows + "cols = " + cols);
         int rgb_size = rows * cols * 3;
         int yuv_size = rows*cols + rows*cols/2;
 

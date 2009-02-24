@@ -1,4 +1,5 @@
-package rover;
+package rover.network;
+
 
 public class VideoPacket extends Packet{
 	public static int DATA_OFFSET = 10;
@@ -15,6 +16,16 @@ public class VideoPacket extends Packet{
 	{
 		super(packet, bytes);
 	    this.Height = -1;
+	    this.Width = -1;
+	    this.FrameID = -1;
+	    this.ChannelID = -1;
+	    this.PacketNumber = -1;
+	    this.TotalPackets = -1;
+	}
+	
+	public VideoPacket(Packet p){
+		super(p.packet, p.bytes);
+		this.Height = -1;
 	    this.Width = -1;
 	    this.FrameID = -1;
 	    this.ChannelID = -1;

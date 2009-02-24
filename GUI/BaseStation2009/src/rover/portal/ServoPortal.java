@@ -1,7 +1,8 @@
-package rover;
+package rover.portal;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SpinnerNumberModel;
 
 import java.awt.Frame;
 import java.awt.BorderLayout;
@@ -12,18 +13,23 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 
-public class ServoPortal extends Portal {
+public class ServoPortal extends Portal implements ChangeListener{
 
-	public static int CHANNELS = 10;
+	public static int CHANNELS = 32;
 	private JPanel jContentPane = null;
 	
 	ArrayList<JSpinner> spinlist = null;  //  @jve:decl-index=0:
 	ArrayList<JSlider> slidelist = null;
 
 	int channels = 0;
+	boolean disable_events = true;
 	
 	/**
 	 * @param owner
@@ -40,7 +46,7 @@ public class ServoPortal extends Portal {
 	 */
 	private void initialize(int channels) {
 		this.channels = channels;
-		this.setSize(305, channels * 30);
+		this.setSize(305, channels * 22);
 		this.setResizable(false);
 		
 		this.setContentPane(getJContentPane());
@@ -49,13 +55,23 @@ public class ServoPortal extends Portal {
 		slidelist = new ArrayList<JSlider>();
 		
 		for(int i = 0;i<channels;i++){
-			JSpinner spinner = new JSpinner();
+			JSpinner spinner = new JSpinner(new SpinnerNumberModel(50, 0, 100, .01));
 			JSlider slider = new JSlider();
 			
 			//do some configuration here
 			spinner.setMinimumSize(new Dimension(60, 1));
 			spinner.setMaximumSize(new Dimension(60, 20));
 			spinner.setSize(60, 20);
+			
+			slider.setMaximum(10000);
+			slider.setMinimum(0);
+			slider.setMajorTickSpacing(100);
+			slider.setMinorTickSpacing(1);
+			slider.setValue(5000);
+			
+			slider.addChangeListener(this);
+			spinner.addChangeListener(this);
+			
 			
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.HORIZONTAL;
@@ -75,10 +91,38 @@ public class ServoPortal extends Portal {
 			slidelist.add(slider);
 			
 		}
-		
+		disable_events = false;
 		
 	}
 
+	
+	@Override
+	public void stateChanged(ChangeEvent arg0) {
+		if(disable_events) return;
+		disable_events = true;
+		int i;
+		double val;
+		if(arg0.getSource().getClass() == JSpinner.class){
+			i = spinlist.indexOf(arg0.getSource());
+			Double d = (Double)spinlist.get(i).getValue();
+			val = d.doubleValue();
+			d *= 100;
+			slidelist.get(i).setValue(d.intValue());
+		}else{
+			i = slidelist.indexOf(arg0.getSource());
+			val = slidelist.get(i).getValue();
+			val /= 100;
+			spinlist.get(i).setValue(val);
+		}
+		//send some servo control packets on channel i
+		System.out.println("Servo " + i + " changing to " + val);
+		
+		//TODO send network packet
+		
+		disable_events = false;
+	}
+
+	
 	/**
 	 * This method initializes jContentPane
 	 * 
@@ -93,7 +137,7 @@ public class ServoPortal extends Portal {
 	}
 
 	@Override
-	protected void Shutdown() {
+	public void Shutdown() {
 		// TODO Auto-generated method stub
 		
 	}

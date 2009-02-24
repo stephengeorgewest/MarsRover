@@ -1,4 +1,4 @@
-package rover;
+package rover.utils;
 
 import java.awt.Color;
 import java.awt.Image;
