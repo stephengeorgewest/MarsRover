@@ -1,1 +1,2 @@
-gcc NetworkServoControl.cpp network.c openssc.cpp -o NetworkServoControl
+default:
+	gcc NetworkServoControl.cpp network.c openssc.cpp -o NetworkServoControl
