@@ -1,6 +1,8 @@
 #include "network.h"
 #include "openssc.h"
 
+	char * port = "/dev/tty1";
+	struct SSC32_config_struct config;
 int main( int argc, char** argv)
 {
 	enum packet_type type;
@@ -9,4 +11,10 @@ int main( int argc, char** argv)
 	else
 		type = (packet_type) *argv[0];
         printf("th+%d",type);
+	
+	SSC32(port, config);
+	Connect(config);
+	
+	SetServo(0, 0, config);
+	Disconnect(config);
 }
