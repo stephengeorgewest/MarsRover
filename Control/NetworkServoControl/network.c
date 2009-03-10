@@ -17,9 +17,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "util.h"
+//#include "util.h"
 #include "network.h"
-#include "update_control.h"
+//#include "update_control.h"
 
 
 /* *** Multicast Address Vars *** */
@@ -54,7 +54,6 @@ int listen_socket_fd;
  */
 struct sockaddr_in listen_address;
 
-
 /* *** Network initialization functions *** */
 
 /** \brief Initialize multicast information
@@ -74,7 +73,8 @@ void init_multicast()
   // Create the UDP multicast socket
   multicast_socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
   if( multicast_socket_fd < 0 )
-    exit_with_error("Could not bind to socket");
+	exit(-1);
+ //   exit_with_error("Could not bind to socket");
 
   }
 
@@ -105,7 +105,8 @@ void init_udp_listener()
   /* 1. Create a UDP socket and error on failure (shouldn't happen). */
   listen_socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
   if( listen_socket_fd < 0 )
-    exit_with_error("Could not bind to socket");
+	exit(-1);
+//    exit_with_error("Could not bind to socket");
 
   /* 2. Make the socket non-blocking */
   fcntl(listen_socket_fd, F_SETFL, O_NONBLOCK);
@@ -116,8 +117,8 @@ void init_udp_listener()
 	    sizeof(listen_address)
 	  ) < 0
     )
-    exit_with_error("Could not bind socket to address");
-
+	exit(-1);
+   // exit_with_error("Could not bind socket to address");
   /* 4. Listen on the socket we have created. */
   listen(listen_socket_fd, MAX_PACKET_BACKLOG);
 
@@ -274,30 +275,30 @@ void process_packet(char* message, unsigned int message_length)
   {
 
   /* Get the type of the packet */
-  enum packet_type type = (packet_type) *message;
+  enum packet_type type = (enum packet_type) *message;
 
   //printf("Packet type is %hhx\n", type);
 
   switch( type )
     {
     case heartbeat_packet:
-      process_heartbeat_packet(message, message_length);
+      //process_heartbeat_packet(message, message_length);
       break;
 
     case debug_packet:
-      process_debug_packet(message, message_length);
+      //process_debug_packet(message, message_length);
       break;
 
     case gain_packet:
-      process_gain_packet(message, message_length);
+      //process_gain_packet(message, message_length);
       break;
 
     case control_packet:
-      process_control_packet(message, message_length);
+      //process_control_packet(message, message_length);
       break;
 
     case kill_packet:
-      process_kill_packet(message, message_length);
+      //process_kill_packet(message, message_length);
       break;
 
     case telemetry_packet:
@@ -348,7 +349,7 @@ void process_gain_packet(char* message, unsigned int message_length)
 
   /* unpack the packet */
   /* TODO: bad evil hardcoded offsets should be banished */
-  float p_p = unpack_float(message +  1);
+  /*float p_p = unpack_float(message +  1);
   float p_i = unpack_float(message +  5);
   float p_d = unpack_float(message +  9);
 
@@ -360,7 +361,7 @@ void process_gain_packet(char* message, unsigned int message_length)
   float r_i = unpack_float(message + 29);
   float r_d = unpack_float(message + 33);
 
-
+*/
   /* DEBUG
    * printf("length=%d\n", message_length);
    * printf("p_p=%f p_i=%f p_d=%f\n", p_p, p_i, p_d);
@@ -369,11 +370,11 @@ void process_gain_packet(char* message, unsigned int message_length)
    */
 
   /* Update the gains on the quadrotor */
-  set_gains( p_p, p_i, p_d,
+  /*set_gains( p_p, p_i, p_d,
              q_p, q_i, q_d,
              r_p, r_i, r_d
            );
-
+*/
   } /* END process_gain_packet() */
 
 
@@ -387,15 +388,15 @@ void process_control_packet(char* message, unsigned int message_length)
 
   /* unpack the packet */
   /* TODO: bad evil hardcoded offsets should be banished */
-  float p = unpack_float(message +  1);
+  /*float p = unpack_float(message +  1);
   float q = unpack_float(message +  5);
   float r = unpack_float(message +  9);
   float t = unpack_float(message + 13);
-
+*/
   /* DEBUG
    * printf("length=%d p=%f q=%f r=%f t=%f\n", message_length, p, q, r, t);
    */
-  set_pqrt(p, q, r, t);
+  //set_pqrt(p, q, r, t);
 
   } /* END process_control_packet() */
 
@@ -412,10 +413,10 @@ void process_kill_packet(char* message, unsigned int message_length)
 
   char reply[] = "I don't hate you!";
 
-  send_debug(reply, strlen(reply));
+  //send_debug(reply, strlen(reply));
 
   /* Shutdown the quadrotor */
-  system_shutdown();
+  //system_shutdown();
 
   printf("Killed.");
   exit(1);

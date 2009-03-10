@@ -36,9 +36,9 @@
 //	CLASS: SSC32
 //	AUTHOR: Travis L. Brown
 //**************************************************************************
-SSC32(char* port, struct SSC32_config_struct * config)
+void SSC32(char* port, struct SSC32_config_struct * config)
 {
-	config->connected = false;
+	config->connected = 0;
 	config->port = port;
 	bzero( &config->tty, sizeof(config->tty) ); //tty structure
 	config->fd = 0;
@@ -46,15 +46,15 @@ SSC32(char* port, struct SSC32_config_struct * config)
 }
 
 
-bool Connect(struct SSC32_config_struct * config)
+int Connect_default(struct SSC32_config_struct * config)
 {
 	return Connect(SSC32_BAUDRATE, config);
 }
 
-bool Connect(int Baudrate, struct SSC32_config_struct * config)
+int Connect(int Baudrate, struct SSC32_config_struct * config)
 {
 	if(config->connected || Baudrate > SSC32_BAUDRATE)
-		return false;
+		return 0;
 
 	config->baud = Baudrate;
 
@@ -78,29 +78,29 @@ bool Connect(int Baudrate, struct SSC32_config_struct * config)
 	config->fd = open( config->port, O_RDWR | O_NOCTTY);
 
 	if( config->fd == -1 ) {
-		return false;
+		return 0;
 	}
 
 	// Configure serial port settings
 	tcflush( config->fd, TCIFLUSH );		//Set Flush settings
 	tcsetattr( config->fd, TCSANOW, &config->tty ); //	Make changes now without waiting for data to complete
-	config->connected = true;
-	return true;
+	config->connected = 1;
+	return 1;
 }
 
-bool Disconnect(struct SSC32_config_struct * config)
+int Disconnect(struct SSC32_config_struct * config)
 {
 	if(!config->connected)
-		return false;
+		return 0;
 		
-	config->connected = false;
+	config->connected = 0;
 	bzero( &config->tty, sizeof(config->tty) );
 	close(config->fd);
 	config->fd = 0;
-	return true;
+	return 1;
 }
 
-bool IsConnected(struct SSC32_config_struct * config)
+int IsConnected(struct SSC32_config_struct * config)
 {
 	return config->connected;
 }
@@ -139,7 +139,7 @@ int SetServo(int channel, unsigned int value, struct SSC32_config_struct * confi
 
 #ifdef DEBUG
 	printf("Sending ");
-	for(int i = 0;i<ind;i++)
+	for(i = 0;i<ind;i++)
 	{
 		printf("%x ", buf[i] );
 	}
@@ -150,12 +150,14 @@ int SetServo(int channel, unsigned int value, struct SSC32_config_struct * confi
 	return nbytes;
 }
 
-int SetServos(int channels[], unsigned int values[], int count)
+int SetServos(int channels[], unsigned int values[], int count,  struct 
+SSC32_config_struct * config)
 {
 	int nbytes = 0;
 	char buf[count*15];
 	int ind = 0;
-	for(int i = 0;i<count;i++)
+	int i;
+	for(i = 0;i<count;i++)
 	{
 		if(values[i] > MAX_VALUE || values[i] < MIN_VALUE)
 			continue;
@@ -186,7 +188,7 @@ int SetServos(int channels[], unsigned int values[], int count)
 
 #ifdef DEBUG
 				printf("Sending ");
-				for(int i = 0;i<ind;i++){
+				for(i = 0;i<ind;i++){
 					printf("%x ", buf[i] );
 				}
 				printf("\n");

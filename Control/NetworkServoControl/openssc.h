@@ -14,14 +14,13 @@
 #define SSC32_MIN				500
 #define SSC32_MAX				2500
 #define SSC32_BAUDRATE			B115200
-
+#define MAX_VALUE 10000
+#define MIN_VALUE  0
 #include <fcntl.h>
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <algorithm>
-#include <vector>
 
 struct SSC32_config_struct
 {
@@ -29,23 +28,23 @@ struct SSC32_config_struct
 	int baud;
 	struct termios tty;	//serial port settings
 	char* port;			//pointer to the serial port
-	bool connected;		//internal connection flag
+	int connected;		//internal connection flag
 	int fd;				// File descriptor for the serial port
 };
 
 //Creates a MiniSSCII interface attached to the specified port eg '/dev/ttyS1'
-SSC32(char* port, struct SSC32_config_struct * config);
+void SSC32(char* port, struct SSC32_config_struct * config);
 
 
 //Connects to the MiniSSCII with the specified range, if no range is specified it defaults to the DEG_90
-bool Connect(struct SSC32_config_struct * config);
-bool Connect(int Baudrate, struct SSC32_config_struct * config);
+int Connect_default(struct SSC32_config_struct * config);
+int Connect(int Baudrate, struct SSC32_config_struct * config);
 
 //Disconnects from the serial line
-bool Disconnect(struct SSC32_config_struct * config);
+int Disconnect(struct SSC32_config_struct * config);
 
 //returns the value of the internal connected flag
-bool IsConnected(struct SSC32_config_struct * config);
+int IsConnected(struct SSC32_config_struct * config);
 
 //Sets a servo channel to the specified value
 int SetServo(int channel, unsigned int value, struct SSC32_config_struct * config);
