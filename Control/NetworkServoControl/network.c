@@ -188,22 +188,23 @@ void process_pending_packets()
     if( client_message_length > 0 )
       {
       /* Process the client message. */
-      process_packet(client_message, client_message_length);
+	  printf("got message \"%s\"\n",client_message);
+      //process_packet(client_message, client_message_length);
 
 		
       /* TESTING: message to send back */
-      char reply_message[] = "Still Alive";
-      int  reply_length    = strlen((char*) reply_message);
+      //char reply_message[] = "Still Alive";
+      //int  reply_length    = strlen((char*) reply_message);
       
       /* TESTING: send a message back */
-      send_server_response( (unsigned char*) reply_message,
-			    reply_length,
-			    (struct sockaddr *) &client_address,
-			    client_address_length
-			  );
+      //send_server_response( (unsigned char*) reply_message,
+		////	    reply_length,
+		//	    (struct sockaddr *) &client_address,
+		//	    client_address_length
+		//	  );
     			
       /* TESTING: send a multicast reply */
-      send_debug(reply_message, reply_length);
+      //send_debug(reply_message, reply_length);
 
       } /* END if( client_message_length > 0 ) */
     } /* END while( client_message_length > 0 ) */
