@@ -1,5 +1,6 @@
 default:
-	gcc NetworkServoControl.c network.c openssc.c -o NetworkServoControl
+	gcc RoverNetworkServoControl.c RoverNetwork.c openssc.c -o RoverNetworkServoControl
+	#gcc NetworkServoControl.c network.c openssc.c -o NetworkServoControl
 
 broadcast:
 	gcc RoverNetworkBroadcast.c RoverNetwork.c -o RoverNetworkBroadcast
@@ -7,4 +8,4 @@ broadcast:
 	
 listen:
 	gcc RoverNetworkListen.c RoverNetwork.c -o RoverNetworkListen
-	gcc NetworkListen.c network.c -o NetworkListen
+	#gcc NetworkListen.c network.c -o NetworkListen
