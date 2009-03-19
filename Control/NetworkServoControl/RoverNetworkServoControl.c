@@ -1,7 +1,7 @@
 #include "RoverNetwork.h"
 #include "openssc.h"
 
-	char * port = "/dev/tty1";
+	char * port = "/dev/ttys1";
 	struct SSC32_config_struct config;
 	struct RoverNetwork RN;
 int main( int argc, char** argv)
@@ -17,10 +17,10 @@ int main( int argc, char** argv)
         {
                 char message[MSGBUFSIZE];
                 int nbytes= recieve_message(&RN, message);
-                printf("Recieved Message %d bytes long:%x\n", nbytes, message);
+                printf("\nRecieved Message %d bytes long:%x\n", nbytes, message);
                 if(nbytes<0)
                         sleep(5);
-		if(message[0]==97)//a for nowSERVO_MAGIC_BYTE}
+		if(message[0]==ROVER_MAGIC_SERVO)
 		{
 			int num_channels=message[1];			
 			printf("Recieved Servo Packet with %d channels\n",num_channels);
@@ -30,7 +30,21 @@ int main( int argc, char** argv)
 			else
 			{
 				for(i=0; i<num_channels; i++)
-					printf("channel %d = %f",message[2+i*5], htonl(message[2+i*5+1]));
+				{
+					int channel= message[2+i*5];
+					int reverse = //htonl(message[2+i*5+1]); 
+						(int)((message[2+i*5+1]<<24)
+							+(message[2+i*5+2]<<16)
+							+(message[2+i*5+3]<<8)
+							+(message[2+i*5+4]<<0));
+					float rev_float;
+					memcpy(&rev_float, &reverse, 4);
+					printf("channel %d = %f(rev)\n",
+						channel, rev_float);
+			 SetServo(channel, (int)((rev_float*MAX_VALUE)/100),  &config);
+
+
+				}
 			}
 		}
         }
