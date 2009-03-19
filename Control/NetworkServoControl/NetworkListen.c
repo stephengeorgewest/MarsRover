@@ -39,7 +39,8 @@ main(int argc, char *argv[])
 	/* set up destination address */
 	memset(&addr,0,sizeof(addr));
 	addr.sin_family=AF_INET;
-	addr.sin_addr.s_addr=htonl(INADDR_ANY); /* N.B.: differs from sender */
+	addr.sin_addr.s_addr=inet_addr(HELLO_GROUP);
+//htonl(INADDR_ANY); /* N.B.: differs from sender */
 	addr.sin_port=htons(HELLO_PORT);
 
 	/* bind to receive address */
