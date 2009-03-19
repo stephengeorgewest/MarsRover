@@ -3,8 +3,8 @@
 main(int argc, char *argv[])
 {
 	struct RoverNetwork RN;
-	sprintf(RN.ip_address, ROVER_GROUP);
-	RN.port=ROVER_PORT;
+	sprintf(RN.ip_address, ROVER_GROUP_ASCII);
+	RN.port=ROVER_PORT_ASCII;
 
 	init_multicast(&RN);
 		

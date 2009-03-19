@@ -1,13 +1,13 @@
 #include "RoverNetwork.h"
 #include "openssc.h"
-#define message_length 50
+
 	char * port = "/dev/tty1";
 	struct SSC32_config_struct config;
 	struct RoverNetwork RN;
 int main( int argc, char** argv)
 {
-        sprintf(RN.ip_address, ROVER_GROUP);
-        RN.port=ROVER_PORT;
+        sprintf(RN.ip_address, ROVER_GROUP_SERVO);
+        RN.port=ROVER_PORT_SERVO;
         init_multicast(&RN);
 
         SSC32(port, &config);
@@ -25,8 +25,13 @@ int main( int argc, char** argv)
 			int num_channels=message[1];			
 			printf("Recieved Servo Packet with %d channels\n",num_channels);
 			int i=0;
-//			for(i=0; i<num_channels; i++)
-//				printf("channel %d = %f",message[2+i*5], (float)message[2+i*5+1]);
+			if(num_channels>32)//??
+				puts("Bad # of CHannels");
+			else
+			{
+				for(i=0; i<num_channels; i++)
+					printf("channel %d = %f",message[2+i*5], htonl(message[2+i*5+1]));
+			}
 		}
         }
 	Disconnect(&config);
