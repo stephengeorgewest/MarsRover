@@ -47,10 +47,10 @@ public class RoverPanel2D extends JPanel implements GLEventListener{
 		this.setSize(300, 200);
 		this.setLayout(new BorderLayout());
 		this.add(getglJPanel());
-		Throttles[0] = 50;
-		Throttles[1] = -20;
-		Throttles[2] = 90;
-		Throttles[3] = -100;
+		Throttles[0] = .50f;
+		Throttles[1] = -.20f;
+		Throttles[2] = .90f;
+		Throttles[3] = -1.00f;
 		Head_angle = 45;
 	}
 
@@ -128,8 +128,8 @@ public class RoverPanel2D extends JPanel implements GLEventListener{
 		int i = -1;
 		int j = -1;
 		
-		for(int n = 0;n<Throttles.length;n++){
-			float height = maxsize*Throttles[n]/100f;
+		for(int n = 0;n<4;n++){
+			float height = maxsize*Throttles[n];
 			if(height > 0)
 				gl.glColor3ub((byte)116, (byte)255, (byte)13);
 			else
@@ -176,7 +176,7 @@ public class RoverPanel2D extends JPanel implements GLEventListener{
 		gl.glEnd();
 		
 		gl.glColor3ub((byte)100, (byte)100, (byte)100);
-		
+		//draw tires
 		for(int i = -1;i<3;i+=2)
 			for(int j = -1;j<3;j+=2){
 			
@@ -188,7 +188,7 @@ public class RoverPanel2D extends JPanel implements GLEventListener{
 				gl.glPopMatrix();
 			}
 		
-		
+		//draw tire lines
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
 		gl.glColor3ub((byte)0, (byte)0, (byte)0);
 		
@@ -213,6 +213,7 @@ public class RoverPanel2D extends JPanel implements GLEventListener{
 		
 		gl.glColor3ub((byte)0, (byte)0, (byte)0);
 		
+		//draw rover body
 		gl.glBegin(GL.GL_LINE_STRIP);
 			gl.glVertex3f(-12.0f, 18.0f, 8f);
 			gl.glVertex3f(12.0f, 18.0f, 8f);
@@ -239,10 +240,9 @@ public class RoverPanel2D extends JPanel implements GLEventListener{
 		
 		gl.glPushMatrix();
 
+		//draw head
 		gl.glColor3ub((byte)119, (byte)187, (byte)255);
-		
 		gl.glTranslatef(0, 15, 18);
-		
 		gl.glRotatef(Head_angle, 0, 0, 1);
 		gl.glBegin(GL.GL_QUADS);
 			gl.glVertex3f(-3f, -1.5f, 8f);

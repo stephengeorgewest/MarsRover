@@ -19,7 +19,8 @@ public abstract class Portal extends JDialog {
 
 	public Portal(Frame owner) {
 		super(owner);
-		
+		this.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+
 	}
 
 	

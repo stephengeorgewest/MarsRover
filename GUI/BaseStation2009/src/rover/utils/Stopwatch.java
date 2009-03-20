@@ -29,6 +29,7 @@ public class Stopwatch {
 	
 	public void Reset(){
 		accumulated = 0;
+		if(running) Start();
 	}
 	
 	public long getElapsedNanos(){

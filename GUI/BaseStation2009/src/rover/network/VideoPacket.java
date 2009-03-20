@@ -4,6 +4,8 @@ package rover.network;
 public class VideoPacket extends Packet{
 	public static int DATA_OFFSET = 10;
 	
+	public static int VIDEO_HEADER = 12;
+	
 	public int Height;
 	public int Width;
 	public int FrameID;
@@ -21,6 +23,7 @@ public class VideoPacket extends Packet{
 	    this.ChannelID = -1;
 	    this.PacketNumber = -1;
 	    this.TotalPackets = -1;
+	    FromByteArray(packet, bytes);
 	}
 	
 	public VideoPacket(Packet p){
@@ -33,18 +36,22 @@ public class VideoPacket extends Packet{
 	    this.TotalPackets = -1;
 	}
 	
-	public boolean fillData()
+	public void setPacket(byte[] packet, int bytes){
+		this.packet = packet;
+		this.bytes = bytes;
+	}
+	
+	public boolean fillData(){
+		return FromByteArray(packet, bytes);
+	}
+	
+	public boolean FromByteArray(byte[] packet, int bytes)
 	{
+		if(bytes < 9) return false;
 	    try
 	    {
+	    	if(packet[0] != VIDEO_HEADER) return false;
 	        ChannelID = packet[1];
-	
-	        PacketNumber = packet[8];
-	        TotalPackets = packet[9];
-	
-	        FrameID = 0;
-	        FrameID |= packet[7];
-	        FrameID |= (packet[6] << 8);
 	
 	        Width = 0;
 	        Width |= (packet[2] << 8);
@@ -53,6 +60,13 @@ public class VideoPacket extends Packet{
 	        Height = 0;
 	        Height |= (packet[4] << 8);
 	        Height |= packet[5];
+	
+	        FrameID = 0;
+	        FrameID |= packet[7];
+	        FrameID |= (packet[6] << 8);
+	        
+	        PacketNumber = packet[8];
+	        TotalPackets = packet[9];
 	
 	    }
 	    catch (Exception e)

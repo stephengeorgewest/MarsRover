@@ -28,6 +28,7 @@ import rover.components.ImagePanel;
 import rover.network.MulticastListener;
 import rover.network.Packet;
 import rover.network.PacketHandler;
+import rover.network.SocketInfo;
 import rover.network.VideoPacket;
 import rover.network.VideoPacketBuffer;
 import rover.utils.Stopwatch;
@@ -91,6 +92,16 @@ public class VideoPortal extends Portal {
 			InetAddress mcaddress = InetAddress.getByName(Main.props.getProperty("video1_address"));
 			int port = Integer.parseInt(Main.props.getProperty("video1_port"));
 			ml = new MulticastListener(mcaddress, port);
+			
+			SocketInfo si = new SocketInfo();
+			si.setPortal("Video Portal");
+			si.setPort(port);
+			si.setType("MC Rec");
+			si.setAddress(mcaddress);
+			
+			MainGUI.registerSocket(si);
+			
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -118,6 +129,24 @@ public class VideoPortal extends Portal {
 		
 		
 	}
+	
+	@Override
+	public String toString(){
+		return this.getTitle();
+	}
+	
+	public static class VideoPortalInit extends PortalInit {
+		@Override
+		public Portal createPortal() {
+			return new VideoPortal(MainGUI.instance);
+		}
+		
+		@Override
+		public String toString(){
+			return "Video Portal";
+		}
+	}
+	
 	
 /*	class ThreadStart implements Runnable{
 		VideoPortal parent;
