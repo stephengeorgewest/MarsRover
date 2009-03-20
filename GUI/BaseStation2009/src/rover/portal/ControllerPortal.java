@@ -403,7 +403,7 @@ public class ControllerPortal extends Portal{
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(733, 319);
+		this.setSize(733, 334);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Controller Portal");
 	}
@@ -484,7 +484,7 @@ public class ControllerPortal extends Portal{
 		if (jPanel == null) {
 			jPanel = new JPanel();
 			jPanel.setLayout(null);
-			jPanel.setBounds(new Rectangle(435, 0, 291, 287));
+			jPanel.setBounds(new Rectangle(435, 0, 291, 302));
 			jPanel.setBorder(BorderFactory.createTitledBorder(null, "Rover View", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
 			jPanel.add(getRoverPanel2D(), null);
 		}
@@ -537,22 +537,22 @@ public class ControllerPortal extends Portal{
 			GLabel = new JLabel();
 			GLabel.setText("0");
 			GLabel.setSize(new Dimension(60, 15));
-			GLabel.setLocation(new Point(330, 110));
+			GLabel.setLocation(new Point(342, 113));
 			RRLabel = new JLabel();
 			RRLabel.setText("0");
-			RRLabel.setLocation(new Point(330, 95));
+			RRLabel.setLocation(new Point(342, 98));
 			RRLabel.setSize(new Dimension(60, 15));
 			LRLabel = new JLabel();
 			LRLabel.setText("0");
-			LRLabel.setLocation(new Point(330, 80));
+			LRLabel.setLocation(new Point(342, 83));
 			LRLabel.setSize(new Dimension(60, 15));
 			RFLabel = new JLabel();
 			RFLabel.setText("0");
-			RFLabel.setLocation(new Point(330, 65));
+			RFLabel.setLocation(new Point(342, 68));
 			RFLabel.setSize(new Dimension(60, 15));
 			LFLabel = new JLabel();
 			LFLabel.setText("0");
-			LFLabel.setLocation(new Point(330, 50));
+			LFLabel.setLocation(new Point(342, 53));
 			LFLabel.setSize(new Dimension(60, 15));
 			jLabel11 = new JLabel();
 			jLabel11.setBounds(new Rectangle(330, 50, 61, 16));
@@ -560,27 +560,27 @@ public class ControllerPortal extends Portal{
 			jLabel10 = new JLabel();
 			jLabel10.setText("LF:");
 			jLabel10.setSize(new Dimension(60, 14));
-			jLabel10.setLocation(new Point(250, 50));
+			jLabel10.setLocation(new Point(262, 53));
 			jLabel9 = new JLabel();
 			jLabel9.setPreferredSize(new Dimension(20, 14));
-			jLabel9.setLocation(new Point(250, 110));
+			jLabel9.setLocation(new Point(262, 113));
 			jLabel9.setSize(new Dimension(60, 14));
 			jLabel9.setText("Gimbal:");
 			jLabel8 = new JLabel();
 			jLabel8.setPreferredSize(new Dimension(20, 14));
-			jLabel8.setLocation(new Point(250, 95));
+			jLabel8.setLocation(new Point(262, 98));
 			jLabel8.setSize(new Dimension(60, 14));
 			jLabel8.setText("RR:");
 			jLabel7 = new JLabel();
 			jLabel7.setText("LR:");
 			jLabel7.setSize(new Dimension(60, 14));
-			jLabel7.setLocation(new Point(250, 80));
+			jLabel7.setLocation(new Point(262, 83));
 			jLabel6 = new JLabel();
 			jLabel6.setText("RF:");
 			jLabel6.setSize(new Dimension(60, 14));
-			jLabel6.setLocation(new Point(250, 65));
+			jLabel6.setLocation(new Point(262, 68));
 			jLabel5 = new JLabel();
-			jLabel5.setBounds(new Rectangle(255, 20, 95, 16));
+			jLabel5.setBounds(new Rectangle(267, 23, 95, 16));
 			jLabel5.setText("Output Values");
 			jLabel4 = new JLabel();
 			jLabel4.setBounds(new Rectangle(15, 20, 103, 18));
@@ -589,7 +589,7 @@ public class ControllerPortal extends Portal{
 			jPanel2.setLayout(null);
 			jPanel2.setBorder(BorderFactory.createTitledBorder(null, "Control Tuning/Options", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(51, 51, 51)));
 			jPanel2.setLocation(new Point(0, 125));
-			jPanel2.setSize(new Dimension(436, 162));
+			jPanel2.setSize(new Dimension(436, 177));
 
 			jPanel2.add(getJScrollPane(), null);
 			jPanel2.add(jLabel4, null);
@@ -668,7 +668,7 @@ public class ControllerPortal extends Portal{
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setBounds(new Rectangle(13, 41, 233, 113));
+			jScrollPane.setBounds(new Rectangle(13, 41, 233, 129));
 			jScrollPane.setViewportView(getJTable());
 		}
 		return jScrollPane;
@@ -683,7 +683,7 @@ public class ControllerPortal extends Portal{
 	private JButton getApplyButton() {
 		if (applyButton == null) {
 			applyButton = new JButton();
-			applyButton.setBounds(new Rectangle(252, 129, 137, 22));
+			applyButton.setBounds(new Rectangle(251, 147, 147, 22));
 			applyButton.setText("Apply Calibration");
 			applyButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {

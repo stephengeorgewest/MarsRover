@@ -147,7 +147,7 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 		for(int i = 0;i<channels;i++){
 			if(boxlist.get(i).isSelected()) continue;
 			slidelist.get(i).setValue((int)(100*values[i]));
-			spinlist.get(i).setValue(values[i]);
+			spinlist.get(i).setValue(new Double(values[i]));
 		}
 		disable_events = false;
 	}
@@ -183,7 +183,7 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 	 */
 	private void initialize(int channels) {
 		this.channels = channels;
-		this.setSize(305, channels * 25);
+		this.setSize(305, channels * 30);
 		//this.setResizable(false);
 		this.setTitle("Servo Portal");
 		
@@ -203,23 +203,24 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 			JSlider slider = new JSlider();
 			JCheckBox box = new JCheckBox();
 			
+			int line_height = 20;
+			
 			box.setText("Ch. "+i);
 			
 			//do some configuration here
-			spinner.setMinimumSize(new Dimension(60, 15));
-			spinner.setMaximumSize(new Dimension(60, 15));
-			spinner.setSize(60, 15);
-			spinner.setValue(new Float(50));
+			spinner.setMinimumSize(new Dimension(60, line_height));
+			spinner.setMaximumSize(new Dimension(60, line_height));
+			spinner.setSize(60, line_height);
 			
 			slider.setMaximum(10000);
 			slider.setMinimum(0);
 			slider.setMajorTickSpacing(100);
 			slider.setMinorTickSpacing(1);
 			slider.setValue(5000);
-			slider.setMinimumSize(new Dimension(600, 15));
-			slider.setMaximumSize(new Dimension(600, 15));
-			slider.setSize(600, 15);
-			
+			slider.setMinimumSize(new Dimension(600, line_height));
+			slider.setMaximumSize(new Dimension(600, line_height));
+			slider.setSize(600, line_height);
+		
 			
 			slider.setEnabled(false);
 			spinner.setEnabled(false);
@@ -312,7 +313,7 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 			i = slidelist.indexOf(arg0.getSource());
 			val = slidelist.get(i).getValue();
 			val /= 100;
-			spinlist.get(i).setValue(new Float(val));
+			spinlist.get(i).setValue(new Double(val));
 			//System.out.println("Servo " + i + " changing to " + val);
 		}
 		values[i] = val;
