@@ -13,14 +13,19 @@
 		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="inputDevices" key="selection"/>
+		<item value="double" key="selection"/>
 		<list key="findhistory">
+			<item value="Double"/>
+			<item value="channels"/>
+			<item value="channels*"/>
+			<item value=","/>
 			<item value="inputDevices"/>
 			<item value="JComb"/>
 			<item value="short"/>
 			<item value="Map"/>
 		</list>
 		<list key="replacehistory">
+			<item value=";"/>
 		</list>
 	</section>
 </section>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="34" version="2.0">
+<workbench progressCount="30" version="2.0">
 <workbenchAdvisor/>
-<window height="917" maximized="true" width="1292" x="58" y="83">
+<window height="1014" width="1400" x="0" y="1">
 <fastViewData fastViewLocation="1024"/>
 <perspectiveBar>
 <itemSize x="160"/>
@@ -14,15 +14,15 @@
 <coolItem id="org.eclipse.jdt.ui.JavaElementCreationActionSet" itemType="typeToolBarContribution" x="108" y="24"/>
 <coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="83" y="24"/>
 <coolItem id="org.eclipse.ui.WorkingSetActionSet" itemType="typeToolBarContribution" x="58" y="24"/>
-<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="116" y="24"/>
+<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="66" y="24"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="209" y="24"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.ui.browser.editor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.jdt.ui.ClassFileEditor" itemType="typePlaceholder" x="-1" y="-1"/>
-<coolItem id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" itemType="typeToolBarContribution" x="291" y="24"/>
-<coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" itemType="typePlaceholder" x="291" y="24"/>
+<coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 </coolbarLayout>
@@ -31,71 +31,10 @@
 <editorArea activeWorkbook="DefaultEditorWorkbook">
 <info part="DefaultEditorWorkbook">
 <folder appearance="1" expanded="2">
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-<part id="1"/>
-<part id="2"/>
-<part id="3"/>
-<part id="4"/>
-<part id="5"/>
-<part id="6"/>
-<part id="7"/>
-<part id="8"/>
-<part id="9"/>
-<part id="10"/>
-<part id="11"/>
-</presentation>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ImagePanel.java" partName="ImagePanel.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/components/ImagePanel.java" title="ImagePanel.java" tooltip="BaseStation2009/src/rover/components/ImagePanel.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/components/ImagePanel.java"/>
-<editorState selectionLength="0" selectionOffset="0"/>
-</editor>
-<editor id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="RoverPanel2D.java" partName="RoverPanel2D.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/components/RoverPanel2D.java" title="RoverPanel2D.java" tooltip="BaseStation2009/src/rover/components/RoverPanel2D.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/components/RoverPanel2D.java"/>
-<editorState selectionLength="0" selectionOffset="6700"/>
-</editor>
-<editor id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="ControllerPortal.java" partName="ControllerPortal.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/portal/ControllerPortal.java" title="ControllerPortal.java" tooltip="BaseStation2009/src/rover/portal/ControllerPortal.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/portal/ControllerPortal.java"/>
-<editorState selectionLength="0" selectionOffset="0"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ControlPacket.java" partName="ControlPacket.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/network/ControlPacket.java" title="ControlPacket.java" tooltip="BaseStation2009/src/rover/network/ControlPacket.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/network/ControlPacket.java"/>
-<editorState selectionLength="0" selectionOffset="75"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Packet.java" partName="Packet.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/network/Packet.java" title="Packet.java" tooltip="BaseStation2009/src/rover/network/Packet.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/network/Packet.java"/>
-<editorState selectionLength="0" selectionOffset="162"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="InputDevice.java" partName="InputDevice.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/utils/InputDevice.java" title="InputDevice.java" tooltip="BaseStation2009/src/rover/utils/InputDevice.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/utils/InputDevice.java"/>
-<editorState selectionLength="0" selectionOffset="381"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Stopwatch.java" partName="Stopwatch.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/utils/Stopwatch.java" title="Stopwatch.java" tooltip="BaseStation2009/src/rover/utils/Stopwatch.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/utils/Stopwatch.java"/>
-<editorState selectionLength="0" selectionOffset="256"/>
-</editor>
-<editor id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="MainGUI.java" partName="MainGUI.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/MainGUI.java" title="MainGUI.java" tooltip="BaseStation2009/src/rover/MainGUI.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/MainGUI.java"/>
-<editorState selectionLength="0" selectionOffset="837"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="VideoPortal.java" partName="VideoPortal.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/portal/VideoPortal.java" title="VideoPortal.java" tooltip="BaseStation2009/src/rover/portal/VideoPortal.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/portal/VideoPortal.java"/>
-<editorState selectionLength="0" selectionOffset="4139"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="VideoPacketBuffer.java" partName="VideoPacketBuffer.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/network/VideoPacketBuffer.java" title="VideoPacketBuffer.java" tooltip="BaseStation2009/src/rover/network/VideoPacketBuffer.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/network/VideoPacketBuffer.java"/>
-<editorState selectionLength="0" selectionOffset="1853"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Main.java" partName="Main.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/Main.java" title="Main.java" tooltip="BaseStation2009/src/rover/Main.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/Main.java"/>
-<editorState selectionLength="0" selectionOffset="335"/>
-</editor>
-<editor focus="true" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="MainGUI.java" partName="MainGUI.java" path="C:/Documents and Settings/Travix/Desktop/MARS ROVER/Rover Code 2009/trunk/GUI/BaseStation2009/src/rover/portal/MainGUI.java" title="MainGUI.java" tooltip="BaseStation2009/src/rover/portal/MainGUI.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/BaseStation2009/src/rover/portal/MainGUI.java"/>
-<editorState selectionLength="0" selectionOffset="3486"/>
-</editor>
 </editors>
 <views>
 <view id="org.eclipse.jdt.ui.TypeHierarchy" partName="Hierarchy"/>
@@ -188,7 +127,7 @@
 </view>
 <view id="org.eclipse.jdt.ui.SourceView" partName="Declaration"/>
 </views>
-<perspectives activePart="org.eclipse.ui.views.PropertySheet" activePerspective="org.eclipse.jdt.ui.JavaPerspective">
+<perspectives activePart="org.eclipse.jdt.ui.PackageExplorer" activePerspective="org.eclipse.jdt.ui.JavaPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="org.eclipse.jdt.internal.ui.JavaPerspectiveFactory" id="org.eclipse.jdt.ui.JavaPerspective" label="Java"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -271,8 +210,8 @@
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.21197793" ratioLeft="269" ratioRight="1000" relationship="2" relative="left"/>
-<info folder="true" part="bottom" ratio="0.74671054" ratioLeft="681" ratioRight="231" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ve.internal.java.codegen.editorpart.BeansList" appearance="2" expanded="2">
+<info folder="true" part="bottom" ratio="0.80425054" ratioLeft="719" ratioRight="175" relationship="4" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.jdt.ui.SourceView" label="Declaration"/>
 <page content="org.eclipse.ui.views.ProgressView" label="Progress"/>
@@ -291,7 +230,7 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@62974e" ratio="0.7770815" ratioLeft="868" ratioRight="249" relationship="2" relative="org.eclipse.ui.editorss">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@62974e" ratio="0.82094896" ratioLeft="917" ratioRight="200" relationship="2" relative="org.eclipse.ui.editorss">
 <folder activePageID="org.eclipse.ui.views.PropertySheet" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
@@ -386,172 +325,7 @@
 </perspective>
 </perspectives>
 <workingSets/>
-<navigationHistory>
-<editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/portal/ControllerPortal.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/BaseStation2009/src/rover/portal/VideoPortal.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/components/RoverPanel2D.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/MainGUI.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/BaseStation2009/src/rover/components/ImagePanel.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/portal/ControllerPortal.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/components/RoverPanel2D.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/BaseStation2009/src/rover/Main.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/BaseStation2009/src/rover/portal/VideoPortal.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/portal/ControllerPortal.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/BaseStation2009/src/rover/components/ImagePanel.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" path="/BaseStation2009/src/rover/portal/MainGUI.java"/>
-</editors>
-<item historyLabel="VideoPortal.java" index="1">
-<position info="not_deleted" x="9513" y="0"/>
-</item>
-<item historyLabel="VideoPortal.java" index="1">
-<position info="not_deleted" x="9872" y="0"/>
-</item>
-<item historyLabel="VideoPortal.java" index="1">
-<position info="not_deleted" x="6498" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="0">
-<position info="not_deleted" x="5776" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="2">
-<position info="not_deleted" x="1291" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="0">
-<position info="not_deleted" x="7236" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="2">
-<position info="not_deleted" x="1291" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="0">
-<position info="not_deleted" x="7236" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="3">
-<position info="not_deleted" x="768" y="0"/>
-</item>
-<item historyLabel="ImagePanel.java" index="4">
-<position/>
-</item>
-<item historyLabel="ControllerPortal.java" index="5">
-<position info="not_deleted" x="7624" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="6">
-<position info="not_deleted" x="3452" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="5">
-<position info="not_deleted" x="5473" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="5">
-<position info="not_deleted" x="5911" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="3">
-<position/>
-</item>
-<item historyLabel="Main.java" index="7">
-<position info="not_deleted" x="327" y="0"/>
-</item>
-<item historyLabel="Main.java" index="7">
-<position info="not_deleted" x="335" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="5">
-<position info="not_deleted" x="5911" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="6">
-<position info="not_deleted" x="2871" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="5">
-<position info="not_deleted" x="5911" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="6">
-<position info="not_deleted" x="2871" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="6">
-<position info="not_deleted" x="1415" y="0"/>
-</item>
-<item historyLabel="ControllerPortal.java" index="5">
-<position info="not_deleted" x="5937" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="6">
-<position info="not_deleted" x="1501" y="0"/>
-</item>
-<item historyLabel="RoverPanel2D.java" index="6">
-<position info="not_deleted" x="6700" y="0"/>
-</item>
-<item historyLabel="ImagePanel.java" index="4">
-<position/>
-</item>
-<item historyLabel="VideoPortal.java" index="8">
-<position info="not_deleted" x="6498" y="0"/>
-</item>
-<item historyLabel="VideoPortal.java" index="8">
-<position info="not_deleted" x="9872" y="0"/>
-</item>
-<item historyLabel="VideoPortal.java" index="8">
-<position info="not_deleted" x="4139" y="0"/>
-</item>
-<item historyLabel="ImagePanel.java" index="4">
-<position/>
-</item>
-<item historyLabel="ControllerPortal.java" index="9">
-<position info="not_deleted" x="5893" y="0"/>
-</item>
-<item historyLabel="ImagePanel.java" index="10">
-<position/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2497" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="1727" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2810" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2843" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2810" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3164" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3486" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2810" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3486" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2810" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3486" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3164" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2810" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2692" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="2771" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3486" y="0"/>
-</item>
-<item historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3511" y="0"/>
-</item>
-<item active="true" historyLabel="MainGUI.java" index="11">
-<position info="not_deleted" x="3486" y="0"/>
-</item>
-</navigationHistory>
+<navigationHistory/>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
 <workbenchWindowAdvisor/>
@@ -568,50 +342,50 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="ControllerPortal.java" tooltip="BaseStation2009/src/rover/portal/ControllerPortal.java">
+<persistable path="/BaseStation2009/src/rover/portal/ControllerPortal.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="RoverPanel2D.java" tooltip="BaseStation2009/src/rover/components/RoverPanel2D.java">
+<persistable path="/BaseStation2009/src/rover/components/RoverPanel2D.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ArmPanel3D.java" tooltip="BaseStation2009/src/rover/components/ArmPanel3D.java">
+<persistable path="/BaseStation2009/src/rover/components/ArmPanel3D.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="ArmPortal.java" tooltip="BaseStation2009/src/rover/portal/ArmPortal.java">
+<persistable path="/BaseStation2009/src/rover/portal/ArmPortal.java"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="MainGUI.java" tooltip="BaseStation2009/src/rover/portal/MainGUI.java">
 <persistable path="/BaseStation2009/src/rover/portal/MainGUI.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ControlPacket.java" tooltip="BaseStation2009/src/rover/network/ControlPacket.java">
+<persistable path="/BaseStation2009/src/rover/network/ControlPacket.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="ServoPortal.java" tooltip="BaseStation2009/src/rover/portal/ServoPortal.java">
+<persistable path="/BaseStation2009/src/rover/portal/ServoPortal.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="MapPortal.java" tooltip="BaseStation2009/src/rover/portal/MapPortal.java">
+<persistable path="/BaseStation2009/src/rover/portal/MapPortal.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MulticastQueue.java" tooltip="BaseStation2009/src/rover/network/MulticastQueue.java">
+<persistable path="/BaseStation2009/src/rover/network/MulticastQueue.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MulticastListener.java" tooltip="BaseStation2009/src/rover/network/MulticastListener.java">
+<persistable path="/BaseStation2009/src/rover/network/MulticastListener.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GPSData.java" tooltip="BaseStation2009/src/rover/utils/GPSData.java">
+<persistable path="/BaseStation2009/src/rover/utils/GPSData.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GPSClient.java" tooltip="BaseStation2009/src/rover/utils/GPSClient.java">
+<persistable path="/BaseStation2009/src/rover/utils/GPSClient.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="InputUtils.java" tooltip="BaseStation2009/src/rover/input/InputUtils.java">
+<persistable path="/BaseStation2009/src/rover/input/InputUtils.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Main.java" tooltip="BaseStation2009/src/rover/Main.java">
 <persistable path="/BaseStation2009/src/rover/Main.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.systemExternalEditor" name="run.bat" tooltip="BaseStation2009/run.bat">
 <persistable path="/BaseStation2009/run.bat"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="VideoPacketBuffer.java" tooltip="BaseStation2009/src/rover/network/VideoPacketBuffer.java">
-<persistable path="/BaseStation2009/src/rover/network/VideoPacketBuffer.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="VideoPortal.java" tooltip="BaseStation2009/src/rover/portal/VideoPortal.java">
-<persistable path="/BaseStation2009/src/rover/portal/VideoPortal.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="MainGUI.java" tooltip="BaseStation2009/src/rover/MainGUI.java">
-<persistable path="/BaseStation2009/src/rover/MainGUI.java"/>
-</file>
-<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="JComponent.class" tooltip="javax.swing.JComponent">
-<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=BaseStation2009/C:\/Program Files\/Java\/jre1.6.0_05\/lib\/rt.jar&lt;javax.swing(JComponent.class"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="MapPortal.java" tooltip="BaseStation2009/src/rover/portal/MapPortal.java">
-<persistable path="/BaseStation2009/src/rover/portal/MapPortal.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="Portal.java" tooltip="BaseStation2009/src/rover/portal/Portal.java">
-<persistable path="/BaseStation2009/src/rover/portal/Portal.java"/>
-</file>
-<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="RawInputEventQueue.class" tooltip="net.java.games.input.RawInputEventQueue">
-<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=BaseStation2009/lib\/JInput\/jinput.jar&lt;net.java.games.input(RawInputEventQueue.class"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ve.internal.java.codegen.editorpart.JavaVisualEditor" name="ServoPortal.java" tooltip="BaseStation2009/src/rover/portal/ServoPortal.java">
-<persistable path="/BaseStation2009/src/rover/portal/ServoPortal.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="StopWatch.java" tooltip="BaseStation2009/src/rover/utils/StopWatch.java">
-<persistable path="/BaseStation2009/src/rover/utils/StopWatch.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="InputDevice.java" tooltip="BaseStation2009/src/rover/utils/InputDevice.java">
-<persistable path="/BaseStation2009/src/rover/utils/InputDevice.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.systemExternalEditor" name="JInput_docs.zip" tooltip="BaseStation2009/lib/JInput/JInput_docs.zip">
-<persistable path="/BaseStation2009/lib/JInput/JInput_docs.zip"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Packet.java" tooltip="BaseStation2009/src/rover/network/Packet.java">
-<persistable path="/BaseStation2009/src/rover/network/Packet.java"/>
 </file>
 </mruList>
 </workbench>
