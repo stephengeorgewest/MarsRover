@@ -7,7 +7,7 @@
 	Provides implementation for openssc.h
 */
 
-//#define DEBUG
+#define DEBUG
 
 #include "openssc.h"
 
@@ -78,7 +78,7 @@ int Connect(int Baudrate, struct SSC32_config_struct * config)
 	config->fd = open( config->port, O_RDWR | O_NOCTTY);
 
 	if( config->fd == -1 ) {
-		return 0;
+		return -1;
 	}
 
 	// Configure serial port settings
@@ -107,6 +107,7 @@ int IsConnected(struct SSC32_config_struct * config)
 
 int SetServo(int channel, unsigned int value, struct SSC32_config_struct * config)
 {
+	printf("Set Servo Called %i \n", value);
 	if(!config->connected)
 		return 0;
 		
@@ -114,11 +115,12 @@ int SetServo(int channel, unsigned int value, struct SSC32_config_struct * confi
 		return 0;
 		
 	char buf[15];
-	char chan[2];
-	char digits[4];
+	char chan[3];
+	char digits[5];
 	int val = value*(SSC32_MAX-SSC32_MIN)/MAX_VALUE + SSC32_MIN;
-	int chan_count = snprintf( chan, 2, "%d", channel );
-	int digits_count = snprintf( digits, 4, "%d", val );
+	printf("val = %i\n", val);
+	int chan_count = snprintf( chan, 3, "%d", channel );
+	int digits_count = snprintf( digits, 5, "%d", val );
 
 	//assemble the command string
 	int ind = 0;
@@ -139,6 +141,7 @@ int SetServo(int channel, unsigned int value, struct SSC32_config_struct * confi
 
 #ifdef DEBUG
 	printf("Sending ");
+	int i;
 	for(i = 0;i<ind;i++)
 	{
 		printf("%x ", buf[i] );

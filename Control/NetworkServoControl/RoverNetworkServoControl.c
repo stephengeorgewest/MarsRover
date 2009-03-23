@@ -1,7 +1,7 @@
 #include "RoverNetwork.h"
 #include "openssc.h"
 
-	char * port = "/dev/ttys1";
+	char * port = "/dev/ttyS1";
 	struct SSC32_config_struct config;
 	struct RoverNetwork RN;
 int main( int argc, char** argv)
@@ -11,8 +11,11 @@ int main( int argc, char** argv)
         init_multicast(&RN);
 
         SSC32(port, &config);
-        Connect_default(&config);
+        int ret = Connect_default(&config);
 
+	printf("ret = %i\n",ret);
+	if(ret==-1)
+		exit(0);
         while (1)
         {
                 char message[MSGBUFSIZE];
