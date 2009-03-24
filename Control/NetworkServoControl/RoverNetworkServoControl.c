@@ -34,7 +34,7 @@ int main( int argc, char** argv)
 				for(i=0; i<num_channels; i++)
 				{
 					int channel= message[2+i*5];
-					int reverse = //htonl(message[2+i*5+1]); 
+					int reverse = //try ntohl(message[2+i*5+1]); 
 						(int)((message[2+i*5+1]<<24)
 							+(message[2+i*5+2]<<16)
 							+(message[2+i*5+3]<<8)
