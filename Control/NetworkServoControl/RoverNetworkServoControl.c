@@ -6,23 +6,22 @@
 	struct RoverNetwork RN;
 int main( int argc, char** argv)
 {
-        sprintf(RN.ip_address, ROVER_GROUP_SERVO);
-        RN.port=ROVER_PORT_SERVO;
-        init_multicast(&RN);
+	init_multicast(&RN, ROVER_GROUP_SERVO, ROVER_PORT_SERVO);
 
-        SSC32(port, &config);
-        int ret = Connect_default(&config);
-
+	SSC32(port, &config);
+	int ret = Connect_default(&config);
 	printf("ret = %i\n",ret);
 	if(ret==-1)
 		exit(0);
-        while (1)
-        {
-                char message[MSGBUFSIZE];
-                int nbytes= recieve_message(&RN, message);
-                printf("\nRecieved Message %d bytes long:%x\n", nbytes, message);
-                if(nbytes<0)
-                        sleep(5);
+	
+	while (1)
+	{
+		char message[MSGBUFSIZE];
+		int nbytes= recieve_message(&RN, message);
+		printf("\nRecieved Message %d bytes long:%x\n", nbytes, message);
+		if(nbytes<0)
+			sleep(5);
+
 		if(message[0]==ROVER_MAGIC_SERVO)
 		{
 			int num_channels=message[1];			
@@ -42,14 +41,11 @@ int main( int argc, char** argv)
 							+(message[2+i*5+4]<<0));
 					float rev_float;
 					memcpy(&rev_float, &reverse, 4);
-					printf("channel %d = %f(rev)\n",
-						channel, rev_float);
-			 SetServo(channel, (int)((rev_float*MAX_VALUE)/100),  &config);
-
-
+					printf("channel %d = %f(rev)\n", channel, rev_float);
+					SetServo(channel, (int)((rev_float*MAX_VALUE)/100),  &config);
 				}
 			}
 		}
-        }
+    }
 	Disconnect(&config);
 }

@@ -11,11 +11,11 @@
 #define ROVER_GROUP_ASCII "225.0.0.37"
 #define ROVER_PORT_ASCII 12345
 #define ROVER_MAGIC_ASCII 92
-#define MSGBUFSIZE 1024
+//for example program and perhaps error message reporting.
 
 #define ROVER_GROUP_VIDEO "224.1.1.1"
 #define ROVER_PORT_VIDEO 4111
-#define ROVER_MAGIC_VIDEO 
+#define ROVER_MAGIC_VIDEO 12
 
 #define ROVER_GROUP_SERVO "224.1.2.3"
 #define ROVER_PORT_SERVO 4123
@@ -23,15 +23,15 @@
 
 #define ROVER_GROUP_ARM "224.4.5.6"
 #define ROVER_PORT_ARM 4456
-#define ROVER_MAGIC_ARM 
+#define ROVER_MAGIC_ARM 42
 
 #define ROVER_GROUP_GPS "224.6.2.5"
 #define ROVER_PORT_GPS 4625
-#define ROVER_MAGIC_GPS 
+#define ROVER_MAGIC_GPS 36 // all nmea sentences begin with $ so we'll use that
 
 #define ROVER_GROUP_CAMERA "224.0.0.0"
 #define ROVER_PORT_CAMERA 4000
-#define ROVER_MAGIC_CAMERA 
+#define ROVER_MAGIC_CAMERA 76
 
 #define MSGBUFSIZE 1024
 
@@ -45,6 +45,7 @@ struct RoverNetwork
 	//char message[MSGBUFSIZE];
 };
 
-int init_multicast(struct RoverNetwork* RN);
+int init_multicast_(struct RoverNetwork* RN);
+int init_multicast(struct RoverNetwork* RN, char * IP_Address, int Port);
 int send_message(struct RoverNetwork * RN,char * message);
 int recieve_message(struct RoverNetwork*RN, char * msgbuf_in);
