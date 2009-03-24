@@ -10,10 +10,10 @@ main(int argc, char *argv[])
 	{
 		char message[MSGBUFSIZE];
 		int nbytes= recieve_message(&RN, message);
-		if(mesage[0]==ROVER_MAGIC_ASCII)
+		if(message[0]==ROVER_MAGIC_ASCII)
 			printf("Recieved valid Message %d bytes long:%s\n", nbytes, &message[1]);
 		else
-			printf("Recieved valid Message %d bytes long: magic=%d, %s\n", nbytes,messge[0], &message[1]);
+			printf("Recieved valid Message %d bytes long: magic=%d, %s\n", nbytes,message[0], &message[1]);
 		if(nbytes<0)
 			sleep(5);
 		int i=0;

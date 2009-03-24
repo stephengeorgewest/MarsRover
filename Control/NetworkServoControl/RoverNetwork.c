@@ -11,9 +11,9 @@
 
 int init_multicast(struct RoverNetwork* RN, char * IP_Address, int Port)
 {
-	sprintf(RN.ip_address, IP_Address);
-	RN.port=Port;
-	init_multicast_(&RN);
+	sprintf((*RN).ip_address, IP_Address);
+	(*RN).port=Port;
+	init_multicast_(RN);
 }
 
 int init_multicast_(struct RoverNetwork* RN)
