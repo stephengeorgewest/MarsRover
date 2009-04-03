@@ -3,6 +3,7 @@
 #include <sys/mman.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 // registers that define the function of the gpio pins in pairs - 00 makes the pair of bits GPIO
 #define PC104_A_FUNCTION 0xE8000030
@@ -31,10 +32,12 @@
 main(int argc, char *argv[])
 {
 	int fd;
-    void *map_base, *portAData, *portADirection, *portAFunction; 
+	void *map_base, *portAData, *portADirection, *portAFunction; 
 	unsigned long read_result, writeval, GPIOData;
-	long target = PC104_A_DATA;
-	
+	off_t target = 0xE8000000;//PC104_A_DATA;
+	printf("target: %x\n",target);
+	off_t targetaddr;
+	size_t mapsize,mapmask;	
 	//open dev/mem to access physical address space
 	if((fd = open("/dev/mem", O_RDWR | O_SYNC)) == -1) {
         printf("/dev/mem could not be opened.\n");
@@ -45,7 +48,16 @@ main(int argc, char *argv[])
     fflush(stdout);
 
 	//map a page of memory
-	map_base = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, target + & ~MAP_MASK);
+	mapsize = getpagesize();
+	printf("map size: %x\n",mapsize);
+	mapmask =  ~(mapsize-1);
+	printf("addr: %x\n",mapmask);
+	targetaddr = (target & mapmask);
+	printf("targetaddr: %x\n",targetaddr);
+
+	//map base is now the virtual memory address that corresponds to targetaddr
+	
+	map_base = mmap(0, mapsize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, targetaddr);
     if(map_base == (void *) -1) {
         printf("Memory map failed.\n");
     } else {
@@ -53,15 +65,16 @@ main(int argc, char *argv[])
     }
     fflush(stdout);
 
-	portAData = map_base + (target & MAP_MASK);
-	target = PC104_A_DIRECTION;
-	portADirection = map_base + (target & MAP_MASK);
-	target = PC104_A_FUNCTION;
-	portAFunction = map_base + (target & MAP_MASK);
+	portAData = map_base + (PC104_A_DATA & (~mapmask));
+	portADirection = map_base + (PC104_A_DIRECTION & (~mapmask));
+	portAFunction = map_base + (PC104_A_FUNCTION & (~mapmask));
 	
+	printf("portAData: %p\n",portAData);
+	printf("portADirection: %p\n", portADirection);
+	printf("portAFunction: %p\n", portAFunction);
 	// now can cast as pointers and dereference to access data
-	//read_result = *((volatile unsigned long *) virt_addr);
-	//*((unsigned long *) virt_addr) = writeval;
+	// ie. read_result = *((volatile unsigned long *) virt_addr);
+	// ie. *((unsigned long *) virt_addr) = writeval;
 	
 	// Set A to GPIO
 	*((unsigned long *) portAFunction) = (unsigned long)GPIO_FUNCTION;
@@ -72,7 +85,7 @@ main(int argc, char *argv[])
 	{
 		GPIOData = *((unsigned long *) portAData);
 		
-		printf("GPIO Data: %lu",GPIOData);
+		printf("GPIO Data: %x\n",GPIOData);
 		//parse each encoder, 3 bits per encoder from A0 to A14, 5 encoders total
 		// First 2 bits encoding, 3rd bit reference
 		
