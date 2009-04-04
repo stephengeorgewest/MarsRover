@@ -9,6 +9,8 @@
 #define I 1
 #define D 2
 
+#define NUM_JOINTS 6
+
 main(int argc, char *argv[])
 {
 	struct RoverNetwork arm_RN;
@@ -24,7 +26,9 @@ main(int argc, char *argv[])
 	float joint_PID[NUM_JOINTS][3];
 	int joint_indexed[NUM_JOINTS];
 	int i=0;
-	int contol_is_on = 0;
+	int control_is_on = 0;
+	
+
 	for(i=0; i<NUM_JOINTS; i++)
 	{
 		joint_commands[i]=0.0;
@@ -63,7 +67,7 @@ main(int argc, char *argv[])
 		{
 			if(message[0]==ROVER_MAGIC_ARM)
 			{
-				printf("Recieved valid Message %d bytes long\n", nbytes, &message[1]);
+				printf("Recieved valid Message %d bytes long type=%d\n", nbytes, &message[1]);
 				switch(message[1])
 				{
 					case ARM_CONTROL_ON_OFF:
@@ -92,9 +96,12 @@ main(int argc, char *argv[])
 						}
 						break;
 					case ARM_CONTROL_CONTROL:
-						int num_joints_update=message[2];
-							printf("updating %d joints\n", num_joints_update);
+					{//can't start with int declaration without brackets?
+						int num_joints_update;
+						num_joints_update=message[2];
+						printf("updating %d joints\n", num_joints_update);
 						
+						//int i=0;//declared at top
 						for(i=0; i<num_joints_update; i++)
 						{
 							int joint_to_update=message[3+i*5];//error check
@@ -108,9 +115,10 @@ main(int argc, char *argv[])
 								+(message[float_start+3]<<0)
 							);
 							memcpy(&joint_commands[joint_to_update], &reverse,4);
-							printf("joint_commands[%d]=%f\n", i,j, joint_commands[joint_to_update]);
+							printf("joint_commands[%d]=%f\n", i, joint_commands[joint_to_update]);
 						}
-						break;
+					}
+					break;
 					default:
 						printf("Not a valid type %d\n", message[1]);
 						
@@ -140,7 +148,7 @@ main(int argc, char *argv[])
 		
 		
 		//send Servo commands
-		if(contol_is_on)
+		if(control_is_on)
 		{
 			message[0]=ROVER_MAGIC_SERVO;
 			for(i=0; i<NUM_JOINTS; i++)
