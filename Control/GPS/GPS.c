@@ -33,8 +33,22 @@ int main( int argc, char** argv)
     tty.c_cc[VTIME] = 0;                    // Return immediately
     tty.c_cc[VMIN] = 0;   
    
-    int fd = open( port, O_RDWR | O_NOCTTY);
+    int fd = open( port, O_RDWR | O_NOCTTY);// | O_NONBLOCK);
+	if(fd==0)
+		puts("fd bad");
+	else
+		puts("fd good");
 
+	tcflush( fd, TCIFLUSH );
+	int set = tcsetattr( fd, TCSANOW, &tty );
+
+	if(set==0)
+		puts("serial good");
+	else
+	{
+		puts("serial bad");
+		printf("set=%d",set);
+	}
     //open the network socket
     int net_ret = init_multicast(&RN, ROVER_GROUP_GPS, ROVER_PORT_GPS);
 
