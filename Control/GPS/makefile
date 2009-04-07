@@ -1,3 +1,2 @@
 default:
-	gcc GPS.c -o GPS
-
+	gcc GPS.c RoverNetwork.c -o gps
