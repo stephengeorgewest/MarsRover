@@ -26,8 +26,13 @@
 #define GPIO_INPUT 0
 #define GPIO_FUNCTION 0
 
-#define MAP_SIZE 4096UL
-#define MAP_MASK (MAP_SIZE - 1)
+#define QUAD1_MASK 0x00000007
+#define QUAD2_MASK 0x00000038
+#define QUAD3_MASK 0x000001c0
+#define QUAD4_MASK 0x00000e00
+#define QUAD5_MASK 0x00007000
+
+#define DEBUG
 
 main(int argc, char *argv[])
 {
@@ -38,6 +43,17 @@ main(int argc, char *argv[])
 	printf("target: %x\n",target);
 	off_t targetaddr;
 	size_t mapsize,mapmask;	
+	
+	int q1count, q2count, q3count, q4count, q5count;
+	unsigned int q1PrevQuadState, q2PrevQuadState, q3PrevQuadState, q4PrevQuadState, q5PrevQuadState;
+	unsigned int q1data;
+	
+	q1count = 0;
+	q2count = 0;
+	q3count = 0;
+	q4count = 0;
+	q5count = 0;
+	
 	//open dev/mem to access physical address space
 	if((fd = open("/dev/mem", O_RDWR | O_SYNC)) == -1) {
         printf("/dev/mem could not be opened.\n");
@@ -80,14 +96,68 @@ main(int argc, char *argv[])
 	*((unsigned long *) portAFunction) = (unsigned long)GPIO_FUNCTION;
 	// Set A gpio to inputs
 	*((unsigned long *) portADirection) = (unsigned long)GPIO_INPUT;
-	//read values from GPIO
+	
+	//initialize quad states
+	GPIOData = *((unsigned long *) portAData);
+	q1PrevQuadState = ((GPIOData & QUAD1_MASK)>>3)&0x3;
+	
+	//continuously sample quadrature
 	while(1)
 	{
 		GPIOData = *((unsigned long *) portAData);
 		
 		printf("GPIO Data: %x\n",GPIOData);
+		
 		//parse each encoder, 3 bits per encoder from A0 to A14, 5 encoders total
 		// First 2 bits encoding, 3rd bit reference
 		
-	}
+		//encoder 1
+		q1Data = (GPIOData & QUAD1_MASK)>>3;
+		switch (q1data)
+		{
+			//q1QuadState =  q1Data&0x3;
+			//in each of the first 4 cases the reference bit is zero
+			case 0:
+				if(q1PrevQuadState == 0x2)
+					q1count++;
+				else if(q1PrevQuadState == 0x1)
+					q1count--;			
+				else if(q1PrevQuadState == 0x3)
+					printf("Missed count");
+			break;
+			case 1:
+				if(q1PrevQuadState == 0x0)
+					q1count++;
+				else if(q1PrevQuadState == 0x3)
+					q1count--;
+				else if(q1PrevQuadState == 0x2)
+					printf("Missed count");
+			break;
+			case 2:
+				if(q1PrevQuadState == 0x3)
+					q1count++;
+				else if(q1PrevQuadState == 0x0)
+					q1count--;
+				else if(q1PrevQuadState == 0x1)
+					printf("Missed count");
+			break;
+			case 3:
+				if(q1PrevQuadState == 0x1)
+					q1count++;
+				else if(q1PrevQuadState == 0x2)
+					q1count--;
+				else if(q1PrevQuadState == 0x0) //for debug purposes
+					printf("Missed count");
+			break;
+			
+			//if it doesn't fall in those categories it must have a 1
+			default:
+				q1count = 0;// = the reference angle or number
+		}
+		printf("Quad 1 count: %d\n",q1count);
+		q1prevQuadState = q1Data&0x3; //mask the last 2 bits for quad count
+		
+		//encoder 2
+		
+	} //end while loop
 }
