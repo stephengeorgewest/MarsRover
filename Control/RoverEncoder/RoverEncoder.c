@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 	
 	int q1count, q2count, q3count, q4count, q5count;
 	unsigned int q1PrevQuadState, q2PrevQuadState, q3PrevQuadState, q4PrevQuadState, q5PrevQuadState;
-	unsigned int q1data;
+	unsigned int q1Data;
 	
 	q1count = 0;
 	q2count = 0;
@@ -99,21 +99,21 @@ main(int argc, char *argv[])
 	
 	//initialize quad states
 	GPIOData = *((unsigned long *) portAData);
-	q1PrevQuadState = ((GPIOData & QUAD1_MASK)>>3)&0x3;
+	q1PrevQuadState = ((GPIOData & QUAD1_MASK))&0x3;
 	
 	//continuously sample quadrature
 	while(1)
 	{
 		GPIOData = *((unsigned long *) portAData);
 		
-		printf("GPIO Data: %x\n",GPIOData);
+		//printf("GPIO Data: %x\n",GPIOData);
 		
 		//parse each encoder, 3 bits per encoder from A0 to A14, 5 encoders total
 		// First 2 bits encoding, 3rd bit reference
 		
 		//encoder 1
-		q1Data = (GPIOData & QUAD1_MASK)>>3;
-		switch (q1data)
+		q1Data = (GPIOData & QUAD1_MASK);
+		switch (q1Data)
 		{
 			//q1QuadState =  q1Data&0x3;
 			//in each of the first 4 cases the reference bit is zero
@@ -155,7 +155,7 @@ main(int argc, char *argv[])
 				q1count = 0;// = the reference angle or number
 		}
 		printf("Quad 1 count: %d\n",q1count);
-		q1prevQuadState = q1Data&0x3; //mask the last 2 bits for quad count
+		q1PrevQuadState = q1Data&0x3; //mask the last 2 bits for quad count
 		
 		//encoder 2
 		
