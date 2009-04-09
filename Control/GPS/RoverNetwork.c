@@ -62,7 +62,7 @@ int init_multicast_(struct RoverNetwork* RN)
 	return 0;// following convention 0 == success -1 == fail
 }
 
-int send_message(struct RoverNetwork * RN,char * message)
+int send_message(struct RoverNetwork * RN,char * message, int bytes)
 {
 	//int i=0;
 	//for(i=0; i<MSGBUFSIZE; i++)
@@ -70,7 +70,7 @@ int send_message(struct RoverNetwork * RN,char * message)
 	//
 	//puts("Send a message:");
 	//fgets(message, MSGBUFSIZE, stdin);
-	int num_sent = sendto((*RN).fd,message,strlen(message),0,(struct sockaddr *) &(*RN).addr, sizeof((*RN).addr));
+	int num_sent = sendto((*RN).fd,message,bytes,0,(struct sockaddr *) &(*RN).addr, sizeof((*RN).addr));
 	if (num_sent < 0)
 	{
 		puts("sendto error");
