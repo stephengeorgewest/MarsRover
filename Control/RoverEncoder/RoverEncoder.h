@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+#define PI 3.141593
+
 // registers that define the function of the gpio pins in pairs - 00 makes the pair of bits GPIO
 #define PC104_A_FUNCTION 0xE8000030
 #define PC104_B_FUNCTION 0xE8000034
@@ -32,7 +34,7 @@
 #define QUAD4_MASK 0x00000e00
 #define QUAD5_MASK 0x00007000
 
-#define DEBUG
+//#define DEBUG
 
 #define QUAD_RESOLUTION1 .0006283185
 #define QUAD_RESOLUTION2 .0006283185

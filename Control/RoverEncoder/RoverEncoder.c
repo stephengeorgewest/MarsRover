@@ -484,6 +484,8 @@ main(int argc, char *argv[])
 #ifdef DEBUG
 		printf("Quad 5 count: %d\n",q5count);
 #endif
+		printf("Angle 5 : %f\n",angle5*90/PI);
+
 		q5PrevQuadState = q5Data&0x3; //mask the last 2 bits for quad count
 	} //end while loop
 }
