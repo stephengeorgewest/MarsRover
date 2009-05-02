@@ -151,11 +151,12 @@ main(int argc, char *argv[])
 		if(control_is_on)
 		{
 			message[0]=ROVER_MAGIC_SERVO;
+			message[1]=NUM_JOINTS;
 			for(i=0; i<NUM_JOINTS; i++)
 			{
-				message[i*5+1]=i;
+				message[i*5+2]=i;
 				//htonl();//host order to network order long
-				memcpy(&message[i*5+2],&joint_errors[i],4);//fix me to network order
+				memcpy(&message[i*5+3],&joint_errors[i],4);//fix me to network order
 			}
 			nbytes=send_message(&servo_RN, message); 
 			//clear buffer probably isn't necessary
