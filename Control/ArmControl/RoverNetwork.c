@@ -94,11 +94,11 @@ int recieve_message(struct RoverNetwork*RN, char * msgbuf_in)
                 msgbuf_in[i]=0;
 	int addrlen = sizeof((*RN).addr);
 	int nbytes=recvfrom((*RN).fd, msgbuf_in, MSGBUFSIZE, 0, (struct sockaddr *) &(*RN).addr, &addrlen );
-	if ( nbytes < 0)
-	{
-		puts("recvfrom error");
-		return nbytes;
-	}
+//	if ( nbytes < 0)
+//	{
+//		puts("recvfrom error");
+//		return nbytes;
+//	}
 	//printf("Recieved Message %d bytes long:%s\n", nbytes, msgbuf_in);
 	return nbytes;
 }
