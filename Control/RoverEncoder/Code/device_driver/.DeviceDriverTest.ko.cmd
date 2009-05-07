@@ -1,0 +1,1 @@
+cmd_/home/commando/Desktop/device_driver/DeviceDriverTest.ko := ld -r -m elf_i386  --build-id -o /home/commando/Desktop/device_driver/DeviceDriverTest.ko /home/commando/Desktop/device_driver/DeviceDriverTest.o /home/commando/Desktop/device_driver/DeviceDriverTest.mod.o

@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <pthread.h>
+#include <time.h>
 
-#define NUM_ENCODERS 5
 #define PI 3.141593
-
+#define NUM_ENCODERS 5
 // registers that define the function of the gpio pins in pairs - 00 makes the pair of bits GPIO
 #define PC104_A_FUNCTION 0xE8000030
 #define PC104_B_FUNCTION 0xE8000034
