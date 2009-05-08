@@ -16,8 +16,8 @@ unsigned int qData[NUM_ENCODERS];
 float angle[NUM_ENCODERS];
 
 unsigned int quadMask[NUM_ENCODERS];
-unsigned int quadResolution[NUM_ENCODERS];
-int initAngle[NUM_ENCODERS];
+float quadResolution[NUM_ENCODERS];
+float initAngle[NUM_ENCODERS];
 	
 	
 void initData();
@@ -126,11 +126,12 @@ main(int argc, char *argv[])
 	#ifdef DEBUG
 			printf("Quad 1 count: %d\n",qcount[i]);
 	#endif
-			if(i==1)
-				printf("Angle 1 : %f\n",angle1*90/PI);
+			if(i==0)
+				printf("Angle 1 : %f\n",angle[0]*90/PI);
 			
 			qPrevQuadState[i] = qData[i]&0x3; //mask the last 2 bits for quad count
-		} //end if
+			
+		} //end for
 	} //end while loop
 }
 
