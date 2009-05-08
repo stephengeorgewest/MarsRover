@@ -45,7 +45,8 @@ main(int argc, char *argv[])
 		
 		//parse each encoder, 3 bits per encoder from A0 to A14, 5 encoders total
 		// First 2 bits encoding, 3rd bit reference
-		for(int i=0;i<NUM_ENCODERS;i++)
+		int i;
+		for(i=0;i<NUM_ENCODERS;i++)
 		{
 			//encoder 1
 			qData[i] = (GPIOData & quadMask[i]);////////////////////////////////////
@@ -125,6 +126,9 @@ main(int argc, char *argv[])
 	#ifdef DEBUG
 			printf("Quad 1 count: %d\n",qcount[i]);
 	#endif
+			if(i==1)
+				printf("Angle 1 : %f\n",angle1*90/PI);
+			
 			qPrevQuadState[i] = qData[i]&0x3; //mask the last 2 bits for quad count
 		} //end if
 	} //end while loop
@@ -132,7 +136,8 @@ main(int argc, char *argv[])
 
 void initData()
 {
-	for(int i=0;i<NUM_ENCODERS;i++)
+	int i;
+	for(i=0;i<NUM_ENCODERS;i++)
 	{
 		qcount[i] = 0;
 	}
@@ -143,11 +148,11 @@ void initData()
 	angle[3] = INIT_ANGLE4;
 	angle[4] = INIT_ANGLE5;
 	
-	quadMask[0] = QUAD_MASK1;
-	quadMask[1] = QUAD_MASK2;
-	quadMask[2] = QUAD_MASK3;
-	quadMask[3] = QUAD_MASK4;
-	quadMask[4] = QUAD_MASK5;
+	quadMask[0] = QUAD1_MASK;
+	quadMask[1] = QUAD2_MASK;
+	quadMask[2] = QUAD3_MASK;
+	quadMask[3] = QUAD4_MASK;
+	quadMask[4] = QUAD5_MASK;
 	
 	quadResolution[0] = QUAD_RESOLUTION1;
 	quadResolution[1] = QUAD_RESOLUTION2;
