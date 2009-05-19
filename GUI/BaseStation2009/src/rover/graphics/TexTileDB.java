@@ -76,10 +76,15 @@ public class TexTileDB extends Thread{
 		
 	}
 	
+	public static TexTile getByNormal(double x, double y, int LOD ){
+		if(LOD < 1) return null;
+		String address = GetQuadtreeAddressNormal(x, y);
+		return get(address, LOD);
+	}
+	
 	public static TexTile get(double lat, double lon, int LOD){
 		if(LOD < 1) return null;
 		String address = GetQuadtreeAddress(lat, lon);
-		
 		return get(address, LOD);
 	}
 	
@@ -166,9 +171,7 @@ public class TexTileDB extends Thread{
 	public static TexTile get(double lat, double lon){
 		return get(lat, lon, 20);
 	}
-	
-
-	
+		
 	public static void Initialize(String folder_path){
 		Tiles = new HashMap<String, TexTile>();
 		notavailable = new HashMap<String, Boolean>();
@@ -181,11 +184,9 @@ public class TexTileDB extends Thread{
 		System.out.println("TexTile DB Initialized at " + folder);
 	}
 	
-	
-	
-	public static double MercatorToNormal(double y)
+	public static double MercatorToNormalY(double lat)
 	{
-		y = -y * Math.PI / 180; // convert to radians
+		double y = -lat * Math.PI / 180; // convert to radians
 		y = Math.sin(y);
 		y = (1+y)/(1-y);
 		y = 0.5 * Math.log(y);
@@ -194,17 +195,27 @@ public class TexTileDB extends Thread{
 		return y;
 	}
 	 
-	public static double NormalToMercator(double y)
+	public static double NormalYToMercator(double y)
 	{
 		y -= 0.5;
 		y *= 2 * Math.PI;
 		y = Math.exp(y * 2);
 		y = (y-1)/(y+1);
 		y = Math.asin(y);
-		y = y * -180/Math.PI;
-		return y;
+		double lat = y * -180/Math.PI;
+		return lat;
+	}
+	
+	public static double MercatorToNormalX(double lon)
+	{
+		return (180.0 + lon) / 360.0;
 	}
 	 
+	public static double NormalXToMercator(double x)
+	{
+		return x*360-180;
+	}
+	
 	public static TexTile CreateTileFromAddress(String address)
 	{
 		if(Tiles.containsKey(address)) return Tiles.get(address);
@@ -231,9 +242,9 @@ public class TexTileDB extends Thread{
 		t.lonmin = (x - 0.5) * 360;
 		t.lon = (x + scale * 0.5 - 0.5) * 360;
 		t.lonmax = (x + scale - 0.5) * 360;
-		t.latmin = NormalToMercator(y + scale);
-		t.lat = NormalToMercator(y + scale * 0.5);
-		t.latmax = NormalToMercator(y);
+		t.latmin = NormalYToMercator(y + scale);
+		t.lat = NormalYToMercator(y + scale * 0.5);
+		t.latmax = NormalYToMercator(y);
 //		t.latmin = (y-.5)*180;
 //		t.lat = (y + .5 * scale - .5)*180;
 //		t.latmax = (y + scale - 0.5) * 180;
@@ -253,17 +264,8 @@ public class TexTileDB extends Thread{
 
 		return t;
 	}
-	 
-	public static String GetQuadtreeAddress(double lat, double lon)
-	{
-		if(lat > 90 || lat < -90) return null;
-		if(lon > 180 || lon < -180) return null;
-		//System.out.println("creating address for lat = " + lat + " lon = " + lon);
-		
-		// now convert to normalized square coordinates
-		// use standard equations to map into mercator projection
-		double x = (180.0 + lon) / 360.0;
-		double y = MercatorToNormal(lat);
+	
+	public static String GetQuadtreeAddressNormal(double x, double y){
 		String quad = "t";// google addresses start with t
 		char[] lookup = {'q', 'r', 't', 's'}; // tl tr bl br
 		for (int digits = 0; digits < 23; digits++)
@@ -277,8 +279,21 @@ public class TexTileDB extends Thread{
 			x *= 2;
 			y *= 2;
 		}
-		//System.out.println("Returning " + quad);
 		return quad;
+	}
+	
+	public static String GetQuadtreeAddress(double lat, double lon)
+	{
+		if(lat > 90 || lat < -90) return null;
+		if(lon > 180 || lon < -180) return null;
+		//System.out.println("creating address for lat = " + lat + " lon = " + lon);
+		
+		// now convert to normalized square coordinates
+		// use standard equations to map into mercator projection
+		double x = MercatorToNormalX(lon);
+		double y = MercatorToNormalY(lat);
+		
+		return GetQuadtreeAddressNormal(x, y);
 	}
 
 	
@@ -345,7 +360,7 @@ public class TexTileDB extends Thread{
 
 
 	public static String getFileName(String address) {
-		return folder + "\\" + address + ".jpg";
+		return folder + "/" + address + ".jpg";
 	}
 	
 	public static void recomputeTiles(){

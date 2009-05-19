@@ -19,6 +19,8 @@ import java.awt.Rectangle;
 import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -529,6 +531,9 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 			loadButton.setText("Topology");
 			loadButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					File curdir = new File ("./geocache");
+					getJFileChooser().setFileFilter(new ExtFilter(".hdr"));
+					getJFileChooser().setCurrentDirectory(curdir);
 					getJFileChooser().showOpenDialog(getJContentPane());
 					File f = getJFileChooser().getSelectedFile();
 					if(f != null) roverSimulationPanel3D.loadTopoData(f.getAbsolutePath());

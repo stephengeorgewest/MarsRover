@@ -64,7 +64,7 @@ public class GeoData {
 	FloatBuffer fbuf;
 	
 	public GeoData(){
-		cell_size = 0.0008983111749910168882500898311175f; //approximately 10 meters
+		cell_size = 0.0008983111749910168882500898311175f; //approximately 10 meters, this will be set when geo data is loaded
 		ncols = 0;
 		nrows = 0;
 		westb = 0;
@@ -178,7 +178,7 @@ public class GeoData {
 	
 	public float get(int x, int y){
 		int index = y*ncols + x;
-		if(x < 0 || x >= ncols || y < 0 || y >= nrows){
+		if(y < 0 || y >= nrows || x < 0 || x >= ncols){
 			return 0;
 		}
 //		System.out.println("returning " + fbuf.get(index));
@@ -188,7 +188,7 @@ public class GeoData {
 	public float get(double lat, double lon){
 		
 		int x = (int)(ncols*(lon-westb)/(eastb-westb));
-		int y = (int)(nrows*(lat-southb)/(northb-southb));
+		int y = (int)(nrows*(lat-northb)/(southb-northb));
 		//System.out.println("x = " + x);
 		//System.out.println("y = " + y);
 		
@@ -198,12 +198,12 @@ public class GeoData {
 	}
 	
 	public int getxindex(double lon){
-		int x = (int)(ncols*(lon-westb)/(eastb-westb));
+		int x = (int)(nrows*(lon-westb)/(eastb-westb));
 		return Math.min(Math.max(x, 0), ncols);
 	}
 	
 	public int getyindex(double lat){
-		int y = (int)(nrows*(lat-southb)/(northb-southb));
+		int y = (int)(nrows*(lat-northb)/(southb-northb));
 		return Math.min(Math.max(y, 0), nrows);
 	}
 }

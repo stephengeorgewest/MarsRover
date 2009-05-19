@@ -284,7 +284,7 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
 		geo.load(filename);
 		TexTileDB.recomputeTiles();
 		
-		SetRoverView();
+		SetInitialView();
 	}
 	
 	public static Texture load(String fileName){
@@ -721,6 +721,10 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
 	private void drawTerrain(GL gl){
 	    double clat = y2lat(camera_pos.val[1]);
 		double clon = x2lon(camera_pos.val[0], GeoData.adj_latitude);
+		
+		double cx = TexTileDB.MercatorToNormalX(clon);
+		double cy = TexTileDB.MercatorToNormalY(clat);
+		
     	double height = camera_pos.val[2]-geo.get(clat, clon);
     	
     	int xp_up, xp_down, yp_up, yp_down;
@@ -732,14 +736,18 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
     	int targetLOD = 25 - (int) (Math.log(height-500)/Math.log(2));
     	targetLOD = Math.max(1, targetLOD);
     	TexTile t = TexTileDB.get(clat, clon, targetLOD);
+    	
     	while(t == null && targetLOD > 0){
     		//System.out.println(targetLOD);
     		targetLOD--;
     		t = TexTileDB.get(clat, clon, targetLOD);
     	}
     	if(t != null){
-			double latinc = t.latmax-t.latmin;
-			double loninc = t.lonmax-t.lonmin;
+			//double latinc = t.latmax-t.latmin;
+			//double loninc = t.lonmax-t.lonmin;
+			
+    		double yinc = TexTileDB.MercatorToNormalY(t.latmax)-TexTileDB.MercatorToNormalY(t.latmin);
+			double xinc = TexTileDB.MercatorToNormalX(t.lonmax)-TexTileDB.MercatorToNormalX(t.lonmin);
 			
 			//------------
 			//|  Q  |  R |
@@ -790,7 +798,8 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
 	       	for(int i = -xp_down;i<=xp_up;i++){
 				for(int j = -yp_down;j<=yp_up;j++){
 					gl.glPushMatrix();
-					TexTile tile = TexTileDB.get(j*latinc+clat, i*loninc+clon, targetLOD);
+					//TexTile tile = TexTileDB.get(j*latinc+clat, i*loninc+clon, targetLOD);
+					TexTile tile = TexTileDB.getByNormal(i*xinc+cx, j*yinc+cy, targetLOD);
 					if(tile != null){
 						gl.glTranslated(lon2x(tile.lon, GeoData.adj_latitude)-camera_pos.val[0], lat2y(tile.lat)-camera_pos.val[1], 0);
 						tile.Render(gl, glu, geo);
@@ -803,7 +812,7 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
 				}
 	       	}
 	       	//draw all other levels of detail
-	       	while(targetLOD > 2){
+	       	while(targetLOD > 3){
 		       	t = null;
 		       	//find next available tile
 		       	while(t == null && targetLOD > 2){
@@ -834,8 +843,12 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
 					yp_down++;
 				}
 		       	
-				latinc = t.latmax-t.latmin;
-				loninc = t.lonmax-t.lonmin;
+				//latinc = t.latmax-t.latmin;
+				//loninc = t.lonmax-t.lonmin;
+				
+				yinc = TexTileDB.MercatorToNormalY(t.latmax)-TexTileDB.MercatorToNormalY(t.latmin);
+				xinc = TexTileDB.MercatorToNormalX(t.lonmax)-TexTileDB.MercatorToNormalX(t.lonmin);
+				
 				
 				//System.out.println("Rendering latinc = " + latinc + " loninc = " + loninc);
 				
@@ -850,7 +863,8 @@ public class RoverSimulationPanel3D  extends JPanel implements GLEventListener, 
 						}
 							
 						gl.glPushMatrix();
-						TexTile tile = TexTileDB.get(j*latinc+clat, i*loninc+clon, targetLOD);
+						//TexTile tile = TexTileDB.get(j*latinc+clat, i*loninc+clon, targetLOD);
+						TexTile tile = TexTileDB.getByNormal(i*xinc+cx, j*yinc+cy, targetLOD);
 						if(tile != null){
 							gl.glTranslated(lon2x(tile.lon, GeoData.adj_latitude)-camera_pos.val[0], lat2y(tile.lat)-camera_pos.val[1], 0);
 							tile.Render(gl, glu, geo);
