@@ -29,13 +29,19 @@ public class Main {
 
 		byte buf[] = new byte[1000];
 		for (int i=0; i<buf.length; i++) buf[i] = (byte)i;
-				
+		int lat = 38;
+		double latmin = 24.396;
+		int lon = 110;
+		double lonmin = 47.4561;
 		while(true){
 			try{
+				lonmin -=.0001;
+				latmin -=.0001;
 				String NMEAString;
 				int bytes;
 				
-				NMEAString = "$GPGGA,170834,4124.8963,N,08151.6838,W,1,05,1.5,280.2,M,-34.0,M,,,";
+				NMEAString = "$GPGGA,170834," + lat + "" + latmin + ",N,"+lon+""+lonmin+",W,1,05,1.5,280.2,M,-34.0,M,,,";
+				//NMEAString = "$GPGGA,170834,4124.8963,N,11151.6838,W,1,05,1.5,280.2,M,-34.0,M,,,";
 				//NMEAString = "Jibberish";
 				bytes = getBytes(NMEAString, buf);
 		
@@ -44,7 +50,7 @@ public class Main {
 				System.out.println("Sending "+ NMEAString);
 				s.send(pack);
 				
-				NMEAString = "$GPGXA asdflajds;flasjf";
+				NMEAString = "$GPGGA asdflajds;flasjf";
 				bytes = getBytes(NMEAString, buf);
 				pack.setData(buf, 0, bytes);
 				System.out.println("Sending "+ NMEAString);
@@ -60,11 +66,11 @@ public class Main {
 
 				
 				
-				NMEAString = "$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191194,020.3,E";
-				bytes = getBytes(NMEAString, buf);
-				pack.setData(buf, 0, bytes);
-				System.out.println("Sending "+ NMEAString);
-				s.send(pack);
+//				NMEAString = "$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191194,020.3,E";
+//				bytes = getBytes(NMEAString, buf);
+//				pack.setData(buf, 0, bytes);
+//				System.out.println("Sending "+ NMEAString);
+//				s.send(pack);
 				
 				Thread.sleep(1000);
 			}catch(Exception e){
