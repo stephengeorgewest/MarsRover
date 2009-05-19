@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<typeInfoHistroy>
-<typeInfo handle="=BaseStation2009/lib\/JOGL\/jogl.jar&lt;javax.media.opengl(GLJPanel.class[GLJPanel" modifiers="33" timestamp="1211450420000"/>
-<typeInfo handle="=BaseStation2009/src&lt;rover.components{ImagePanel.java[ImagePanel" modifiers="1" timestamp="1234586142968"/>
-<typeInfo handle="=BaseStation2009/src&lt;rover.components{RoverPanel2D.java[RoverPanel2D" modifiers="1" timestamp="1236110405375"/>
-<typeInfo handle="=BaseStation2009/lib\/JOGL\/jogl.jar&lt;javax.media.opengl(GLCanvas.class[GLCanvas" modifiers="33" timestamp="1211450420000"/>
-<typeInfo handle="=BaseStation2009/C:\/Program Files\/Java\/jre1.6.0_05\/lib\/rt.jar&lt;javax.swing(JSpinner.class[JSpinner" modifiers="33" timestamp="1203675491000"/>
-<typeInfo handle="=BaseStation2009/src&lt;rover.components{ArmPanel3D.java[ArmPanel3D" modifiers="1" timestamp="1237145795781"/>
-</typeInfoHistroy>
