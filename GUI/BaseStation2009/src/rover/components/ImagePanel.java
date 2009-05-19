@@ -1,4 +1,4 @@
-package rover.components;
+package rover.guistuff;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
