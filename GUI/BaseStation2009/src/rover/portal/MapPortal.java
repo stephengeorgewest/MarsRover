@@ -501,7 +501,7 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 		if (jButton == null) {
 			jButton = new JButton();
 			jButton.setFont(new Font("Dialog", Font.BOLD, 8));
-			jButton.setIcon(new ImageIcon(getClass().getResource("/rover_icon.PNG")));
+			jButton.setIcon(new ImageIcon(getClass().getResource("/rover_icon.png")));
 			jButton.setToolTipText("Zoom to Rover");
 			jButton.setLocation(new Point(232, 14));
 			jButton.setSize(new Dimension(35, 35));
@@ -523,7 +523,7 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 	private JButton getLoadButton() {
 		if (loadButton == null) {
 			loadButton = new JButton();
-			loadButton.setIcon(new ImageIcon(getClass().getResource("/open.PNG")));
+			loadButton.setIcon(new ImageIcon(getClass().getResource("/open.png")));
 			loadButton.setHorizontalTextPosition(SwingConstants.RIGHT);
 			loadButton.setBounds(new Rectangle(157, 114, 110, 25));
 			loadButton.setText("Topology");
@@ -572,7 +572,7 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 	private JButton getAddWaypointButton() {
 		if (addWaypointButton == null) {
 			addWaypointButton = new JButton();
-			addWaypointButton.setIcon(new ImageIcon(getClass().getResource("/plus.PNG")));
+			addWaypointButton.setIcon(new ImageIcon(getClass().getResource("/plus.png")));
 			addWaypointButton.setSize(new Dimension(25, 25));
 			addWaypointButton.setToolTipText("Add a waypoint");
 			addWaypointButton.setLocation(new Point(241, 198));
@@ -593,7 +593,7 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 	private JButton getGoButton() {
 		if (goButton == null) {
 			goButton = new JButton();
-			goButton.setIcon(new ImageIcon(getClass().getResource("/goto.PNG")));
+			goButton.setIcon(new ImageIcon(getClass().getResource("/goto.png")));
 			goButton.setSize(new Dimension(25, 25));
 			goButton.setLocation(new Point(242, 227));
 			goButton.addActionListener(new java.awt.event.ActionListener() {
@@ -617,7 +617,7 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 		if (deleteButton == null) {
 			deleteButton = new JButton();
 			deleteButton.setLocation(new Point(241, 278));
-			deleteButton.setIcon(new ImageIcon(getClass().getResource("/X.PNG")));
+			deleteButton.setIcon(new ImageIcon(getClass().getResource("/X.png")));
 			deleteButton.setSize(new Dimension(25, 25));
 			deleteButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
