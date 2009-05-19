@@ -14,11 +14,6 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
-import terrain.Camera;
-import terrain.Fillet;
-import terrain.GeomBuffer;
-import terrain.GeomBufferManager;
-
 import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureCoords;

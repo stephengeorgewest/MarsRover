@@ -427,7 +427,7 @@ public class MapPortal extends Portal implements GPSClient.GPSHandler, CameraMov
 			topviewButton.setLocation(new Point(232, 53));
 			topviewButton.setText("");
 			topviewButton.setFont(new Font("Dialog", Font.BOLD, 8));
-			topviewButton.setIcon(new ImageIcon(getClass().getResource("/map_icon.PNG")));
+			topviewButton.setIcon(new ImageIcon(getClass().getResource("/map_icon.png")));
 			topviewButton.setToolTipText("Map View");
 			topviewButton.setSize(new Dimension(35, 35));
 			topviewButton.addActionListener(new java.awt.event.ActionListener() {

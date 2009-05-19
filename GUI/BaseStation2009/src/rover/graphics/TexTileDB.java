@@ -122,7 +122,7 @@ public class TexTileDB extends Thread{
 				lr.address = t.address;
 				addRequest(lr);
 			//}else if(!notavailable.containsKey(t.address)){
-			}else if(!dt.parent.isLeaf){ //otherwise put in a request to have it downloaded
+			}else if(dt.parent != null && !dt.parent.isLeaf){ //otherwise put in a request to have it downloaded
 				FetchRequest fr = new FetchRequest();
 				fr.address = t.address;
 				//System.out.println("a: DL request for " + fr.address);
