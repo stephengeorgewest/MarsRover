@@ -19,6 +19,13 @@ public class ControlPacket extends Packet {
 		Value_list = new float[100];
 	}
 	
+	public ControlPacket(byte channels){
+		super();
+		Channels = channels;
+		Channel_list = new byte[Channels];
+    	Value_list = new float[Channels];
+	}
+	
 	public ControlPacket(byte[] packet, int bytes) {
 		super(packet, bytes);
 		Channel_list = new byte[100];
@@ -71,12 +78,13 @@ public class ControlPacket extends Packet {
 			packet[2+5*i] = Channel_list[i];
 			
 			int val = Float.floatToIntBits(Value_list[i]);
-			packet[2+5*i + 1] = (byte)((val >> 24) & 0x000000FF);
-			packet[2+5*i + 2] = (byte)((val >> 16) & 0x000000FF);
-			packet[2+5*i + 3] = (byte)((val >> 8) & 0x000000FF);
-			packet[2+5*i + 4] = (byte)(val & 0x000000FF);
+			BinUtils.intToByteArray(val, packet, 2+5*i + 1);
+//			packet[2+5*i + 1] = (byte)((val >> 24) & 0x000000FF);
+//			packet[2+5*i + 2] = (byte)((val >> 16) & 0x000000FF);
+//			packet[2+5*i + 3] = (byte)((val >> 8) & 0x000000FF);
+//			packet[2+5*i + 4] = (byte)(val & 0x000000FF);
 			
-			System.out.println(packet[2+5*i + 1] + " " + packet[2+5*i + 2] + " " + packet[2+5*i + 3] + " " + packet[2+5*i + 4]);
+			//System.out.println(packet[2+5*i + 1] + " " + packet[2+5*i + 2] + " " + packet[2+5*i + 3] + " " + packet[2+5*i + 4]);
 			
         }
 		return true;

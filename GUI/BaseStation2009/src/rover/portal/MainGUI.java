@@ -12,11 +12,15 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
+import rover.guistuff.PortalModel;
+import rover.guistuff.SocketModel;
 import rover.network.SocketInfo;
 import javax.swing.BorderFactory;
 import javax.swing.border.EtchedBorder;
@@ -48,11 +52,22 @@ public class MainGUI extends JFrame {
 	private JTable jTable = null;
 	private JLabel jLabel = null;
 	
+	ImageIcon red;
+	ImageIcon green;
+	ImageIcon yellow;
+	
+	InetAddress bsr;  //  @jve:decl-index=0:
+	InetAddress rsr;  //  @jve:decl-index=0:
+	InetAddress arm;
+	InetAddress main;  //  @jve:decl-index=0:
+	
+	
 	private PortalInit[] pinit = {new ControllerPortal.ControllerPortalInit(),
 			new ServoPortal.ServoPortalInit(), 
 			new VideoPortal.VideoPortalInit(), 
 			new MapPortal.MapPortalInit(),
-			new ArmPortal.ArmPortalInit()};
+			new ArmPortal.ArmPortalInit(),
+			new SurveyPortal.SurveyPortalInit()};
 	
 	
 	/**
@@ -66,11 +81,18 @@ public class MainGUI extends JFrame {
 			return;
 		}
 		instance = this;
-		initialize();
+		
+		red = new ImageIcon(getClass().getResource("/redlight.gif"));
+		green = new ImageIcon(getClass().getResource("/greenlight.gif"));
+		yellow = new ImageIcon(getClass().getResource("/yellowlight.gif"));
+		
+		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		configFile = new Properties();
 		configFile.load(this.getClass().getClassLoader().getResourceAsStream("config.properties"));
-
+		
+		
+		
 		//TODO: Add xml file parser that repopulates the Portal list from a layout file
 		
 		PortalList = new ArrayList<Portal>();
@@ -90,7 +112,8 @@ public class MainGUI extends JFrame {
 //			PortalList.get(i).setVisible(true);
 //		}
 
-		
+		initialize();
+		updateIPs();
 	}
 	
 	public void addNewPortal(Portal p){
@@ -124,6 +147,34 @@ public class MainGUI extends JFrame {
 
 	private JButton removeButton = null;
 
+	private JPanel tracePanel = null;
+
+	private JLabel jLabel3 = null;
+
+	private JLabel jLabel4 = null;
+
+	private JLabel jLabel5 = null;
+
+	private JLabel jLabel6 = null;
+
+	private JLabel armicon = null;
+
+	private JLabel mainicon = null;
+
+	private JLabel rsricon = null;
+
+	private JLabel bsricon = null;
+
+	private JButton pingButton = null;
+
+	private JLabel mainip = null;
+
+	private JLabel armip = null;
+
+	private JLabel rsrip = null;
+
+	private JLabel bsrip = null;
+
 	public static void registerSocket(SocketInfo si){
 		System.out.println("New socket Registered");
 		model.addSocket(si);
@@ -145,7 +196,7 @@ public class MainGUI extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(456, 241);
+		this.setSize(486, 244);
 		this.setJMenuBar(getJJMenuBar());
 		this.setMaximumSize(new Dimension(500, 500));
 		this.setContentPane(getJContentPane());
@@ -199,7 +250,7 @@ public class MainGUI extends JFrame {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
 			jScrollPane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-			jScrollPane.setBounds(new Rectangle(6, 29, 431, 126));
+			jScrollPane.setBounds(new Rectangle(6, 29, 458, 129));
 			jScrollPane.setViewportView(getJTable());
 		}
 		return jScrollPane;
@@ -272,6 +323,7 @@ public class MainGUI extends JFrame {
 			//jTabbedPane.addTab("Portal Manager", component)
 			jTabbedPane.addTab("Portal Manager", null, getPortalPanel(), null);
 			jTabbedPane.addTab("Socket Manager", null, getSocketPanel(), null);
+			jTabbedPane.addTab("Network Trace", null, getTracePanel(), null);
 		}
 		return jTabbedPane;
 	}
@@ -283,7 +335,7 @@ public class MainGUI extends JFrame {
 	private JPanel getPortalPanel() {
 		if (portalPanel == null) {
 			jLabel2 = new JLabel();
-			jLabel2.setBounds(new Rectangle(246, 12, 134, 19));
+			jLabel2.setBounds(new Rectangle(278, 13, 134, 19));
 			jLabel2.setText("Currently Active Portals");
 			jLabel1 = new JLabel();
 			jLabel1.setBounds(new Rectangle(27, 10, 101, 21));
@@ -321,7 +373,7 @@ public class MainGUI extends JFrame {
 	private JList getJList() {
 		if (jList == null) {
 			jList = new JList(pinit);
-			jList.setBounds(new Rectangle(18, 35, 166, 114));
+			jList.setBounds(new Rectangle(18, 35, 166, 123));
 			jList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		}
 		return jList;
@@ -334,7 +386,7 @@ public class MainGUI extends JFrame {
 	private JList getJList1() {
 		if (jList1 == null) {
 			jList1 = new JList(new PortalModel());
-			jList1.setBounds(new Rectangle(247, 36, 161, 117));
+			jList1.setBounds(new Rectangle(278, 35, 161, 123));
 			jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			jList1.addMouseListener(new java.awt.event.MouseAdapter() {
 				public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -357,7 +409,7 @@ public class MainGUI extends JFrame {
 			addButton = new JButton();
 			addButton.setText(">>");
 			addButton.setSize(new Dimension(50, 20));
-			addButton.setLocation(new Point(188, 59));
+			addButton.setLocation(new Point(199, 59));
 			addButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					PortalInit pi = (PortalInit)(getJList().getSelectedValue());
@@ -379,7 +431,7 @@ public class MainGUI extends JFrame {
 			removeButton = new JButton();
 			removeButton.setText("<<");
 			removeButton.setSize(new Dimension(50, 20));
-			removeButton.setLocation(new Point(190, 94));
+			removeButton.setLocation(new Point(200, 92));
 			removeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					Object ob = jList1.getSelectedValue();
@@ -394,6 +446,132 @@ public class MainGUI extends JFrame {
 			});
 		}
 		return removeButton;
+	}
+
+	/**
+	 * This method initializes tracePanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getTracePanel() {
+		if (tracePanel == null) {
+			bsrip = new JLabel();
+			bsrip.setBounds(new Rectangle(28, 35, 93, 20));
+			bsrip.setText("192.168.88.100");
+			rsrip = new JLabel();
+			rsrip.setBounds(new Rectangle(35, 103, 92, 23));
+			rsrip.setText("192.168.88.101");
+			armip = new JLabel();
+			armip.setBounds(new Rectangle(270, 36, 94, 25));
+			armip.setText("192.168.88.50");
+			mainip = new JLabel();
+			mainip.setBounds(new Rectangle(271, 106, 92, 22));
+			mainip.setText("192.168.88.44");
+			bsricon = new JLabel();
+			bsricon.setText("");
+			bsricon.setSize(new Dimension(50, 50));
+			bsricon.setLocation(new Point(145, 14));
+			bsricon.setIcon(red);
+			rsricon = new JLabel();
+			rsricon.setText("");
+			rsricon.setSize(new Dimension(50, 50));
+			rsricon.setLocation(new Point(144, 77));
+			rsricon.setIcon(red);
+			mainicon = new JLabel();
+			mainicon.setText("");
+			mainicon.setSize(new Dimension(50, 50));
+			mainicon.setLocation(new Point(375, 74));
+			mainicon.setIcon(red);
+			armicon = new JLabel();
+			armicon.setText("");
+			armicon.setSize(new Dimension(50, 50));
+			armicon.setLocation(new Point(373, 9));
+			armicon.setIcon(red);
+			jLabel6 = new JLabel();
+			jLabel6.setBounds(new Rectangle(276, 83, 87, 19));
+			jLabel6.setText("Main Board");
+			jLabel5 = new JLabel();
+			jLabel5.setBounds(new Rectangle(275, 11, 83, 25));
+			jLabel5.setText("ARM9 Board");
+			jLabel4 = new JLabel();
+			jLabel4.setBounds(new Rectangle(60, 79, 32, 21));
+			jLabel4.setText("RSR");
+			jLabel3 = new JLabel();
+			jLabel3.setBounds(new Rectangle(57, 10, 35, 19));
+			jLabel3.setText("BSR");
+			tracePanel = new JPanel();
+			tracePanel.setLayout(null);
+			tracePanel.add(jLabel3, null);
+			tracePanel.add(jLabel4, null);
+			tracePanel.add(jLabel5, null);
+			tracePanel.add(jLabel6, null);
+			tracePanel.add(armicon, null);
+			tracePanel.add(mainicon, null);
+			tracePanel.add(rsricon, null);
+			tracePanel.add(bsricon, null);
+			tracePanel.add(getPingButton(), null);
+			tracePanel.add(mainip, null);
+			tracePanel.add(armip, null);
+			tracePanel.add(rsrip, null);
+			tracePanel.add(bsrip, null);
+		}
+		return tracePanel;
+	}
+
+	/**
+	 * This method initializes pingButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getPingButton() {
+		if (pingButton == null) {
+			pingButton = new JButton();
+			pingButton.setBounds(new Rectangle(17, 133, 122, 29));
+			pingButton.setText("Ping All");
+			pingButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					try{
+						int timeOut = 2000;
+						boolean bsr_available = bsr.isReachable(timeOut);
+						if(bsr_available) bsricon.setIcon(green);
+						else bsricon.setIcon(red);
+						boolean rsr_available = rsr.isReachable(timeOut);
+						if(rsr_available) rsricon.setIcon(green);
+						else rsricon.setIcon(red);
+						boolean arm_available = arm.isReachable(timeOut);
+						if(arm_available) armicon.setIcon(green);
+						else armicon.setIcon(red);
+						boolean main_available = main.isReachable(timeOut);
+						if(main_available) mainicon.setIcon(green);
+						else mainicon.setIcon(red);
+						
+					} catch (Exception ex){
+						ex.printStackTrace();
+					}
+				}
+			});
+		}
+		return pingButton;
+	}
+	
+	private void updateIPs(){
+		try{
+			bsr = InetAddress.getByName(configFile.getProperty("bsr_ip"));
+			rsr = InetAddress.getByName(configFile.getProperty("rsr_ip"));
+			arm = InetAddress.getByName(configFile.getProperty("arm_ip"));
+			main = InetAddress.getByName(configFile.getProperty("main_ip"));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		if(rsr != null) rsrip.setText(rsr.getHostAddress());
+		else rsrip.setText("null");
+		if(bsr != null) bsrip.setText(bsr.getHostAddress());
+		else bsrip.setText("null");
+		if(arm != null) armip.setText(arm.getHostAddress());
+		else armip.setText("null");
+		if(main != null) mainip.setText(main.getHostAddress());
+		else mainip.setText("null");
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

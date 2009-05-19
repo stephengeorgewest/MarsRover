@@ -24,7 +24,7 @@ import java.util.Date;
 import javax.swing.JButton;
 
 import rover.Main;
-import rover.components.ImagePanel;
+import rover.guistuff.ImagePanel;
 import rover.network.MulticastListener;
 import rover.network.Packet;
 import rover.network.PacketHandler;

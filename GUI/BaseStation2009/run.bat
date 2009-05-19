@@ -1,1 +1,1 @@
-java -cp bin;lib/JOGL/jogl.jar;lib/JOGL/gluegen-rt.jar;lib/JInput/;lib/JInput/jinput.jar -Djava.library.path=lib/JInput;lib/JOGL rover.Main
+java  -cp bin;lib/JOGL/jogl.jar;lib/JOGL/gluegen-rt.jar;lib/JInput/;lib/JInput/jinput.jar -Djava.library.path=lib/JInput;lib/JOGL -Xms100m -Xmx150m rover.Main

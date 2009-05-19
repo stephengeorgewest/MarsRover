@@ -1,8 +1,9 @@
 package rover;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.swing.UIManager;
@@ -31,8 +32,21 @@ public class Main {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		
+	}
+	
+	public static void writeConfig(){
+		ClassLoader cl = Main.class.getClassLoader();
+		URL address = cl.getResource("config.properties");
+		try{
+			String path = address.toURI().getPath();
+			System.out.println("Saving config at " + path);
+			OutputStream file = new FileOutputStream(path);
+			props.store(file, "Program Generated Config File");	
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+
 	}
 	
 }

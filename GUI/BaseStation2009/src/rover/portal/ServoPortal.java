@@ -56,7 +56,7 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 	Object threadLock;
 	
 	private boolean servoThreadKill = false;
-	private int send_period = 2000;
+	private int send_period = 500;
 	
 	/**
 	 * @param owner
@@ -117,7 +117,8 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 					cp.FromByteArray(pack.getData(), pack.getLength());
 					readControlPacket(cp);
 					count++;
-					//System.out.println("Packet Received");
+					if(count % 10 == 0) updateGUI();
+					//System.out.println(count + " Packet Received");
 				}
 				
 				if(count > 0) updateGUI();
@@ -199,7 +200,7 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 		}
 		
 		for(int i = 0;i<channels;i++){
-			JSpinner spinner = new JSpinner(new SpinnerNumberModel(50, 0, 100, .01));
+			JSpinner spinner = new JSpinner(new SpinnerNumberModel(50, 0, 100, .1));
 			JSlider slider = new JSlider();
 			JCheckBox box = new JCheckBox();
 			

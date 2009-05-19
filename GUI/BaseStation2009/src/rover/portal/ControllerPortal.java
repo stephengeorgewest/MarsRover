@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import rover.Main;
-import rover.components.RoverPanel2D;
+import rover.guistuff.RoverPanel2D;
 import rover.input.*;
 import rover.network.ControlPacket;
 import rover.network.SocketInfo;
@@ -166,8 +166,10 @@ public class ControllerPortal extends Portal{
 
 		control_rate = 20;
 		
-		channels = new byte[] {0,1,2,3,10};
+		channels = new byte[] {0,1,2,3,4};
 		calibration = new float[][]{{0,50,100},{0,50,100}, {0,50,100}, {0,50,100}, {0,50,100}};
+		
+		readConfig();
 		
 		calib = new CalibrationModel();
 		WriteCalibrationToTable();
@@ -187,6 +189,65 @@ public class ControllerPortal extends Portal{
 		inputThread.start();
 	}
 
+	private void readConfig(){
+		channels[0] = Byte.parseByte(Main.props.getProperty("lf_chan"));
+		channels[1] = Byte.parseByte(Main.props.getProperty("rf_chan"));
+		channels[2] = Byte.parseByte(Main.props.getProperty("lr_chan"));
+		channels[3] = Byte.parseByte(Main.props.getProperty("rr_chan"));
+		channels[4] = Byte.parseByte(Main.props.getProperty("cam_chan"));
+		
+		calibration[0][0] = Float.parseFloat(Main.props.getProperty("lf_min"));
+		calibration[0][1] = Float.parseFloat(Main.props.getProperty("lf_mid"));
+		calibration[0][2] = Float.parseFloat(Main.props.getProperty("lf_max"));
+		
+		calibration[1][0] = Float.parseFloat(Main.props.getProperty("rf_min"));
+		calibration[1][1] = Float.parseFloat(Main.props.getProperty("rf_mid"));
+		calibration[1][2] = Float.parseFloat(Main.props.getProperty("rf_max"));
+		
+		calibration[2][0] = Float.parseFloat(Main.props.getProperty("lr_min"));
+		calibration[2][1] = Float.parseFloat(Main.props.getProperty("lr_mid"));
+		calibration[2][2] = Float.parseFloat(Main.props.getProperty("lr_max"));
+		
+		calibration[3][0] = Float.parseFloat(Main.props.getProperty("rr_min"));
+		calibration[3][1] = Float.parseFloat(Main.props.getProperty("rr_mid"));
+		calibration[3][2] = Float.parseFloat(Main.props.getProperty("rr_max"));
+		
+		calibration[4][0] = Float.parseFloat(Main.props.getProperty("cam_min"));
+		calibration[4][1] = Float.parseFloat(Main.props.getProperty("cam_mid"));
+		calibration[4][2] = Float.parseFloat(Main.props.getProperty("cam_max"));
+		
+	}
+	
+	private void writeConfig(){
+		Main.props.setProperty("lf_chan", Byte.toString(channels[0]));
+		Main.props.setProperty("rf_chan", Byte.toString(channels[1]));
+		Main.props.setProperty("lr_chan", Byte.toString(channels[2]));
+		Main.props.setProperty("rr_chan", Byte.toString(channels[3]));
+		Main.props.setProperty("cam_chan", Byte.toString(channels[4]));
+		
+		Main.props.setProperty("lf_min", Float.toString(calibration[0][0]));
+		Main.props.setProperty("lf_mid", Float.toString(calibration[0][1]));
+		Main.props.setProperty("lf_max", Float.toString(calibration[0][2]));
+		
+		Main.props.setProperty("rf_min", Float.toString(calibration[1][0]));
+		Main.props.setProperty("rf_mid", Float.toString(calibration[1][1]));
+		Main.props.setProperty("rf_max", Float.toString(calibration[1][2]));
+
+		Main.props.setProperty("lr_min", Float.toString(calibration[2][0]));
+		Main.props.setProperty("lr_mid", Float.toString(calibration[2][1]));
+		Main.props.setProperty("lr_max", Float.toString(calibration[2][2]));
+
+		Main.props.setProperty("rr_min", Float.toString(calibration[3][0]));
+		Main.props.setProperty("rr_mid", Float.toString(calibration[3][1]));
+		Main.props.setProperty("rr_max", Float.toString(calibration[3][2]));
+
+		Main.props.setProperty("cam_min", Float.toString(calibration[4][0]));
+		Main.props.setProperty("cam_mid", Float.toString(calibration[4][1]));
+		Main.props.setProperty("cam_max", Float.toString(calibration[4][2]));
+
+		Main.writeConfig();
+	}
+	
 	private void initSocket(){
 
 		try{
@@ -322,7 +383,7 @@ public class ControllerPortal extends Portal{
                         RF = InputUtils.scaleByCalibration(calibration[1][0], calibration[1][1], calibration[1][2], 50+50*state.axes[1]);
                         LR = InputUtils.scaleByCalibration(calibration[2][0], calibration[2][1], calibration[2][2], 50+50*state.axes[2]);
                         RR = InputUtils.scaleByCalibration(calibration[3][0], calibration[3][1], calibration[3][2], 50+50*state.axes[3]);
-                        Head  = InputUtils.scaleByCalibration(calibration[3][0], calibration[3][1], calibration[3][2], 50+50*state.axes[4]);
+                        Head  = InputUtils.scaleByCalibration(calibration[4][0], calibration[4][1], calibration[4][2], 50+50*state.axes[4]);
                         
                         this.LFLabel.setText(df.format(LF));
                         this.RFLabel.setText(df.format(RF));
@@ -688,6 +749,7 @@ public class ControllerPortal extends Portal{
 			applyButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					ReadCalibrationFromTable();
+					writeConfig();
 				}
 			});
 		}

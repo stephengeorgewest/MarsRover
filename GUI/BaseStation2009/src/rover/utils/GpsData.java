@@ -3,88 +3,7 @@ package rover.utils;
 import java.text.DecimalFormat;
 
 public class GpsData{
-	
-	private static DecimalFormat df = new DecimalFormat("####.####");
-	 
-    /*  GPGGA
-     *  1    = UTC time of fix
-     *  2    = Latitude of fix
-     *  3    = N or S of longitude
-     *  4    = Longitude of fix
-     *  5    = E or W of longitude
-     *  6    = Fix Quality (0 = bad, 1 = GPS, 2 = DGPS)
-     *  7    = Number of Satalites
-     *  8    = Horizontal Dilution of Precision (HDOP)
-     *  9    = Altitude above mean sea level
-     *  10   = Units of Altitude
-     *  11   = Height of geoid above WGS84 ellipsoid
-     *  12   = Units of Height above geoid
-     *  13   = Time since last DGPS update
-     *  14   = DGPS reference station id
-     *  15   = CheckSum
-     */
-    static class GPGGA
-    {
-        public static int UTC_TIME = 1;
-        public static int LATITUDE = 2;
-        public static int LAT_HEMI = 3;
-        public static int LONGITUDE = 4;
-        public static int LON_HEMI = 5;
-        public static int FIX_QUALITY = 6;
-        public static int NUM_SATS = 7;
-        public static int H_DILUTION = 8;
-        public static int ELEVATION = 9;
-        public static int ELEV_UNITS = 10;
-        public static int G_HEIGHT = 11;
-        public static int GH_UNITS = 12;
-        public static int DGPS_AGE = 13;
-        public static int CHECKSUM = 14;
-    };
 
-    /*  GPRMC
-     *  1    = UTC time of fix
-     *  2    = Data status (A=Valid position, V=navigation receiver warning)
-     *  3    = Latitude of fix
-     *  4    = N or S of longitude
-     *  5    = Longitude of fix
-     *  6    = E or W of longitude
-     *  7    = Speed over ground in knots
-     *  8    = Track made good in degrees True
-     *  9    = UTC date of fix
-     *  10   = Magnetic variation degrees (Easterly var. subtracts from true course)
-     *  11   = E or W of magnetic variation 
-     */
-    static class GPRMC
-    {
-    	public static int UTC_TIME = 1;
-    	public static int STATUS = 2;
-    	public static int LATITUDE = 3;
-    	public static int LAT_HEMI = 4;
-    	public static int LONGITUDE = 5;
-    	public static int LON_HEMI = 6;
-    	public static int GROUND_SPEED = 7;
-    	public static int HEADING = 8;
-    	public static int UTCDATE = 9;
-    	public static int MAGNETIC = 10;
-    	public static int CHECKSUM = 11;
-    };
-
-    /* HCHDG
-     * 1 = Heading
-     * 2 = Deviation
-     * 3 = Variation
-     * 4 = E/W magnetic variation
-     */
-    static class HCHDG
-    {
-    	public static int HEADING = 1;
-    	public static int DEVIATION = 2;
-    	public static int DEVIATION2 = 3;
-    	public static int VARIATION = 4;
-    	public static int E_W = 5;
-    }
-
-	
 	public double Longitude;
     public double Latitude;
     public double Elevation;
@@ -175,33 +94,54 @@ public class GpsData{
     public String getFormatedPos()
     {
         if (Latitude == Double.NaN || Longitude == Double.NaN) return "Invalid";
-        String lat = df.format(Latitude);
-        String lon = df.format(Longitude);
-
-        int ilat = lat.indexOf('.');
-        int ilon = lon.indexOf('.');
-
-        if (ilat == -1 || ilon == -1) return "Invalid";
-
-        
-
-        //Console.WriteLine(lat + " index of . is " + ilat);
-
-        String latitude = "";
-        String longitude = "";
-        try
-        {
-            latitude = lat.substring(0, ilat - 2) + " " + lat.substring(ilat - 2, lat.length() - (ilat - 2)) + "' " + lathemi;
-            longitude = lon.substring(0, ilat - 2) + " " + lon.substring(ilat - 2, lon.length() - (ilon - 2)) + "' " + lonhemi;
-
-        }
-        catch (Exception e) 
-        {
-            return "Error";
-        }
-        return latitude + ", " + longitude;
+        return formatLatLon(Latitude, Longitude);
     }
     
+    public static String formatLatLon(double lat, double lon){
+    	return formatLat(lat) + " " + formatLon(lon);
+    }
+    
+    public static String formatLat(double lat){
+    	if(format_mode == MODE_DMS){
+    		int lat_deg = (int)(lat);
+    		int lat_min = (int)(60*(lat-lat_deg));
+    		int lat_sec = (int)(3600*(lat-lat_deg-lat_min/60.0));
+
+    		return lat_deg + " " + lat_min + "' " + lat_sec + "\" "; 
+    		
+    	} else if(format_mode == MODE_DECIMAL){
+    		return ldf.format(lat);
+    	} else if(format_mode == MODE_DM){
+    		int lat_deg = (int)(lat);
+    		double lat_min = 60*(lat-lat_deg);
+
+    		return lat_deg + " " + df.format(lat_min) + "' "; 
+    		
+    	} else  {
+    		return "Unknown format mode ";
+    	}
+    }
+    
+    public static String formatLon(double lon){
+    	if(format_mode == MODE_DMS){
+    		int lon_deg = (int)(lon);
+    		int lon_min = (int)(60*(lon-lon_deg));
+    		int lon_sec = (int)(3600*(lon-lon_deg-lon_min/60.0));
+
+    		return lon_deg + " " + lon_min + "' " + lon_sec + "\""; 
+    		
+    	} else if(format_mode == MODE_DECIMAL){
+    		return ldf.format(lon);
+    	} else if(format_mode == MODE_DM){
+    		int lon_deg = (int)(lon);
+    		double lon_min = 60*(lon-lon_deg);
+
+    		return lon_deg + " " + df.format(lon_min) + "' "; 
+    		
+    	} else  {
+    		return "Unknown format mode";
+    	}
+    }
     
  
     public static boolean MergeGpsString(String GPSstr, GpsData data){
@@ -238,6 +178,14 @@ public class GpsData{
             elstring = elstring == "" ? "0.0" : elstring;
             double elevation = Double.parseDouble(elstring);
 
+            int lat = (int)(latitude/100);
+            latitude = lat + (latitude - 100*lat)/60;
+            int lon = (int)(longitude/100);
+            longitude = lon + (longitude - 100*lon)/60;
+            
+            if (lonhemi == 'W') longitude *= -1;
+            if (lathemi == 'S') latitude *= -1;
+            
             data.LockAcquired = (fixQuality == 1 || fixQuality == 2) ? true : false;
             data.Elevation = elevation;
             data.Latitude = latitude;
@@ -312,4 +260,93 @@ public class GpsData{
 
     }
     
+    
+	
+	private static DecimalFormat df = new DecimalFormat("####.####");
+	private static DecimalFormat ldf = new DecimalFormat("####.########");
+	public static final int MODE_DMS = 0;
+	public static final int MODE_DECIMAL = 1;
+	public static final int MODE_DM = 2;
+	
+	public static int format_mode = MODE_DECIMAL;
+	
+    /*  GPGGA
+     *  1    = UTC time of fix
+     *  2    = Latitude of fix
+     *  3    = N or S of longitude
+     *  4    = Longitude of fix
+     *  5    = E or W of longitude
+     *  6    = Fix Quality (0 = bad, 1 = GPS, 2 = DGPS)
+     *  7    = Number of Satalites
+     *  8    = Horizontal Dilution of Precision (HDOP)
+     *  9    = Altitude above mean sea level
+     *  10   = Units of Altitude
+     *  11   = Height of geoid above WGS84 ellipsoid
+     *  12   = Units of Height above geoid
+     *  13   = Time since last DGPS update
+     *  14   = DGPS reference station id
+     *  15   = CheckSum
+     */
+    public static class GPGGA
+    {
+        public static int UTC_TIME = 1;
+        public static int LATITUDE = 2;
+        public static int LAT_HEMI = 3;
+        public static int LONGITUDE = 4;
+        public static int LON_HEMI = 5;
+        public static int FIX_QUALITY = 6;
+        public static int NUM_SATS = 7;
+        public static int H_DILUTION = 8;
+        public static int ELEVATION = 9;
+        public static int ELEV_UNITS = 10;
+        public static int G_HEIGHT = 11;
+        public static int GH_UNITS = 12;
+        public static int DGPS_AGE = 13;
+        public static int CHECKSUM = 14;
+    };
+
+    /*  GPRMC
+     *  1    = UTC time of fix
+     *  2    = Data status (A=Valid position, V=navigation receiver warning)
+     *  3    = Latitude of fix
+     *  4    = N or S of longitude
+     *  5    = Longitude of fix
+     *  6    = E or W of longitude
+     *  7    = Speed over ground in knots
+     *  8    = Track made good in degrees True
+     *  9    = UTC date of fix
+     *  10   = Magnetic variation degrees (Easterly var. subtracts from true course)
+     *  11   = E or W of magnetic variation 
+     */
+    public static class GPRMC
+    {
+    	public static int UTC_TIME = 1;
+    	public static int STATUS = 2;
+    	public static int LATITUDE = 3;
+    	public static int LAT_HEMI = 4;
+    	public static int LONGITUDE = 5;
+    	public static int LON_HEMI = 6;
+    	public static int GROUND_SPEED = 7;
+    	public static int HEADING = 8;
+    	public static int UTCDATE = 9;
+    	public static int MAGNETIC = 10;
+    	public static int CHECKSUM = 11;
+    };
+
+    /* HCHDG
+     * 1 = Heading
+     * 2 = Deviation
+     * 3 = Variation
+     * 4 = E/W magnetic variation
+     */
+    public static class HCHDG
+    {
+    	public static int HEADING = 1;
+    	public static int DEVIATION = 2;
+    	public static int DEVIATION2 = 3;
+    	public static int VARIATION = 4;
+    	public static int E_W = 5;
+    }
+
+	
 }
