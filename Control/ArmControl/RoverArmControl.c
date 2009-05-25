@@ -167,7 +167,7 @@ main(int argc, char *argv[])
 				value = htonl(value);
 				memcpy(&message[i*5+3],&value,4);//fix me to network order
 			}
-			nbytes=send_message(&servo_RN, message); 
+			nbytes=send_message(&servo_RN, message, NUM_JOINTS*5+2); 
 			//clear buffer probably isn't necessary
 			for(i=0; i<nbytes; i++)
 				message[i]=0;

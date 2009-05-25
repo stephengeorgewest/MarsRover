@@ -35,8 +35,6 @@ int init_multicast_(struct RoverNetwork* RN)
 		puts("Reusing ADDR failed");
 		return -1;
 	}
-	u_char ttl=10;
-	setsockopt((*RN).fd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl));
 	/* set up destination address */
 	memset(&(*RN).addr,0,sizeof((*RN).addr));
 	(*RN).addr.sin_family=AF_INET;
@@ -58,7 +56,7 @@ int init_multicast_(struct RoverNetwork* RN)
 		puts("setsockopt ERROR");
 		return -1;
 	}
-	u_char ttl=3;//choose number of hops before packet discard
+	u_char ttl=10;//choose number of hops before packet discard
 	setsockopt((*RN).fd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl));
 
 	return 0;// following convention 0 == success -1 == fail
@@ -71,7 +69,7 @@ int setup_non_blocking(struct RoverNetwork * RN)
 	return 0;// no errors checked yet
 }
 
-int send_message(struct RoverNetwork * RN,char * message)
+int send_message(struct RoverNetwork * RN,char * message, int size)
 {
 	//int i=0;
 	//for(i=0; i<MSGBUFSIZE; i++)
@@ -79,7 +77,7 @@ int send_message(struct RoverNetwork * RN,char * message)
 	//
 	//puts("Send a message:");
 	//fgets(message, MSGBUFSIZE, stdin);
-	int num_sent = sendto((*RN).fd,message,strlen(message),0,(struct sockaddr *) &(*RN).addr, sizeof((*RN).addr));
+	int num_sent = sendto((*RN).fd,message, size,0,(struct sockaddr *) &(*RN).addr, sizeof((*RN).addr));
 	if (num_sent < 0)
 	{
 		puts("sendto error");
