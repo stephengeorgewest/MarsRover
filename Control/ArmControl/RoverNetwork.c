@@ -35,7 +35,8 @@ int init_multicast_(struct RoverNetwork* RN)
 		puts("Reusing ADDR failed");
 		return -1;
 	}
-
+	u_char ttl=10;
+	setsockopt((*RN).fd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl));
 	/* set up destination address */
 	memset(&(*RN).addr,0,sizeof((*RN).addr));
 	(*RN).addr.sin_family=AF_INET;

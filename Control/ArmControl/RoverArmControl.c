@@ -29,7 +29,7 @@ main(int argc, char *argv[])
 	float joint_PID[NUM_JOINTS][3];
 	int joint_indexed[NUM_JOINTS];
 	int i=0;
-	int control_is_on = 0;
+	int control_is_on = 1;
 	
 
 	for(i=0; i<NUM_JOINTS; i++)
