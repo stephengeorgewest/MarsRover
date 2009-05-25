@@ -164,8 +164,16 @@ main(int argc, char *argv[])
 				float value = joint_PID[i][P]*error
 							 +joint_PID[i][I]*joint_accumulated_errors[i]
 							 +joint_PID[i][D]*error_diff+50;
-				value = htonl(value);
-				memcpy(&message[i*5+3],&value,4);//fix me to network order
+				uint32_t value0;
+				memcpy(&value0, &value, 4);
+				uint32_t value1 = htonl(value0);
+				
+				if(i==0)
+				{
+					printf("error[%d]=%f\n",i, value);
+					printf("%x\n%x\n\n",value0, value1);
+				}
+				memcpy(&message[i*5+3],&value1,4);//fix me to network order
 			}
 			nbytes=send_message(&servo_RN, message, NUM_JOINTS*5+2); 
 			//clear buffer probably isn't necessary
