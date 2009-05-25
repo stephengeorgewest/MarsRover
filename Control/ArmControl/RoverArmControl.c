@@ -22,8 +22,10 @@ main(int argc, char *argv[])
 	init_multicast(&servo_RN, ROVER_GROUP_SERVO, ROVER_PORT_SERVO);
 	
 	float joint_commands[NUM_JOINTS];
-	float joint_errors[NUM_JOINTS];
-	float joint_positions[NUM_JOINTS];
+	//float joint_errors[NUM_JOINTS];
+	float joint_previous_errors[NUM_JOINTS];
+	float joint_accumulated_errors[NUM_JOINTS];
+	//float joint_positions[NUM_JOINTS];
 	float joint_PID[NUM_JOINTS][3];
 	int joint_indexed[NUM_JOINTS];
 	int i=0;
