@@ -48,5 +48,5 @@ struct RoverNetwork
 int init_multicast_(struct RoverNetwork* RN);
 int setup_non_blocking(struct RoverNetwork * RN);
 int init_multicast(struct RoverNetwork* RN, char * IP_Address, int Port);
-int send_message(struct RoverNetwork * RN,char * message);
+int send_message(struct RoverNetwork * RN,char * message, int size);
 int recieve_message(struct RoverNetwork*RN, char * msgbuf_in);
