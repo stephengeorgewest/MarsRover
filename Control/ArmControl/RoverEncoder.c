@@ -159,11 +159,11 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 		printf("Quad 1 count: %d\n",(*RE).qcount[0]);
 #endif
 		//printf("Angle 1 : %f\n",angle1*90/PI);
-		(*RE).qPrevQuadState[0] = q1Data&0x3; //mask the last 2 bits for quad count
+		(*RE).qPrevQuadState[0] = (*RE).qData[0]&0x3; //mask the last 2 bits for quad count
 		
 		//encoder 2
-		q2Data = (GPIOData & QUAD2_MASK)>>3;
-		switch (q2Data)
+		(*RE).qData[1] = (GPIOData & QUAD2_MASK)>>3;
+		switch ((*RE).qData[1])
 		{
 			//in each of the first 4 cases the reference bit is zero
 			case 0:
@@ -239,11 +239,11 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 #ifdef DEBUG
 		printf("Quad 2 count: %d\n",(*RE).qcount[1]);
 #endif
-		(*RE).qPrevQuadState[1] = q2Data&0x3; //mask the last 2 bits for quad count
+		(*RE).qPrevQuadState[1] = (*RE).qData[1]&0x3; //mask the last 2 bits for quad count
 			
 		//encoder 3
-		q3Data = (GPIOData & QUAD3_MASK)>>6;
-		switch (q3Data)
+		(*RE).qData[2] = (GPIOData & QUAD3_MASK)>>6;
+		switch ((*RE).qData[2])
 		{
 			//in each of the first 4 cases the reference bit is zero
 			case 0:
@@ -319,11 +319,11 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 #ifdef DEBUG
 		printf("Quad 3 count: %d\n",(*RE).qcount[2]);
 #endif
-		(*RE).qPrevQuadState[2] = q3Data&0x3; //mask the last 2 bits for quad count
+		(*RE).qPrevQuadState[2] = (*RE).qData[2]&0x3; //mask the last 2 bits for quad count
 			
 		//encoder 4
-		q4Data = (GPIOData & QUAD4_MASK)>>9;
-		switch (q4Data)
+		(*RE).qData[3] = (GPIOData & QUAD4_MASK)>>9;
+		switch ((*RE).qData[3])
 		{
 			//in each of the first 4 cases the reference bit is zero
 			case 0:
@@ -399,11 +399,11 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 #ifdef DEBUG
 		printf("Quad 4 count: %d\n",(*RE).qcount[3]);
 #endif
-		(*RE).qPrevQuadState[3] = q4Data&0x3; //mask the last 2 bits for quad count
+		(*RE).qPrevQuadState[3] = (*RE).qData[3]&0x3; //mask the last 2 bits for quad count
 			
 		//encoder 5
-		q5Data = (GPIOData & QUAD5_MASK)>>12;
-		switch (q5Data)
+		(*RE).qData[4] = (GPIOData & QUAD5_MASK)>>12;
+		switch ((*RE).qData[4])
 		{
 			//in each of the first 4 cases the reference bit is zero
 			case 0:

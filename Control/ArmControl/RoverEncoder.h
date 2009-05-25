@@ -55,7 +55,7 @@
 #define INIT_ANGLE5 0
 
 struct RoverEncoderStruct
-(
+{
 	void *portAData;
 	int qcount[NUM_ENCODERS];
 	unsigned int qPrevQuadState[NUM_ENCODERS];
@@ -63,7 +63,7 @@ struct RoverEncoderStruct
 	float angle[NUM_ENCODERS];
 	int indexed[NUM_ENCODERS];
 	
-);
+};
 int init_Encoders(struct RoverEncoderStruct *RE);
 int update_Encoders(struct RoverEncoderStruct *RE);
 
