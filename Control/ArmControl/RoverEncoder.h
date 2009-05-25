@@ -1,3 +1,7 @@
+#ifndef ROVERENCODE_H
+#defne ROVERENCODER_H
+#else
+
 // Rotary encoder code for TS-7800 using GPIO pins
 #include <sys/types.h>
 #include <sys/mman.h>
@@ -49,3 +53,17 @@
 #define INIT_ANGLE3 0
 #define INIT_ANGLE4 0
 #define INIT_ANGLE5 0
+
+struct RoverEncoderStruct
+(
+	void *portAData;
+	int qcount[NUM_ENCODERS];
+	unsigned int qPrevQuadState[NUM_ENCODERS];
+	unsigned int qData[NUM_ENCODERS];
+	float angle[NUM_ENCODERS];
+	int indexed[NUM_ENCODERS];
+	
+);
+int init_Encoders(struct RoverEncoderStruct *RE);
+int update_Encoders(struct RoverEncoderStruct *RE);
+#endif
