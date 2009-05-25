@@ -151,7 +151,17 @@ main(int argc, char *argv[])
 			{
 				message[i*5+2]=i;
 				//htonl();//host order to network order long
-				memcpy(&message[i*5+3],&joint_errors[i],4);//fix me to network order
+				float error = joint_commands[i]-RE.angle[i];
+				if(i==0)
+					printf("angle[%d]=%f\n",i,(*RE).angle[i]);
+				float joint_accumulated_error[i]+=error;
+				float error_diff = error - joint_previous_error[i];
+				joint_prevoius_error[i]=error;
+				float value = joint_PID[P}*error
+							 +joint_PID[I]*joint_error_accumulated[i]
+							 +joint_PID[D]*error_diff;
+				value = htonl(value);
+				memcpy(&message[i*5+3],&value,4);//fix me to network order
 			}
 			nbytes=send_message(&servo_RN, message); 
 			//clear buffer probably isn't necessary

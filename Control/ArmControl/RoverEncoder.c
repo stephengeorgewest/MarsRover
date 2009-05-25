@@ -75,7 +75,7 @@ int init_Encoders(struct RoverEncoderStruct *RE)
 
 int update_Encoders(struct RoverEncoderStruct *RE)
 {
-	unsigned long GPIOData = *((unsigned long *) portAData);
+	unsigned long GPIOData = *((unsigned long *) (*RE).portAData);
 		
 		//parse each encoder, 3 bits per encoder from A0 to A14, 5 encoders total
 		// First 2 bits encoding, 3rd bit reference
