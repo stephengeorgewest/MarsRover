@@ -35,8 +35,10 @@ main(int argc, char *argv[])
 	for(i=0; i<NUM_JOINTS; i++)
 	{
 		joint_commands[i]=0.0;
-		joint_positions[i]=0.0;
-		joint_errors[i]=0.0;
+		//joint_positions[i]=0.0;
+		joint_previous_errors[i]=0.0;
+		joint_accumulated_errors[0]=0.0;
+		//joint_errors[i]=0.0;
 		joint_indexed[i]=0;
 		joint_PID[i][P]=0.0;
 		joint_PID[i][I]=0.0;
@@ -155,13 +157,13 @@ main(int argc, char *argv[])
 				//htonl();//host order to network order long
 				float error = joint_commands[i]-RE.angle[i];
 				if(i==0)
-					printf("angle[%d]=%f\n",i,(*RE).angle[i]);
-				float joint_accumulated_error[i]+=error;
+					printf("angle[%d]=%f\n",i, RE.angle[i]);
+				joint_accumulated_errors[i]+=error;
 				float error_diff = error - joint_previous_error[i];
-				joint_prevoius_error[i]=error;
-				float value = joint_PID[P}*error
-							 +joint_PID[I]*joint_error_accumulated[i]
-							 +joint_PID[D]*error_diff;
+				joint_previous_errors[i]=error;
+				float value = joint_PID[i][P]*error
+							 +joint_PID[i][I]*joint_accumulated_errors[i]
+							 +joint_PID[i][D]*error_diff;
 				value = htonl(value);
 				memcpy(&message[i*5+3],&value,4);//fix me to network order
 			}
