@@ -1,2 +1,2 @@
 default:
-	gcc RoverArmControl.c RoverNetwork.c  -o RoverArmControl
+	gcc RoverArmControl.c RoverNetwork.c RoverEncoder.c  -o RoverArmControl

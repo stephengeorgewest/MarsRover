@@ -1,6 +1,6 @@
-#ifndef ROVERENCODE_H
-#defne ROVERENCODER_H
-#else
+//#ifndef ROVERENCODE_H
+//#define ROVERENCODER_H
+//#else
 
 // Rotary encoder code for TS-7800 using GPIO pins
 #include <sys/types.h>
@@ -66,4 +66,5 @@ struct RoverEncoderStruct
 );
 int init_Encoders(struct RoverEncoderStruct *RE);
 int update_Encoders(struct RoverEncoderStruct *RE);
-#endif
+
+//#endif
