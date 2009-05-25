@@ -159,7 +159,7 @@ main(int argc, char *argv[])
 				if(i==0)
 					printf("angle[%d]=%f\n",i, RE.angle[i]);
 				joint_accumulated_errors[i]+=error;
-				float error_diff = error - joint_previous_error[i];
+				float error_diff = error - joint_previous_errors[i];
 				joint_previous_errors[i]=error;
 				float value = joint_PID[i][P]*error
 							 +joint_PID[i][I]*joint_accumulated_errors[i]
