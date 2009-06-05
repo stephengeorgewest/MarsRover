@@ -7,7 +7,7 @@
 	Provides implementation for openssc.h
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include "openssc.h"
 

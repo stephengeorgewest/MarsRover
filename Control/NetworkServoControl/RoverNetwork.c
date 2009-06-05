@@ -5,6 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include <fcntl.h>
 //http://tldp.org/HOWTO/Multicast-HOWTO-6.html
 #include "RoverNetwork.h"
 
@@ -61,7 +62,13 @@ int init_multicast_(struct RoverNetwork* RN)
 
 	return 0;// following convention 0 == success -1 == fail
 }
-
+int setup_non_blocking(struct RoverNetwork * RN)
+{
+	int flags = fcntl((*RN).fd, F_GETFL);
+	flags |= O_NONBLOCK;
+	fcntl((*RN).fd, F_SETFL, flags);
+	return 0;
+}
 int send_message(struct RoverNetwork * RN,char * message)
 {
 	//int i=0;
@@ -88,7 +95,7 @@ int recieve_message(struct RoverNetwork*RN, char * msgbuf_in)
 	int nbytes=recvfrom((*RN).fd, msgbuf_in, MSGBUFSIZE, 0, (struct sockaddr *) &(*RN).addr, &addrlen );
 	if ( nbytes < 0)
 	{
-		puts("recvfrom error");
+		//puts("recvfrom error");
 		return nbytes;
 	}
 	//printf("Recieved Message %d bytes long:%s\n", nbytes, msgbuf_in);

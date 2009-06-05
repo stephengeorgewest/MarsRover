@@ -49,3 +49,5 @@ int init_multicast_(struct RoverNetwork* RN);
 int init_multicast(struct RoverNetwork* RN, char * IP_Address, int Port);
 int send_message(struct RoverNetwork * RN,char * message);
 int recieve_message(struct RoverNetwork*RN, char * msgbuf_in);
+int setup_non_blocking(struct RoverNetwork * RN);
+
