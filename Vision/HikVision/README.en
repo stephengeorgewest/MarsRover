@@ -1,0 +1,64 @@
+                      INSTURCTIONS
+
+
+Install/remove the device driver
+======================================
+
+Note: Make sure your kernel version (uname -r) is included in
+      drv directory (modules such as ds40xxhc`uname -r`.ko).
+
+install:
+-----------
+# cd drv
+
+# ./setup.sh
+
+Then reboot the machine or activate the module manually.
+
+remove:
+-----------
+# cd /etc/ds40xxhc
+
+# ./remove.sh
+
+
+Install/remove libraries 
+======================================
+
+SDK: system, player, net|server/client etc.
+
+RUN install.sh script with root privilege:
+
+install
+-----------
+# ./install.sh
+
+or (user with sudo privilege):
+$ sudo ./install.sh
+
+remove
+-----------
+# ./install.sh -e
+
+or:
+$ sudo ./install.sh -e
+
+SELinux workaround
+-----------
+# ./install.sh -r
+
+help message
+-----------
+# ./install.sh -h
+
+
+Compile/run demo
+======================================
+
+# cd demo
+
+
+##### For real-time audio preview, you must link the ds40xxhc's OUT_LINK to
+Audio card with audio line. The series-mounting is connect the first ds40xxhc's
+OUT_LINK to the next ds40xxhc's IN_LINK, then the last ds40xxhc's OUT_LINK to Audio card!
+

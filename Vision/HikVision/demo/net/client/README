@@ -1,0 +1,6 @@
+1.make sure the card have been installed correctly
+2.make sure libm4play.so and libtmnetc.so are in /usr/lib
+3.run clientc (./clinetc <serverip>[ChannelNum][ConnectType(0-tcp,1-udp,2-multicast)])
+4.ok!
+
+Note: The protocol of mulitcast could not running while the server and the client are runnig in the same pc!

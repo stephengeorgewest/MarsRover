@@ -1,0 +1,82 @@
+
+  Copyright 2004-2006, Hangzhou Hikvision Digital Technology Co., Ltd.
+
+
+   If you have any customized requirements, please contact us.
+
+   Website: http://en.hikvision.com
+   E-mail:  overseabusiness@hikvision.com
+   Tel:     0086-571-88060577
+   Fax:     0086-571-88805843
+
+   Support Tel: (+86571)-88075998-8079
+   Support Email: xuhf@hikvision.com
+
+   Address: No.36, Macheng Road, Hangzhou, Zhejiang, China
+   Post Code: 310012
+
+----------------------------------------------------------------------------
+
+
+      Video Capture Card Driver Install/Uninstall for Linux
+
+   NOTICE: Your Linux kernel might not be supported directly.
+           Please contact your equipment provider if necessary providing
+		   with below information (output of these commands):
+        
+           # uname -a
+           # uname -r
+           # gcc -v
+
+
+   Here DRIVER_NAME represents dvrcard or other names of the driver.
+
+   ==================== DRIVER INSTALL ==================== 
+
+1. Extract the gzipped archive with command:
+
+   $ tar zxvf linux_*_drv_[version]_[date].tar.gz
+
+2. cd the directory that extracted files occupy, and run setup.sh as root:
+
+   # ./setup.sh
+
+   The script will make a directory /etc/DRIVER_NAME, and copy all files
+   into the directory. Then it will copy the start script rc.DRIVER_NAME
+   into /etc/init.d/DRIVER_NAME or /etc/rc.d/init.d/DRIVER_NAME, and create
+   necessary symbol links to the script DRIVER_NAME in rc[0-6].d .
+
+   You had better keep /etc/DRIVER_NAME as it is.
+
+   After this step, the installation has been finished. You can reboot the
+   system or run script [/etc/DRIVER_NAME/rc.DRIVER_NAME start] to start
+   the driver.
+
+   NOTE:
+   If you have installed multiple kernels under one system, then it's
+   enough to run setup.sh once. However, some kernel may not be able
+   to load matched driver since our driver only support several versions
+   kernels.
+
+3. If you want to watch some verbose information during insmod/rmmod module,
+   just do as follows:
+
+   # cd /etc/DRIVER_NAME
+   # insmod DRIVER_NAME.ko verbose=1
+   # tail -n 50 /var/log/messages
+
+
+   ==================== DRIVER UNINSTALL ====================  
+
+   Someday you do not need the driver any longer for hardware upgrade or
+   some other reasons, and you want to uninstall the driver to keep the
+   system clean.  The driver uninstall is rather easier than install,
+   just do as follows:
+
+   # cd /etc/DRIVER_NAME
+   # ./remove.sh
+
+   The script will unload the driver and clean all the files/links/device
+   nodes related to the driver. At last it removes the whole /etc/DRIVER_NAME
+   directory.
+

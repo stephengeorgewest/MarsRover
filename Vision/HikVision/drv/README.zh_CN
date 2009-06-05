@@ -1,0 +1,78 @@
+
+   æ­å·žæµ·åº·å¨è§†æ•°å­—æŠ€æœ¯æœ‰é™å…¬å¸  ç‰ˆæƒæ‰€æœ‰ 2004-2006 
+
+
+   å¦‚æžœæ‚¨æœ‰å®šåˆ¶éœ€æ±‚ï¼Œæ¬¢è¿Žå’Œæˆ‘ä»¬è”ç»œã€‚
+
+   å…¬å¸ç½‘å€ï¼šhttp://www.hikvision.com
+
+   å…¬å¸é‚®ç®±ï¼šhkvs@hikvision.com
+
+   å…¬å¸æ€»æœºï¼š        (+86571)-88075998
+   ä¼ çœŸï¼š            (+86571)-88805843
+   æ¿å¡æŠ€æœ¯æ”¯æŒçƒ­çº¿ï¼š(+86571)-88081125
+   ç½‘ç»œç¡¬ç›˜å½•åƒæœºæŠ€æœ¯æ”¯æŒçƒ­çº¿: (+86571)-88846467
+
+   åœ°å€ï¼šä¸­å›½æ­å·žé©¬å¡è·¯36å·  é‚®ç¼–ï¼š310012
+
+----------------------------------------------------------------------------
+
+
+        ÊÓÒôÆµÑ¹Ëõ¿¨LinuxÇý¶¯°²×°/Ð¶ÔØËµÃ÷
+
+
+   ×¢ÒâÊÂÏî£º±¾Çý¶¯¿ÉÄÜÎÞ·¨Ö±½ÓÖ§³ÖÄúµÄLinuxÏµÍ³£¬ÇëÓëÉè±¸
+   ¹©Ó¦ÉÌÁªÏµ£¬²¢Ìá¹©ÈçÏÂ±ØÒªÐÅÏ¢£¨ÏÂÁÐÃüÁîµÄÊä³öÐÅÏ¢£©£º
+
+   # uname -a
+   # uname -r
+   # gcc -v
+
+
+   ===================== °²×°Çý¶¯ =======================
+
+   ×¢£ºDRIVER_NAMEÖ¸dvrcard»òÇý¶¯µÄÆäËûÃû³Æ¡£
+
+1. ½âÑ¹ËõÇý¶¯Ñ¹Ëõ°ü£¬ÃüÁîÈçÏÂ£º
+
+   $ tar zxvf linux_*_drv_[version]_[date].tar.gz
+
+2. ½øÈë½âÑ¹ºóÎÄ¼þËùÔÚÄ¿Â¼£¬ÒÔrootÕÊºÅÖ´ÐÐÈçÏÂ½Å±¾£º
+
+   # ./setup.sh
+
+   ÉÏÊö°²×°½Å±¾»á´´½¨Ä¿Â¼ /etc/DRIVER_NAME £¬²¢½«ËùÓÐ½âÑ¹ºó
+   ÎÄ¼þ¿½±´ÖÁ¸ÃÄ¿Â¼¡£È»ºó¸Ã½Å±¾½« rc.DRIVER_NAME ½Å±¾¿½±´ÖÁ
+   /etc/rc.d/init.d/DRIVER_NAME »ò/etc/init.d/DRIVER_NAME£¬
+   ²¢ÔÚrc[0-6].dÄ¿Â¼Àï´´½¨¸Ã½Å±¾µÄ·ûºÅÁ´½Ó¡£
+
+   °²×°Íê³Éºó£¬ÇëÎðËæÒâÉ¾³ý/ÐÞ¸Ä/etc/DRIVER_NAMEÄ¿Â¼ÄÚÎÄ¼þ¡£
+
+   ¸Ã²½ÖèÖ´ÐÐÍê±Ï£¬Éè±¸Çý¶¯¼´°²×°Íê³É¡£Äú¿ÉÒÔÖØÆô¼ÆËã»ú»òÊÖ
+   ¶¯Ö´ÐÐ½Å±¾[/etc/DRIVER_NAME/rc.DRIVER_NAME start] ¼ÓÔØÇý
+   ¶¯Ä£¿é¡£
+
+   ±¸×¢£º
+   Èç¹ûÔÚÍ¬Ò»¸öLinuxÏµÍ³Àï°²×°ÓÐ¶à¸öµÄÄÚºË£¬ÄÇÃ´Ö»ÐèÖ´ÐÐÒ»
+   ´Îsetup.sh¡£µ±È»£¬ÓÉÓÚÇý¶¯Ö§³ÖµÄÄÚºË°æ±¾ÊýÁ¿ÓÐÏÞ£¬Òò´ËÄú
+   ÏµÍ³ÀïµÄÄÚºË²¢²»Ò»¶¨¶¼ÄÜ¼ÓÔØ¸ÃÉè±¸Çý¶¯¡£
+
+3. ÈçÓû²é¿´Çý¶¯¼ÓÔØÊ±µÄÏêÏ¸ÐÅÏ¢£¬ÇëÖ´ÐÐÈçÏÂÃüÁî£º
+
+   # cd /etc/DRIVER_NAME
+   # insmod DRIVER_NAME.ko verbose=1
+   # tail -n 50 /var/log/messages
+
+
+   ===================== Ð¶ÔØÇý¶¯ =======================
+
+   ½«À´ÄúÓÐ¿ÉÄÜ²»ÔÙÐèÒªÒÑ°²×°µÄÇý¶¯£¬»òÊÇÓÉÓÚÉè±¸Éý¼¶»òÊÇÆä
+   ËûÔ­Òò¡£Óë°²×°Ïà±È£¬Ð¶ÔØÇý¶¯¸üÎª¼òµ¥£¬ÃüÁîÈçÏÂ£º
+
+   # cd /etc/DRIVER_NAME
+   # ./remove.sh
+
+   ÉÏÊö½Å±¾Ê×ÏÈÒÆ³ýÇý¶¯Ä£¿é£¬È»ºóÇå³ýÇý¶¯Ïà¹ØµÄËùÓÐÎÄ¼þ/·ûºÅ
+   Á´½Ó/Éè±¸½Úµã¡£×îºó¸Ã½Å±¾»áÉ¾³ýÕû¸ö/etc/DRIVER_NAMEÄ¿Â¼£¬
+   Òò´ËÈçÓÐ±ØÒªÇëÔ¤ÏÈ±¸·Ý¡£
+

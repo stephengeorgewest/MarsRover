@@ -1,0 +1,98 @@
+#!/bin/bash
+#
+# File:		   rc.ds40xxhc
+#
+# Description: Script to start/stop ds40xxhc device
+#				
+# Change Log:  
+#
+
+
+DEVICENAME="ds40xxhc"
+MODULENAME="ds40xxhc"
+MODULESUFF="o"
+INSTALPATH="/etc/${DEVICENAME}"
+
+KERNELVERS=`uname -r`
+
+owner="root"
+group="root"
+mod="666"
+
+stop()
+{
+	echo -n "Unloading module $MODULENAME...\t"
+	mod=`grep $MODULENAME /proc/modules | awk '{print $1}'`
+	if(test -z mod) then
+		echo "driver not loaded."
+		exit 0
+	fi
+	# Unload the driver
+	/sbin/rmmod $MODULENAME
+	# Remove stale device nodes
+	rm -f /dev/${DEVICENAME}*
+	
+	echo "[OK]"	
+}
+
+start()
+{
+	# "Starting $MODULENAME..." will display automatically
+	echo -en "version $KERNELVERS\t"
+	if [ -d /proc/$MODULENAME ]; then
+		echo -n "already loaded"
+		exit 0
+	fi
+
+	if echo $KERNELVERS | grep -q "2.6" >/dev/null ; then
+		MODULESUFF="ko"
+	fi
+
+	# Check if any corresponding driver exists for kernel
+	if [ ! -f ${INSTALPATH}/${MODULENAME}${KERNELVERS}.${MODULESUFF} ]; then 
+		echo -n "module missed"
+		exit 1
+	fi
+
+	# Prepare for the module binary to load
+	OBJECTPATH=${INSTALPATH}/${MODULENAME}.${MODULESUFF}
+	rm -f ${OBJECTPATH}
+	cp ${INSTALPATH}/${MODULENAME}${KERNELVERS}.${MODULESUFF} ${OBJECTPATH} 2>/dev/null
+	if [ $? != 0 ]; then
+		echo "run the script under ${INSTALPATH}/rc.${MODULENAME}"
+		exit 0
+	fi
+
+	# Invoke insmod with all arguments
+	/sbin/insmod -f ${OBJECTPATH} $* 2>/dev/null || { echo -n "no device found"; exit 1; }
+
+	# Get count of cards
+	DEVCOUNT=`cat /proc/$MODULENAME/info/devcount`
+
+	# Clean stale node
+	rm -f /dev/${DEVICENAME}*
+	# Get the device major number
+	MAJORNUM=`cat /proc/devices | awk "\\$2==\"$MODULENAME\" {print \\$1}"`
+	i=0
+	while (test $i -lt $DEVCOUNT)
+	do
+		mknod /dev/${DEVICENAME}$i c $MAJORNUM $i
+		chown $owner /dev/${DEVICENAME}$i
+		chgrp $group /dev/${DEVICENAME}$i
+		chmod $mod /dev/${DEVICENAME}$i
+		i=`expr $i + 1`
+	done
+}
+
+case $1 in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
+*)
+	echo $"Usage: $0 {start|stop}"
+	exit 1
+esac
+
