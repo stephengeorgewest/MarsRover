@@ -20,6 +20,13 @@ int init_Encoders(struct RoverEncoderStruct *RE)
 	(*RE).angle[2] = INIT_ANGLE3;
 	(*RE).angle[3] = INIT_ANGLE4;
 	(*RE).angle[4] = INIT_ANGLE5;
+
+	(*RE).indexed[0]=0;
+	(*RE).indexed[1]=0;
+	(*RE).indexed[2]=0;
+	(*RE).indexed[3]=0;
+	(*RE).indexed[4]=0;
+
 	//open dev/mem to access physical address space
 	if((fd = open("/dev/mem", O_RDWR | O_SYNC)) == -1) {
         printf("/dev/mem could not be opened.\n");
@@ -152,6 +159,7 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 			
 			//if it doesn't fall in those categories it must have a 1
 			default:
+				(*RE).indexed[0] =1;
 				(*RE).qcount[0] = 0;// = the reference angle or number
 				(*RE).angle[0] = INIT_ANGLE1;
 		}
@@ -233,6 +241,7 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 			
 			//if it doesn't fall in those categories it must have a 1
 			default:
+				(*RE).indexed[1] =1;
 				(*RE).qcount[1] = 0;// = the reference angle or number
 				(*RE).angle[1] = INIT_ANGLE2;
 		}
@@ -313,6 +322,7 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 			
 			//if it doesn't fall in those categories it must have a 1
 			default:
+				(*RE).indexed[2] =1;
 				(*RE).qcount[2] = 0;// = the reference angle or number
 				(*RE).angle[2] = INIT_ANGLE3;
 		}
@@ -393,6 +403,7 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 			
 			//if it doesn't fall in those categories it must have a 1
 			default:
+				(*RE).indexed[3] =1;
 				(*RE).qcount[3] = 0;// = the reference angle or number
 				(*RE).angle[3] = INIT_ANGLE4;
 		}
@@ -473,6 +484,7 @@ int update_Encoders(struct RoverEncoderStruct *RE)
 			
 			//if it doesn't fall in those categories it must have a 1
 			default:
+				(*RE).indexed[4] =1;
 				(*RE).qcount[4] = 0;// = the reference angle or number
 				(*RE).angle[4] = INIT_ANGLE5;
 		}

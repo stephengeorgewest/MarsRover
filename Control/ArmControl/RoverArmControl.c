@@ -5,6 +5,10 @@
 #define ARM_CONTROL_ON_OFF 0
 #define ARM_CONTROL_GAINS 1
 #define ARM_CONTROL_CONTROL 2
+#define ARM_CONTROL_ANGLES 3
+
+#define MAX_FORWARD 52
+#define MAX_BACKWARD 48
 
 #define P 0
 #define I 1
@@ -29,7 +33,7 @@ main(int argc, char *argv[])
 	float joint_PID[NUM_JOINTS][3];
 	int joint_indexed[NUM_JOINTS];
 	int i=0;
-	int control_is_on = 1;
+	int control_is_on = 0;
 	
 
 	for(i=0; i<NUM_JOINTS; i++)
@@ -44,7 +48,8 @@ main(int argc, char *argv[])
 		joint_PID[i][I]=0.0;
 		joint_PID[i][D]=0.0;
 	}
-
+	joint_PID[2][P]=20.0;
+	
 	//start up code for encoder
 	struct RoverEncoderStruct RE;
 	init_Encoders(&RE);
@@ -57,10 +62,21 @@ main(int argc, char *argv[])
 		
 		
 		update_Encoders(&RE);
-		
-		
-		//get command message
+				
 		char message[MSGBUFSIZE];
+//		message[0] = ROVER_MAGIC_ARM;
+//		message[1] = ARM_CONTROL_ANGLES;
+		
+//		for(i=0;i<NUM_JOINTS; i++)
+//		{
+//				uint32_t value;
+//                               memcpy(&value, &(RE.angle[i]), 4);
+//                                uint32_t value1 = htonl(value);
+//				memcpy(&message[i*5+2], &value1,4);
+//				message[i*5+2+1]=RE.indexed[i];
+//		}
+//		send_message(&arm_RN,	message, 2+NUM_JOINTS*5);
+		//get command message
 		int nbytes= recieve_message(&arm_RN, message);
 		if(nbytes>0)// got a message!
 		{
@@ -88,7 +104,7 @@ main(int argc, char *argv[])
 									+(message[float_start+1]<<16)
 									+(message[float_start+2]<<8)
 									+(message[float_start+3]<<0)
-								);
+									);
 								memcpy(&joint_PID[i][j], &reverse,4);
 								printf("joint[%d][%d]=%f\n", i,j, joint_PID[i][j]);
 							}
@@ -153,25 +169,36 @@ main(int argc, char *argv[])
 			message[1]=NUM_JOINTS;
 			for(i=0; i<NUM_JOINTS; i++)
 			{
-				message[i*5+2]=11+i;
+				message[i*5+2]=26+i;
 				//htonl();//host order to network order long
-				float error = joint_commands[i]-RE.angle[i];
-				if(i==0)
-					printf("angle[%d]=%f\n",i, RE.angle[i]);
-				joint_accumulated_errors[i]+=error;
-				float error_diff = error - joint_previous_errors[i];
-				joint_previous_errors[i]=error;
-				float value = joint_PID[i][P]*error
+				//if(i==2)
+				//	printf("angle[%d]=%f\n",i, RE.angle[i]);
+				float value;
+				if(1)//RE.indexed[i])
+				{
+					float error = joint_commands[i]-RE.angle[i];
+					joint_accumulated_errors[i]+=error;
+					float error_diff = error - joint_previous_errors[i];
+					joint_previous_errors[i]=error;
+					value = joint_PID[i][P]*error
 							 +joint_PID[i][I]*joint_accumulated_errors[i]
 							 +joint_PID[i][D]*error_diff+50;
+					if(value<MAX_BACKWARD)
+						value=MAX_BACKWARD;
+					else if(value>MAX_FORWARD)
+						value = MAX_FORWARD;
+				}
+				else
+					value=50.0;
 				uint32_t value0;
 				memcpy(&value0, &value, 4);
 				uint32_t value1 = htonl(value0);
 				
-				if(i==0)
+				if(i==2)
 				{
-					printf("error[%d]=%f\n",i, value);
-					printf("%x\n%x\n\n",value0, value1);
+					//printf("gpio data[%d]=%d\n", i, RE.qData[i]);
+					//printf("servo command[%d]=%f, indexed=%d\n",i, value, RE.indexed[i]);
+					//printf("%x\n%x\n\n",value0, value1);
 				}
 				memcpy(&message[i*5+3],&value1,4);//fix me to network order
 			}
@@ -180,5 +207,7 @@ main(int argc, char *argv[])
 			for(i=0; i<nbytes; i++)
 				message[i]=0;
 		}
+		//else
+			//printf("control is on %d\n", control_is_on);
 	}
 }
