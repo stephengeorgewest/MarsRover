@@ -1,23 +1,48 @@
 package rover.network;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import javax.media.Buffer;
+import javax.media.Format;
+import javax.media.format.VideoFormat;
+import rover.video.FrameListener;
 
-import java.awt.image.BufferedImage;
-
-import rover.utils.Bitmap;
-
+/*
+ * Name: Video Packet Buffer 
+ * Author: Travis L Brown
+ * Description: 
+ * Converts a stream of video packets into a stream of frames. It's basic function is to 
+ * wait until all packets for a given frame have been received, knit these packets together
+ * to form 1 complete frame and then raise an event to notify others that a new frame is available.
+ * 
+ * If a packet from a newer frame is received before all the packets from the previous frame have 
+ * come in, the packet buffer will drop that frame and start assembling the next one.
+ * 
+ * This class is really more useful for uncompressed or lightly compressed video formats 
+ * such as RGB or YUV where fitting a whole frame on one packet is impossible. It is 
+ * recommended that frames be transfered on a single packet if possible. 
+ * 
+ * The theoretical max size for a UDP packet is 64 KBytes although many systems don't support 
+ * packets that large.
+ * 
+ * 
+ */
 public class VideoPacketBuffer
 {
     int currentPacketCount;
     int currentFrameID;
     VideoPacket[] buffer;
 
-    public BufferedImage current_image;
-    public Bitmap b = null;
-
+    public Buffer current_frame; 
+    Format current_format;
+    
+    ArrayList<FrameListener> listeners = null;
+    
+    
     public VideoPacketBuffer()
     {
         currentPacketCount = -1;
         currentFrameID = -1;
-        current_image = null;
+        current_frame = null;
     }
 
     private void resetState(){
@@ -28,26 +53,31 @@ public class VideoPacketBuffer
         }
     }
 
-    //video packets come in the following format [packet ID][ChannelID][image width][image height][FrameID][PacketNumber][TotalPackets][Data...]
+    public void addFrameListener(FrameListener fl){
+    	if(listeners == null){
+    		listeners = new ArrayList<FrameListener>();
+    	}
+    	listeners.add(fl);
+    }
+    
+    /*This is the basic function that is called each time a new packet is received, 
+     * it contains the main buffering logic of the Video Packet Buffer 
+     */
     public void Process(VideoPacket p)
     {
         p.fillData();
+        
         //if we've changed to a different number of packets/frame reset the state
         if(currentPacketCount != p.TotalPackets){
-            //change the capacity of the buffer
+            //change the capacity of the buffer and update the format
             buffer = new VideoPacket[p.TotalPackets];
             currentPacketCount = p.TotalPackets;
-            for(int i = 0;i<currentPacketCount;i++){
-                buffer[i] = null;
-            }
-        }
-        if (p.FrameID != currentFrameID)
-        {
-            //reset state
-            for (int i = 0; i < currentPacketCount; i++)
-            {
-                buffer[i] = null;
-            }
+            current_format = new VideoFormat(new String(p.fourcc), new Dimension(p.Width, p.Height), p.Width*p.Height, (new byte[0]).getClass(), p.fps);
+            
+            resetState();
+        } else if (p.FrameID != currentFrameID){
+        	//we've received an out of order packet
+            resetState();
         }
 
         currentFrameID = p.FrameID;
@@ -62,176 +92,51 @@ public class VideoPacketBuffer
             if(buffer[i] == null) allPacketsReceived = false;
         }
 
-        if (allPacketsReceived) MergePackets();
+        if (allPacketsReceived){
+        	MergePackets();
+        	nextFrameReady();
+        	resetState();
+        }
+        
 
     }
 
     private void MergePackets(){
+    	
+    	Buffer nextFrame = new Buffer();
+    	nextFrame.setFormat(current_format);
+    	nextFrame.setLength(buffer[0].FrameSize);
+    	nextFrame.setSequenceNumber(buffer[0].FrameID);
+    	
+    	//System.out.println(nextFrame.getLength() + " " + buffer[0].packet.length);
+    	byte[] data = new byte[buffer[0].FrameSize];
 
-        int rows = buffer[0].Height;
-        int cols = buffer[0].Width;
-
-        //merge the packets together to create a new image
-        //System.out.println("rows = " + rows + "cols = " + cols);
-        int rgb_size = rows * cols * 3;
-        int yuv_size = rows*cols + rows*cols/2;
-
-        //Console.WriteLine("Allocating space for rgb frame, total memory = " + System.GC.GetTotalMemory(true));
-
-        byte[] rgb = new byte[rgb_size];
-
-        //Console.WriteLine("Allocating space for yuv frame, total memory = " + System.GC.GetTotalMemory(true));
-        byte[] yuv = new byte[yuv_size];
-
-        int yuv_index = 0;
-        for (int i = 0; i < currentPacketCount; i++)
+        int data_index = 0;
+        for (int i = 0; i < buffer[0].TotalPackets; i++)
         {
-            //Console.WriteLine("merging packet " + i + " " + buffer[i].bytes + " bytes");
-            int count = Math.min(buffer[i].bytes - VideoPacket.DATA_OFFSET, yuv_size - yuv_index);
-            System.arraycopy(buffer[i].packet, VideoPacket.DATA_OFFSET, yuv, yuv_index, count);
-            yuv_index += count;
-            
-            /*for(int j = VideoPacket.DATA_OFFSET;j<buffer[i].bytes;j++){
-                yuv[yuv_index] = buffer[i].packet[j];
-                yuv_index++;
-                if (yuv_index > yuv_size)
-                {
-                    Console.WriteLine("Error, image packet corruption");
-                    resetState();
-                    return;
-                }
-            }*/
+//        	System.out.println(buffer[i].toString());
+//        	System.out.println("packetlength = " + buffer[i].bytes + " payload = " + buffer[i].PacketPayload);
+//        	System.out.println("total frame data = " + buffer[i].FrameSize);
+//            System.out.println("merging packet " + i + " " + buffer[i].PacketPayload + " bytes");
+            int count = buffer[i].PacketPayload;
+//            System.out.println("data_index = " + data_index + " count = " + count);
+//            System.out.println(buffer[i].packet[VideoPacket.HEADER_LENGTH] + " " 
+//            					+ buffer[i].packet[VideoPacket.HEADER_LENGTH+1] + " "
+//            					+ buffer[i].packet[VideoPacket.HEADER_LENGTH+2] + " "
+//            					+ buffer[i].packet[VideoPacket.HEADER_LENGTH+3]);
+            System.arraycopy(buffer[i].packet, VideoPacket.HEADER_LENGTH, data, data_index, count);
+            //System.out.println(" header = " + Integer.toHexString(data[0]) + " " + Integer.toHexString(data[1]) + " " + Integer.toHexString(data[2]) + " " + Integer.toHexString(data[3]));
+            data_index += count;
         }
-
-        //Console.WriteLine("Converting YUV image of size " + yuv_index);
-
-        //convert image to rgb
-        convert_YUV420P_RGB(yuv, rgb, rows, cols);
-
-        //Buffer.BlockCopy(yuv, 0, rgb, 0, yuv_size);
-
-        //current_image = new Bitmap(cols, rows, PixelFormat.Format24bppRgb);
-        //CopyDataToBitmap(rgb, current_image);
-
-//        rgb = new byte[cols*rows*3];
-//        for(int i = 0;i<rows;i++){
-//        	for(int j = 0;j<cols;j++){
-//        		rgb[3*(i*cols+j)] = (byte)(255*i/rows);
-//        		rgb[3*(i*cols+j)+1] = (byte)(255);
-//        		rgb[3*(i*cols+j)+2] = (byte)(255);
-//        	}
-//        }
-        
-        b = new Bitmap(rgb, cols, rows);
-
-        current_image = b.getImage();
-        
-        //reset the state
-        resetState();
+        nextFrame.setData(data);
+        current_frame = nextFrame;
     }
 
-
-    void convert_YUV420P_RGB(byte[] yuv, byte[] rgb, int rows, int cols)
-    {
-        int rvScale = 91881;
-        int guScale = -22553;
-        int gvScale = -46801;
-        int buScale = 116129;
-        int yScale = 65536;
-
-        
-        int Y_index = 0;
-        int U_index = rows*cols;
-        int V_index = U_index + rows * cols/4;
-        int RGB_index = 0;
-
-        for (int r = 0; r <= rows - 2; r += 2)
-        {
-            for (int c = 0; c <= cols - 2; c += 2)
-            {
-                //gather yuv information for 4 pixel group
-                int y00, y01, y10, y11, u, v;
-                y00 = yuv[Y_index] & 0xFF;
-                y01 = yuv[Y_index+1] & 0xFF;
-                y10 = yuv[Y_index + cols] & 0xFF;
-                y11 = yuv[Y_index + cols + 1] & 0xFF;
-                u = (yuv[U_index] & 0xFF) - 128;
-                v = (yuv[V_index] & 0xFF) - 128;
-
-//                if(c == 20 && r == 40){
-//                	System.out.println("y, u, v" + y00 + " " + y01 + " " + y10 + " " + y11 + " " + u + " " + v);
-//                }
-                
-                //calculate rgb base components
-                int R, G, B, x;
-                G = guScale * u + gvScale * v;
-                R = rvScale * v;
-                B = buScale * u;
-                /*
-                rgb[RGB_index] = (byte) y00;
-                rgb[RGB_index + 1] = (byte)y00;
-                rgb[RGB_index + 2] = (byte)y00;
-                rgb[RGB_index + 3] = (byte)y01;
-                rgb[RGB_index + 4] = (byte)y01;
-                rgb[RGB_index + 5] = (byte)y01;
-                rgb[RGB_index + cols * 3] = (byte)y10;
-                rgb[RGB_index + 1 + cols * 3] = (byte)y10;
-                rgb[RGB_index + 2 + cols * 3] = (byte)y10;
-                rgb[RGB_index + 3 + cols * 3] = (byte)y11;
-                rgb[RGB_index + 4 + cols * 3] = (byte)y11;
-                rgb[RGB_index + 5 + cols * 3] = (byte)y11;
-                */
-
-                
-                //top left pixel
-                x = R + y00 * yScale;
-//                if(c == 20) System.out.print(x + " ");
-                rgb[RGB_index] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = G + y00 * yScale;
-//                if(c == 20) System.out.print(x + " ");
-                rgb[RGB_index + 1] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = B + y00 * yScale;
-//                if(c == 20) System.out.print(x + " ");
-                rgb[RGB_index + 2] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-
-//                if(c == 20) System.out.println("{" + (rgb[RGB_index] & 0xFF) + " " + (rgb[RGB_index+1] & 0xFF)+ " " + (rgb[RGB_index+2] & 0xFF) + "}");
-                
-                //top right pixel
-                x = R + y01 * yScale;
-                rgb[RGB_index + 3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = G + y01 * yScale;
-                rgb[RGB_index + 4] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = B + y01 * yScale;
-                rgb[RGB_index + 5] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-
-                //bottom left pixel
-                x = R + y10 * yScale;
-                rgb[RGB_index + cols*3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = G + y10 * yScale;
-                rgb[RGB_index + 1 + cols*3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = B + y10 * yScale;
-                rgb[RGB_index + 2 + cols*3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-
-                //bottom right pixel
-                x = R + y11 * yScale;
-                rgb[RGB_index + 3 + cols*3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = G + y11 * yScale;
-                rgb[RGB_index + 4 + cols*3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                x = B + y11 * yScale;
-                rgb[RGB_index + 5 + cols*3] = (byte)((x) > 0xffffff ? 0xff : ((x) <= 0xffff ? 0 : ((x) >> 16)));
-                
-                
-
-                Y_index += 2;
-                U_index++;
-                V_index++;
-
-                RGB_index += 6;
-
-            }
-            Y_index += cols;
-            RGB_index += 3 * cols;
-        }
-
+    private void nextFrameReady(){
+    	if(listeners != null)
+	    	for(FrameListener fl : listeners){
+	    		fl.nextFrameReady(current_frame, buffer[0].ChannelID);
+	    	}
     }
+    
 }

@@ -15,8 +15,14 @@ public class Waypoint {
 		
 	}
 	
+	public Waypoint(GpsData data) {
+		lat = data.Latitude;
+		lon = data.Longitude;
+		z = data.Elevation;
+	}
+
 	public String toString(){
-		return name + " " + GpsData.formatLatLon(lat, lon);
+		return name + " " + GpsData.formatCoordinates(lat, lon);
 	}
 	
 }

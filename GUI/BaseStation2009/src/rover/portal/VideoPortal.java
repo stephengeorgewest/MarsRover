@@ -32,6 +32,7 @@ import rover.network.SocketInfo;
 import rover.network.VideoPacket;
 import rover.network.VideoPacketBuffer;
 import rover.utils.Stopwatch;
+import rover.video.BufferedImageExtractor;
 
 public class VideoPortal extends Portal {
 
@@ -405,7 +406,7 @@ public class VideoPortal extends Portal {
         buffer.Process(test2);
         buffer.Process(test3);
         
-        SetFrame(buffer.current_image);
+        SetFrame(BufferedImageExtractor.convert(buffer.current_frame));
 		
 	}
 

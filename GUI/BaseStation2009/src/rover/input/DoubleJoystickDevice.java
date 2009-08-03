@@ -61,26 +61,55 @@ public class DoubleJoystickDevice implements InputDevice {
 
 			Component[] comps = right.getComponents();
             
-            int i = 0;
+			float x_r = 0,y_r = 0,z_r = 0, rz_r = 0;
+			float[] buttons_r = new float[12];
+			
             for(Component comp : comps){
-    			if(comp.isAnalog() && i == 0){
-    				state.axes[1] = -comp.getPollData();
-    				state.axes[3] = -comp.getPollData();
-    				i++;
-    			}else if(comp.isAnalog() && i == 1){
-    				state.axes[4] = comp.getPollData();
-    				break;
-    			}
-    		}
+            	String ID = comp.getIdentifier().getName();
+            	//System.out.println(ID);
+            	if(Character.isDigit(ID.charAt(0))){
+            		int b;
+            		try{b = Integer.parseInt(ID);}
+            		catch (Exception e){ continue;}
+            		buttons_r[b] = comp.getPollData();
+            		//System.out.println(buttons[b]);
+            	}
+            	else if(ID.compareTo("x") == 0){x_r = comp.getPollData();}
+            	else if(ID.compareTo("y") == 0){y_r = comp.getPollData();}
+            	else if(ID.compareTo("z") == 0 || ID.compareTo("slider") == 0){z_r = comp.getPollData();}
+            	else if(ID.compareTo("rz") == 0){rz_r = comp.getPollData();}
+            }
+            
             comps = left.getComponents();
+            
+            float x_l = 0,y_l = 0,z_l = 0, rz_l = 0;
+			float[] buttons_l = new float[12];
+			
             for(Component comp : comps){
-    			if(comp.isAnalog()){
-    				state.axes[0] = -comp.getPollData();
-    				state.axes[2] = -comp.getPollData();
-    				break;
-    			}
-    		}
+            	String ID = comp.getIdentifier().getName();
+            	//System.out.println(ID);
+            	if(Character.isDigit(ID.charAt(0))){
+            		int b;
+            		try{b = Integer.parseInt(ID);}
+            		catch (Exception e){ continue;}
+            		buttons_l[b] = comp.getPollData();
+            		//System.out.println(buttons[b]);
+            	}
+            	else if(ID.compareTo("x") == 0){x_l = comp.getPollData();}
+            	else if(ID.compareTo("y") == 0){y_l = comp.getPollData();}
+            	else if(ID.compareTo("z") == 0 || ID.compareTo("slider") == 0){z_l = comp.getPollData();}
+            	else if(ID.compareTo("rz") == 0){rz_l = comp.getPollData();}
+            }
+            
+            state.axes[0] = state.axes[2] = -1*y_l;
+    		state.axes[1] = state.axes[3] = -1*y_r;
+            state.axes[4] = rz_r;
+            
 		}
+		
+		
+		
+		
 		return state;
 	}
 

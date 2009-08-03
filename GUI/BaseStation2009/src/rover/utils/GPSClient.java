@@ -68,11 +68,11 @@ public class GPSClient implements Runnable{
             	}
 	            byte[] buf = new byte[1024];
 				DatagramPacket recv = new DatagramPacket(buf, buf.length);
-	//			System.out.println("Listening for gps");
+				//System.out.println("GPS Client Listening for Packets");
 				socket.receive(recv);
 	
 				recv.getLength();
-	
+				//System.out.println("GPS Packet received");
 	            String str = new String(buf);
 	            if (str.length() < 5) continue;
 	            GPSDataReceived(str);

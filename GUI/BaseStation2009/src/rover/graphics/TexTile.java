@@ -39,7 +39,7 @@ public class TexTile {
 	
 	FloatBuffer geoBuffer;
 	FloatBuffer texBuffer;
-	IntBuffer indicies;
+	IntBuffer[] indicies;
 	
 	int xres;
 	int yres;
@@ -47,10 +47,13 @@ public class TexTile {
 	TexTile parent;
 	public boolean isLeaf = false;
 	
+	public int garbage_counter;
+	
 	public static boolean drawTexture = true;
 	public static boolean drawLines = false;
 	public static Color tileColor = new Color(182,114,12);
 	//public static Color tileColor = new Color(243,172,75);
+	
 	
 	
 	public TexTile(TexTile parent){
@@ -63,6 +66,7 @@ public class TexTile {
 		teximage = null;
 		address = null;
 		recompute = true;
+		garbage_counter = TexTileDB.GARBAGE_RENDER_COUNT;
 	}
 
 	public boolean fileExists(){
@@ -83,6 +87,7 @@ public class TexTile {
 		}
 		if(teximage == null) return false;
 		else{
+			garbage_counter = TexTileDB.GARBAGE_RENDER_COUNT;
 			preloaded = true;
 			return true;
 		}
@@ -112,6 +117,7 @@ public class TexTile {
 		else{
 			loaded = true;
 			recompute = true;
+			garbage_counter = TexTileDB.GARBAGE_RENDER_COUNT;
 			return true;
 		}
 	}
@@ -133,7 +139,9 @@ public class TexTile {
 	
 	public void Render(GL gl, GLU glu, GeoData geo) {
 		
-		//System.out.println("Render Called");
+		garbage_counter = TexTileDB.GARBAGE_RENDER_COUNT;
+		
+		//System.out.println("Render( " + address  + ") ");
 		//System.out.println("lat " + latmin + " to " + latmax);
 		//System.out.println("lon " + lonmin + " to " + lonmax);
 		
@@ -145,6 +153,8 @@ public class TexTile {
 			return;
 		}
 		
+		
+		
 		if(geoBuffer == null || recompute == true){
 			//System.out.println("Initiating Buffers");
 			int pblat = geo.pointsBetweenLat(latmin, latmax, lon);
@@ -153,11 +163,11 @@ public class TexTile {
 			//xres = Math.max(2, Math.min(pblon, 256));
 			
 			if(pblat > 2)
-				yres = 9;
+				yres = 25;
 			else
 				yres = 2;
 			if(pblon > 2)
-				xres = 9;
+				xres = 25;
 			else
 				xres = 2;
 			
@@ -165,12 +175,15 @@ public class TexTile {
 			
 			geoBuffer = BufferUtil.newFloatBuffer(3*(xres)*(yres));
 			texBuffer = BufferUtil.newFloatBuffer(2*(xres)*(yres));
-            indicies = BufferUtil.newIntBuffer((2*xres)*(yres-1));
-            int index = 0;
+            indicies = new IntBuffer[yres];
+			
+            
             for(int y = 0;y<yres-1;y++){
+            	indicies[y] = BufferUtil.newIntBuffer((2*xres));
+            	int index = 0;
     			for(int x = 0;x<xres;x++){
-    				indicies.put(index++, y*xres + x);
-    				indicies.put(index++, (y+1)*xres + x);
+    				indicies[y].put(index++, y*xres + x);
+    				indicies[y].put(index++, (y+1)*xres + x);
     			}
             }
 //            for(int i = 0;i<index;i++){
@@ -178,7 +191,7 @@ public class TexTile {
 //            }
             
             TextureCoords tc = texture.getImageTexCoords();
-            index = 0;
+            int index = 0;
             for(float y = 0;y<yres;y++){
             	double texy =y/(yres-1);
             	double vlat = latmin + (yres-y-1)*(latmax-latmin)/(yres-1);
@@ -221,7 +234,8 @@ public class TexTile {
 		}
 		
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL);
-		gl.glDrawElements(GL.GL_QUAD_STRIP, indicies.capacity(), GL.GL_UNSIGNED_INT, indicies);
+		for(int i = 0;i<yres-1;i++)
+			gl.glDrawElements(GL.GL_QUAD_STRIP, indicies[i].capacity(), GL.GL_UNSIGNED_INT, indicies[i]);
 		
 		//System.out.println("Rendering");
 		
@@ -235,7 +249,9 @@ public class TexTile {
 			gl.glLineWidth(2);
 			
 			gl.glColor4ub((byte)0, (byte)255, (byte)0, (byte) 255);
-			gl.glDrawElements(GL.GL_QUAD_STRIP, indicies.capacity(), GL.GL_UNSIGNED_INT, indicies);
+			for(int i = 0;i<yres-1;i++)
+				gl.glDrawElements(GL.GL_QUAD_STRIP, indicies[i].capacity(), GL.GL_UNSIGNED_INT, indicies[i]);
+			
 		}
 		
 //		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);

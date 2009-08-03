@@ -1,6 +1,8 @@
 package rover.utils;
 
+import java.io.File;
 import java.text.DecimalFormat;
+import org.geotools.referencing.operation.transform.NADCONTransform;
 
 public class GpsData{
 
@@ -12,10 +14,10 @@ public class GpsData{
     public double Compass_Heading;
     public byte NumberOfSatellites;
     public boolean LockAcquired;
-    public byte Strikes;
     public boolean goodData;
     public char lathemi;
     public char lonhemi;
+    public long time_stamp;
 	
     public GpsData()
     {
@@ -27,11 +29,28 @@ public class GpsData{
         Compass_Heading = Double.NaN;
         NumberOfSatellites = 0;
         LockAcquired = false;
-        Strikes = 5;
         goodData = false;
         lathemi = ' ';
         lonhemi = ' ';
-
+        time_stamp = -1;
+    }
+    
+    @Override
+    public GpsData clone(){
+    	GpsData data = new GpsData();
+    	data.Latitude = Latitude;
+    	data.Longitude = Longitude;
+    	data.Elevation = Elevation;
+    	data.Heading = Heading;
+    	data.Compass_Heading = Compass_Heading;
+    	data.goodData = goodData;
+    	data.lathemi = lathemi;
+    	data.lonhemi = lonhemi;
+    	data.LockAcquired = LockAcquired;
+    	data.NumberOfSatellites = NumberOfSatellites;
+    	data.Speed = Speed;
+    	data.time_stamp = time_stamp;
+    	return data;
     }
 
     @Override
@@ -45,103 +64,274 @@ public class GpsData{
     }
     
 
-    public double getRealLat()
+//    public double getRealLat()
+//    {
+//        if (Latitude == Double.NaN) return 0;
+//        String lat = df.format(Latitude);
+//        int ilat = lat.indexOf('.');
+//        double latitude = 0;
+//        double minutes = 0;
+//        try
+//        {
+//            latitude = Double.parseDouble(lat.substring(0, ilat - 2));
+//            minutes = Double.parseDouble(lat.substring(ilat - 2, lat.length() - (ilat - 2)));
+//        }
+//        catch (Exception e) 
+//        {
+//            return 0;
+//        }
+//        latitude += minutes / 60.0;
+//        if (lathemi == 'W') latitude *= -1;
+//
+//        return latitude;
+//    }
+//    public double getRealLong()
+//    {
+//        if (Longitude == Double.NaN) return Longitude;
+//        String lon = df.format(Longitude);
+//        int ilon = lon.indexOf('.');
+//
+//        double longitude = 0;
+//        double minutes = 0;
+//
+//        try
+//        {
+//            longitude = Double.parseDouble(lon.substring(0, ilon - 2));
+//            minutes = Double.parseDouble(lon.substring(ilon - 2, lon.length() - (ilon - 2)));
+//        }
+//        catch (Exception e)
+//        {
+//            return 0;
+//        }
+//        longitude += minutes / 60.0;
+//        if (lonhemi == 'W') longitude *= -1;
+//
+//        return longitude;
+//    }
+
+
+
+    public static String getFormatedPos(GpsData data)
     {
-        if (Latitude == Double.NaN) return 0;
-        String lat = df.format(Latitude);
-        int ilat = lat.indexOf('.');
-        double latitude = 0;
-        double minutes = 0;
-        try
-        {
-            latitude = Double.parseDouble(lat.substring(0, ilat - 2));
-            minutes = Double.parseDouble(lat.substring(ilat - 2, lat.length() - (ilat - 2)));
-        }
-        catch (Exception e) 
-        {
-            return 0;
-        }
-        latitude += minutes / 60.0;
-        if (lathemi == 'W') latitude *= -1;
-
-        return latitude;
-    }
-    public double getRealLong()
-    {
-        if (Longitude == Double.NaN) return Longitude;
-        String lon = df.format(Longitude);
-        int ilon = lon.indexOf('.');
-
-        double longitude = 0;
-        double minutes = 0;
-
-        try
-        {
-            longitude = Double.parseDouble(lon.substring(0, ilon - 2));
-            minutes = Double.parseDouble(lon.substring(ilon - 2, lon.length() - (ilon - 2)));
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-        longitude += minutes / 60.0;
-        if (lonhemi == 'W') longitude *= -1;
-
-        return longitude;
-    }
-
-
-    public String getFormatedPos()
-    {
-        if (Latitude == Double.NaN || Longitude == Double.NaN) return "Invalid";
-        return formatLatLon(Latitude, Longitude);
+        if (data.Latitude == Double.NaN || data.Longitude == Double.NaN) return "Invalid";
+        return getFormatedPosWGS84(data.Latitude, data.Longitude);
     }
     
-    public static String formatLatLon(double lat, double lon){
-    	return formatLat(lat) + " " + formatLon(lon);
-    }
-    
-    public static String formatLat(double lat){
+    public static String getFormatedPosWGS84(double lat, double lon){
     	if(format_mode == MODE_DMS){
     		int lat_deg = (int)(lat);
     		int lat_min = (int)(60*(lat-lat_deg));
-    		int lat_sec = (int)(3600*(lat-lat_deg-lat_min/60.0));
-
-    		return lat_deg + " " + lat_min + "' " + lat_sec + "\" "; 
+    		float lat_sec = (float)(3600*(lat-lat_deg-lat_min/60.0));
     		
-    	} else if(format_mode == MODE_DECIMAL){
-    		return ldf.format(lat);
-    	} else if(format_mode == MODE_DM){
+    		int lon_deg = (int)(lon);
+    		int lon_min = (int)(60*(lon-lon_deg));
+    		float lon_sec = (float)(3600*(lon-lon_deg-lon_min/60.0));
+    		
+    		return lat_deg + " " + lat_min + "' " + sdf.format(lat_sec) + "\" " 
+    				+ lon_deg + " " + lon_min + "' " + sdf.format(lon_sec) + "\""; 
+    		
+    	} else if(format_mode == MODE_DD){
+    		return ldf.format(lat) + " " + ldf.format(lon);
+    	} else if(format_mode == MODE_DDM){
     		int lat_deg = (int)(lat);
     		double lat_min = 60*(lat-lat_deg);
 
-    		return lat_deg + " " + df.format(lat_min) + "' "; 
-    		
-    	} else  {
-    		return "Unknown format mode ";
-    	}
-    }
-    
-    public static String formatLon(double lon){
-    	if(format_mode == MODE_DMS){
-    		int lon_deg = (int)(lon);
-    		int lon_min = (int)(60*(lon-lon_deg));
-    		int lon_sec = (int)(3600*(lon-lon_deg-lon_min/60.0));
-
-    		return lon_deg + " " + lon_min + "' " + lon_sec + "\""; 
-    		
-    	} else if(format_mode == MODE_DECIMAL){
-    		return ldf.format(lon);
-    	} else if(format_mode == MODE_DM){
     		int lon_deg = (int)(lon);
     		double lon_min = 60*(lon-lon_deg);
 
-    		return lon_deg + " " + df.format(lon_min) + "' "; 
+    		return lat_deg + " " + df.format(lat_min) + "' " 
+    				+ lon_deg + " " + df.format(lon_min) + "' "; 
     		
+    	} else if(format_mode == MODE_UTM){
+    		return cc.latLon2UTM(lat, lon);
     	} else  {
-    		return "Unknown format mode";
+    		return "Unknown format mode ";
+    	}
+    	
+    	
+    	
+    }
+    
+    public static double distBetween(GpsData d1, GpsData d2){
+    	
+    	return 0;
+    }
+
+    private static void initNADCON(){
+    	nct = null;
+    	try{
+    		File las = new File ("./geocache/GRIDS/conus.las");
+    		File los = new File ("./geocache/GRIDS/conus.los");
+    		nct = new NADCONTransform(las.getAbsolutePath(), los.getAbsolutePath());
+    		//nct.
+    	}catch (Exception e){
+    		e.printStackTrace();
     	}
     }
+    
+//    public static String formatLatLon(GpsData data){
+//    	return formatLat(data) + " " + formatLon(data);
+//    }
+    
+    public static String formatCoordinates(double lat, double lon){
+    	if(datum_mode == GpsData.NAD27){ //conversion required
+    		if(nct == null) initNADCON();
+    		try{
+				double[] src = new double[2];
+				src[0] = lon;
+				src[1] = lat;
+				nct.inverseTransform(src, 0, src, 0, 1);
+				lon = src[0];
+				lat = src[1];
+    		}catch (Exception e){
+    			e.printStackTrace();
+    		}
+    	}
+    	
+    	return getFormatedPosWGS84(lat, lon);
+    }
+    
+
+	public static GpsData parseCoordinates(String text) {
+		GpsData d = new GpsData();
+		String[] parts = text.split(" ");
+		if(format_mode == MODE_DMS){
+			if(parts.length == 6){
+
+				int lat_deg = Integer.parseInt(parts[0]);
+	    		int lat_min = Integer.parseInt(parts[1].substring(0, parts[1].length()-1));
+	    		float lat_sec = Float.parseFloat(parts[2].substring(0, parts[1].length()-2));
+	    		
+	    		int lon_deg = Integer.parseInt(parts[3]);
+	    		int lon_min = Integer.parseInt(parts[4].substring(0, parts[4].length()-1));
+	    		float lon_sec = Float.parseFloat(parts[5].substring(0, parts[5].length()-2));
+	    		
+	    		d.Latitude = lat_deg+lat_min/60.0 + lat_sec/3600.0;
+	    		d.Longitude = lon_deg+lon_min/60.0 + lon_sec/3600.0;
+			}
+    	} else if(format_mode == MODE_DD){
+    		d.Latitude = Double.parseDouble(parts[0]);
+    		d.Longitude = Double.parseDouble(parts[1]);
+    	} else if(format_mode == MODE_DDM){
+    		int lat_deg = Integer.parseInt(parts[0]);
+    		float lat_min = Float.parseFloat(parts[1].substring(0, parts[1].length()-1));
+    		
+    		int lon_deg = Integer.parseInt(parts[2]);
+    		float lon_min = Float.parseFloat(parts[3].substring(0, parts[3].length()-1));
+    		
+    		d.Latitude = lat_deg+lat_min/60.0;
+    		d.Longitude = lon_deg+lon_min/60.0;
+    	} else if(format_mode == MODE_UTM){
+    		double[] latlon = cc.utm2LatLon(text);
+    		d.Latitude = latlon[0];
+    		d.Longitude = latlon[1];
+    	} else  {
+    	}
+		
+		if(datum_mode == GpsData.NAD27){ //conversion required
+    		if(nct == null) initNADCON();
+    		try{
+				double[] src = new double[2];
+				src[0] = d.Longitude;
+				src[1] = d.Latitude;
+				nct.transform(src, 0, src, 0, 1);
+				d.Longitude = src[0];
+				d.Latitude = src[1];
+    		}catch (Exception e){
+    			e.printStackTrace();
+    		}
+    	}
+		
+		return d;
+	}
+
+	
+    
+    
+//    public static String formatCoordinates(GpsData data){
+//    	
+//    	
+//    }
+//    
+//    public static String formatLat(GpsData data){
+//    	double lat = data.Latitude;
+//    	
+//    	if(datum_mode == GpsData.NAD27){ //conversion required
+//    		if(nct == null) initNADCON();
+//    		try{
+//				double[] src = new double[2];
+//				src[0] = data.Longitude;
+//				src[1] = data.Latitude;
+//				nct.inverseTransform(src, 0, src, 0, 1);
+//				lat = src[1];
+//    		}catch (Exception e){
+//    			e.printStackTrace();
+//    		}
+//    	}
+//    	
+//    	return formatLat(lat);
+//    }
+//    
+//    public static String formatLon(GpsData data){
+//    	double lon = data.Longitude;
+//    	
+//    	if(datum_mode == GpsData.NAD27){ //conversion required
+//    		if(nct == null) initNADCON();
+//    		try{
+//				double[] src = new double[2];
+//				src[0] = data.Longitude;
+//				src[1] = data.Latitude;
+//				nct.inverseTransform(src, 0, src, 0, 1);
+//				lon = src[0];
+//    		}catch (Exception e){
+//    			e.printStackTrace();
+//    		}
+//    	}
+//    	
+//    	return formatLon(lon);
+//    }
+    
+//    public static String formatLat(double lat){
+//    	if(format_mode == MODE_DMS){
+//    		int lat_deg = (int)(lat);
+//    		int lat_min = (int)(60*(lat-lat_deg));
+//    		float lat_sec = (float)(3600*(lat-lat_deg-lat_min/60.0));
+//
+//    		return lat_deg + " " + lat_min + "' " + sdf.format(lat_sec) + "\" "; 
+//    		
+//    	} else if(format_mode == MODE_DECIMAL){
+//    		return ldf.format(lat);
+//    	} else if(format_mode == MODE_DM){
+//    		int lat_deg = (int)(lat);
+//    		double lat_min = 60*(lat-lat_deg);
+//
+//    		return lat_deg + " " + df.format(lat_min) + "' "; 
+//    		
+//    	} else  {
+//    		return "Unknown format mode ";
+//    	}
+//    }
+//    
+//    public static String formatLon(double lon){
+//    	if(format_mode == MODE_DMS){
+//    		int lon_deg = (int)(lon);
+//    		int lon_min = (int)(60*(lon-lon_deg));
+//    		float lon_sec = (float)(3600*(lon-lon_deg-lon_min/60.0));
+//
+//    		return lon_deg + " " + lon_min + "' " + sdf.format(lon_sec) + "\""; 
+//    		
+//    	} else if(format_mode == MODE_DECIMAL){
+//    		return ldf.format(lon);
+//    	} else if(format_mode == MODE_DM){
+//    		int lon_deg = (int)(lon);
+//    		double lon_min = 60*(lon-lon_deg);
+//
+//    		return lon_deg + " " + df.format(lon_min) + "' "; 
+//    		
+//    	} else  {
+//    		return "Unknown format mode";
+//    	}
+//    }
     
  
     public static boolean MergeGpsString(String GPSstr, GpsData data){
@@ -261,14 +451,21 @@ public class GpsData{
     }
     
     
-	
-	private static DecimalFormat df = new DecimalFormat("####.####");
-	private static DecimalFormat ldf = new DecimalFormat("####.########");
+    private static DecimalFormat sdf = new DecimalFormat("####.00");
+	private static DecimalFormat df = new DecimalFormat("####.0000");
+	private static DecimalFormat ldf = new DecimalFormat("####.00000000");
+	private static NADCONTransform nct = null;
+	private static CoordinateConversion cc = new CoordinateConversion();
 	public static final int MODE_DMS = 0;
-	public static final int MODE_DECIMAL = 1;
-	public static final int MODE_DM = 2;
+	public static final int MODE_DD = 1;
+	public static final int MODE_DDM = 2;
+	public static final int MODE_UTM = 3;
 	
-	public static int format_mode = MODE_DECIMAL;
+	public static final int WGS84 = 0;
+	public static final int NAD27 = 1;
+	
+	public static int format_mode = MODE_DD;
+	public static int datum_mode = WGS84;
 	
     /*  GPGGA
      *  1    = UTC time of fix
@@ -348,5 +545,4 @@ public class GpsData{
     	public static int E_W = 5;
     }
 
-	
 }

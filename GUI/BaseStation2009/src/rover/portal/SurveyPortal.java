@@ -5,6 +5,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 
 import javax.imageio.ImageIO;
+import javax.media.Buffer;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.SpinnerNumberModel;
@@ -28,11 +29,13 @@ import javax.swing.JButton;
 
 import rover.Main;
 import rover.guistuff.ImagePanel;
+import rover.network.CameraPacket;
 import rover.network.ControlPacket;
 import rover.network.MulticastListener;
 import rover.network.Packet;
 import rover.network.PacketHandler;
 import rover.network.SocketInfo;
+import rover.network.VideoClientSystem;
 import rover.network.VideoPacket;
 import rover.network.VideoPacketBuffer;
 import rover.utils.GPSClient;
@@ -45,12 +48,15 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
+import rover.video.FrameListener;
+import rover.video.Java2DRenderer;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
+public class SurveyPortal extends Portal implements ChangeListener, GPSHandler, FrameListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
-	private ImagePanel videoPanel = null;
-	
 	//video stream stuff
 	BufferedImage cur_image = null;  //  @jve:decl-index=0:	
 	Stopwatch fps_watch;
@@ -79,7 +85,9 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	ControlPacket cp;
 	int rotation_chan;
 	int elevation_chan;
-	int zoom_chan;
+	
+	private InetAddress z_address;  //  @jve:decl-index=0:
+	private int z_port;
 	
 	float[] gimbr_cal = {0,50,100};
 	float[] gimbe_cal = {0,50,100};
@@ -94,14 +102,7 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JLabel jLabel = null;
 	private JLabel jLabel1 = null;
 	private JLabel jLabel4 = null;
-	private JButton outButton = null;
-	private JButton inButton = null;
 	private JLabel jLabel5 = null;
-	private JLabel fpsLabel = null;
-	private JLabel heightLabel = null;
-	private JLabel widthLabel = null;
-	private JLabel jLabel6 = null;
-	private JLabel jLabel7 = null;
 	private JLabel jLabel8 = null;
 	private JLabel jLabel9 = null;
 	private JTextField headingField = null;
@@ -111,9 +112,11 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField mouseyField = null;
 	private JLabel gimbr_chan = null;
 	private JLabel gimbe_chan = null;
-	private JLabel zoomLabel = null;
 	private JLabel jLabel10 = null;
 	private JTextField elevationField = null;
+	private JSpinner zoomSpinner = null;
+	private Java2DRenderer java2DRenderer = null;
+	private JPanel jPanel = null;
 	/**
 	 * This is the default constructor
 	 */
@@ -122,14 +125,18 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		
 		initSocket();
 		
-		cp = new ControlPacket((byte)3);
+		VideoClientSystem.init();
+		VideoClientSystem.getInstance().registerForVideoEvents(this, 2);
+		VideoClientSystem.getInstance().start(2);
+		
+		cp = new ControlPacket((byte)2);
 		rotation_chan = Integer.parseInt(Main.props.getProperty("gimbr_chan"));
 		elevation_chan = Integer.parseInt(Main.props.getProperty("gimbe_chan"));
-		zoom_chan = Integer.parseInt(Main.props.getProperty("zoom_chan"));
+		//zoom_chan = Integer.parseInt(Main.props.getProperty("zoom_chan"));
 		
 		cp.Channel_list[0] = (byte)rotation_chan;
 		cp.Channel_list[1] = (byte)elevation_chan;
-		cp.Channel_list[2] = (byte)zoom_chan;
+		//cp.Channel_list[2] = (byte)zoom_chan;
 		
 		gpsdata = new GpsData();
 		try{
@@ -142,6 +149,8 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		}
 		
 		
+		
+		
 		servoThread = new Thread(){	@Override public void run() {servoThreadStart();}};
 		servoThread.setDaemon(true);
 		threadLock = new Object();
@@ -151,7 +160,6 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		
 		gimbr_chan.setText("c" + rotation_chan);
 		gimbe_chan.setText("c" + elevation_chan);
-		zoomLabel.setText("c" + zoom_chan);
 		
 		fps_watch = new Stopwatch();
 		try {
@@ -159,57 +167,6 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		SetFrame(cur_image);
-		
-		
-		
-		//TODO Add configuration stuff here
-		/*try{
-			mcgroup = InetAddress.getByName("224.6.2.5");
-			mcport = 4625;
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
-		
-		try{
-			InetAddress mcaddress = InetAddress.getByName(Main.props.getProperty("video1_address"));
-			int port = Integer.parseInt(Main.props.getProperty("video1_port"));
-			ml = new MulticastListener(mcaddress, port);
-			
-			SocketInfo si = new SocketInfo();
-			si.setPortal("Site Survey Portal");
-			si.setPort(port);
-			si.setType("MC Rec");
-			si.setAddress(mcaddress);
-			
-			MainGUI.registerSocket(si);
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return;
-		}
-		
-		ml.addPacketListener(new PacketHandler(){
-			@Override
-			public void PacketReceived(Packet p) {
-				VideoPacket vp = new VideoPacket(p);
-				buffer.Process(vp);
-
-			}
-
-		});
-		buffer = new VideoPacketBuffer();
-		
-		
-//		ThreadStart t = new ThreadStart(this);
-//		netThread = new Thread(t);
-//		netThread.setDaemon(true);
-//		netThread.start();
-	
-		
-		
 		
 	}
 	
@@ -232,12 +189,12 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		synchronized(threadLock) {
 			cp.Value_list[0] = gimbr;
 			cp.Value_list[1] = gimbe;
-			cp.Value_list[2] = zoom;
+			//cp.Value_list[2] = zoom;
 			
 			cp.ToByteArray();
 			DatagramPacket pack = new DatagramPacket(cp.packet, cp.bytes,
 					 mc_address, mc_port);
-			System.out.println("Refreshing gimbal values");
+			//System.out.println("Refreshing gimbal values");
 			try{socket.send(pack);}
 			catch(Exception e){
 				e.printStackTrace();
@@ -245,12 +202,31 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		}
 	}
 	
+	private void sendZoomUpdate(){
+		synchronized(threadLock) {
+			CameraPacket campak = new CameraPacket(zoom);
+			campak.ToByteArray();
+			DatagramPacket pack = new DatagramPacket(campak.packet, campak.bytes,
+					 z_address, z_port);
+			System.out.println("Sending zoom value");
+			try{socket.send(pack);}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 	private void initSocket(){
 
 		try{
 			mc_address = InetAddress.getByName(Main.props.getProperty("control_address"));
 			mc_port = Integer.parseInt(Main.props.getProperty("control_port"));
 		
+			z_address = InetAddress.getByName(Main.props.getProperty("zoom_address"));
+			z_port = Integer.parseInt(Main.props.getProperty("zoom_port"));
+		
+			
 			
 			socket = new MulticastSocket(mc_port);
 			socket.setSoTimeout(40);
@@ -324,24 +300,24 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 		
 	}*/
 	
-	public void SetFrame(BufferedImage b){
-
-		fps_watch.Stop();
-		double fps = 1/fps_watch.getElapsedSeconds();
-
-		fpsLabel.setText(fps + " fps");
-		
-		fps_watch.Reset();
-		fps_watch.Start();
-		
-		if(b != null){
-			cur_image = b;
-			heightLabel.setText(b.getHeight() + " pixels");
-			widthLabel.setText(b.getWidth() + " pixels");
-			videoPanel.setImage(cur_image);
-			videoPanel.repaint();
-		}
-	}
+//	public void SetFrame(BufferedImage b){
+//
+//		fps_watch.Stop();
+//		double fps = 1/fps_watch.getElapsedSeconds();
+//
+//		fpsLabel.setText(fps + " fps");
+//		
+//		fps_watch.Reset();
+//		fps_watch.Start();
+//		
+//		if(b != null){
+//			cur_image = b;
+//			heightLabel.setText(b.getHeight() + " pixels");
+//			widthLabel.setText(b.getWidth() + " pixels");
+//			videoPanel.setImage(cur_image);
+//			videoPanel.repaint();
+//		}
+//	}
 	
 	
 	
@@ -363,84 +339,57 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
+			gridBagConstraints1.insets = new Insets(0, 0, 0, 1);
+			gridBagConstraints1.gridy = 0;
+			gridBagConstraints1.ipadx = 300;
+			gridBagConstraints1.ipady = 346;
+			gridBagConstraints1.weightx = 1.0D;
+			gridBagConstraints1.weighty = 1.0D;
+			gridBagConstraints1.gridx = 1;
+			gridBagConstraints1.fill = GridBagConstraints.BOTH;
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.gridx = 0;
+			gridBagConstraints.ipadx = 280;
+			gridBagConstraints.ipady = 300;
+			gridBagConstraints.gridy = 0;
 			jLabel10 = new JLabel();
-			jLabel10.setBounds(new Rectangle(15, 133, 96, 21));
 			jLabel10.setText("Rover Elevation");
-			zoomLabel = new JLabel();
-			zoomLabel.setBounds(new Rectangle(224, 79, 42, 13));
-			zoomLabel.setText("");
+			jLabel10.setBounds(new Rectangle(17, 135, 96, 21));
 			gimbe_chan = new JLabel();
-			gimbe_chan.setBounds(new Rectangle(223, 45, 41, 16));
 			gimbe_chan.setText("");
+			gimbe_chan.setBounds(new Rectangle(225, 47, 41, 16));
 			gimbr_chan = new JLabel();
-			gimbr_chan.setBounds(new Rectangle(224, 20, 41, 17));
 			gimbr_chan.setText("");
+			gimbr_chan.setBounds(new Rectangle(226, 22, 41, 17));
 			jLabel9 = new JLabel();
-			jLabel9.setBounds(new Rectangle(14, 248, 68, 18));
 			jLabel9.setText("Mouse Y");
+			jLabel9.setBounds(new Rectangle(16, 250, 68, 18));
 			jLabel8 = new JLabel();
-			jLabel8.setBounds(new Rectangle(14, 221, 67, 18));
 			jLabel8.setText("Mouse X");
-			jLabel7 = new JLabel();
-			jLabel7.setBounds(new Rectangle(14, 301, 55, 19));
-			jLabel7.setText("Width");
-			jLabel6 = new JLabel();
-			jLabel6.setBounds(new Rectangle(15, 271, 49, 23));
-			jLabel6.setText("Height");
-			widthLabel = new JLabel();
-			widthLabel.setBounds(new Rectangle(128, 298, 47, 21));
-			widthLabel.setText("0");
-			fpsLabel = new JLabel();
-			fpsLabel.setBounds(new Rectangle(15, 326, 218, 20));
-			fpsLabel.setText("0 fps");
+			jLabel8.setBounds(new Rectangle(16, 223, 67, 18));
 			jLabel5 = new JLabel();
-			jLabel5.setBounds(new Rectangle(13, 191, 103, 21));
 			jLabel5.setText("Camera Elevation");
+			jLabel5.setBounds(new Rectangle(15, 193, 103, 21));
 			jLabel4 = new JLabel();
-			jLabel4.setBounds(new Rectangle(13, 76, 97, 21));
 			jLabel4.setText("Camera Zoom");
+			jLabel4.setBounds(new Rectangle(15, 78, 97, 21));
 			jLabel1 = new JLabel();
-			jLabel1.setBounds(new Rectangle(13, 161, 97, 22));
 			jLabel1.setText("Camera Azimuth");
+			jLabel1.setBounds(new Rectangle(15, 163, 97, 22));
 			jLabel = new JLabel();
-			jLabel.setBounds(new Rectangle(14, 105, 97, 20));
 			jLabel.setText("Rover Heading");
+			jLabel.setBounds(new Rectangle(16, 107, 97, 20));
 			jLabel3 = new JLabel();
-			jLabel3.setBounds(new Rectangle(14, 45, 96, 21));
 			jLabel3.setText("Gimbal Elevation");
+			jLabel3.setBounds(new Rectangle(16, 47, 96, 21));
 			jLabel2 = new JLabel();
-			jLabel2.setBounds(new Rectangle(14, 16, 74, 22));
 			jLabel2.setText("Gimbal Phi");
+			jLabel2.setBounds(new Rectangle(16, 18, 74, 22));
 			jContentPane = new JPanel();
-			jContentPane.setLayout(null);
-			jContentPane.add(getVideoPanel(), null);
-			jContentPane.add(jLabel2, null);
-			jContentPane.add(jLabel3, null);
-			jContentPane.add(getPhiSpinner(), null);
-			jContentPane.add(getPhiSpinner1(), null);
-			jContentPane.add(jLabel, null);
-			jContentPane.add(jLabel1, null);
-			jContentPane.add(jLabel4, null);
-			jContentPane.add(getOutButton(), null);
-			jContentPane.add(getInButton(), null);
-			jContentPane.add(jLabel5, null);
-			jContentPane.add(fpsLabel, null);
-			jContentPane.add(getHeightLabel(), null);
-			jContentPane.add(widthLabel, null);
-			jContentPane.add(jLabel6, null);
-			jContentPane.add(jLabel7, null);
-			jContentPane.add(jLabel8, null);
-			jContentPane.add(jLabel9, null);
-			jContentPane.add(getHeadingField(), null);
-			jContentPane.add(getCamAzField(), null);
-			jContentPane.add(getCamElField(), null);
-			jContentPane.add(getMousexField(), null);
-			jContentPane.add(getMouseyField(), null);
-			jContentPane.add(gimbr_chan, null);
-			jContentPane.add(gimbe_chan, null);
-			jContentPane.add(zoomLabel, null);
-			jContentPane.add(jLabel10, null);
-			jContentPane.add(getElevationField(), null);
+			jContentPane.setLayout(new GridBagLayout());
+			jContentPane.add(getJPanel(), gridBagConstraints);
+			jContentPane.add(getJava2DRenderer(), gridBagConstraints1);
 		}
 		return jContentPane;
 	}
@@ -452,142 +401,6 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	}
 
 	/**
-	 * This method initializes videoPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getVideoPanel() {
-		if (videoPanel == null) {
-			videoPanel = new ImagePanel();
-			videoPanel.setLayout(null);
-			videoPanel.setBounds(new Rectangle(272, 11, 325, 300));
-		}
-		return videoPanel;
-	}
-
-	public void ThreadVideoTest(){
-		videoThread = new Thread(){	
-			@Override public void run() { 
-				while(true){
-					try{
-						videoTest();
-						sleep(30);
-					}catch(Exception e){
-						e.printStackTrace();
-					}
-					
-				}
-			}
-		};
-		videoThread.setDaemon(true);
-		videoThread.start();
-	}
-	
-	
-
-	public void videoTest(){
-
-		if(test1 == null){
-			try{
-				//System.out.println("Testing Video System");
-				InputStream s = this.getClass().getClassLoader().getResourceAsStream("test.yuv");
-				DataInputStream ds = new DataInputStream(s);
-				
-	            int psize = 65000;
-	            int byte_count = 0;
-	            byte[] p1 = new byte[psize];
-	            byte[] p2 = new byte[psize];
-	            byte[] p3 = new byte[psize];
-	
-	            int bytes1 = 10;
-	            int bytes2 = 10;
-	            int bytes3 = 10;
-	
-	
-	            short width  = 352;
-	            short height = 288;
-	
-	            p1[0] = 0; //PacketID
-	            p1[1] = 0;                      //ChannelID
-	            p1[2] = (byte)(width >> 8);     //Image Width MSB
-	            p1[3] = (byte)(width & 0x00FF); //Image Width LSB
-	            p1[4] = (byte)(height >> 8);    //Image Height MSB
-	            p1[5] = (byte)(height & 0x00FF);//Image Height LSB
-	            p1[6] = 0;
-	            p1[7] = 5;
-	            p1[8] = 1;
-	            p1[9] = 3;
-	
-	            for (int i = 10; i < psize; i++)
-	            {
-	                ds.read(p1, i, 1);
-	                //Console.Write(" " + p1[i]);
-	                bytes1++;
-	                byte_count++;
-	            }
-	
-	            p2[0] = 0; //PacketID
-	            p2[1] = 0;                      //ChannelID
-	            p2[2] = (byte)(width >> 8);     //Image Width MSB
-	            p2[3] = (byte)(width & 0x00FF); //Image Width LSB
-	            p2[4] = (byte)(height >> 8);    //Image Height MSB
-	            p2[5] = (byte)(height & 0x00FF);//Image Height LSB
-	            p2[6] = 0;
-	            p2[7] = 5;
-	            p2[8] = 2;
-	            p2[9] = 3;
-	
-	            for (int i = 10; i < psize; i++)
-	            {
-	                ds.read(p2, i, 1);
-	                bytes2++;
-	                byte_count++;
-	            }
-	
-	            p3[0] = 0; //PacketID
-	            p3[1] = 0;                      //ChannelID
-	            p3[2] = (byte)(width >> 8);     //Image Width MSB
-	            p3[3] = (byte)(width & 0x00FF); //Image Width LSB
-	            p3[4] = (byte)(height >> 8);    //Image Height MSB
-	            p3[5] = (byte)(height & 0x00FF);//Image Height LSB
-	            p3[6] = 0;
-	            p3[7] = 5;
-	            p3[8] = 3;
-	            p3[9] = 3;
-	
-	            for (int i = 10; i < psize; i++)
-	            {
-	                int read = ds.read(p3, i, 1);
-	                if (read == 0)
-	                {
-	                    //Console.WriteLine("read = " + read);
-	                    break;
-	                }
-	                bytes3++;
-	                byte_count++;
-	                //Console.WriteLine(byte_count);
-	            }
-	            test1 = new VideoPacket(p1, p1.length);
-	            test2 = new VideoPacket(p2, p2.length);
-	            test3 = new VideoPacket(p3, p3.length);
-	            
-		            ds.close();
-	
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
-            
-		}
-            
-        buffer.Process(test1);
-        buffer.Process(test2);
-        buffer.Process(test3);
-        
-        SetFrame(buffer.current_image);
-		
-	}
-
-	/**
 	 * This method initializes phiSpinner	
 	 * 	
 	 * @return javax.swing.JSpinner	
@@ -595,7 +408,7 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JSpinner getPhiSpinner() {
 		if (phiSpinner == null) {
 			phiSpinner = new JSpinner(new SpinnerNumberModel(50, 0, 100, .01));
-			phiSpinner.setBounds(new Rectangle(127, 17, 87, 23));
+			phiSpinner.setBounds(new Rectangle(129, 19, 87, 23));
 			phiSpinner.addChangeListener(this);
 		}
 		return phiSpinner;
@@ -609,73 +422,10 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JSpinner getPhiSpinner1() {
 		if (phiSpinner1 == null) {
 			phiSpinner1 = new JSpinner(new SpinnerNumberModel(50, 0, 100, .01));
-			phiSpinner1.setBounds(new Rectangle(128, 44, 86, 21));
+			phiSpinner1.setBounds(new Rectangle(130, 46, 86, 21));
 			phiSpinner1.addChangeListener(this);
 		}
 		return phiSpinner1;
-	}
-
-	/**
-	 * This method initializes outButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getOutButton() {
-		if (outButton == null) {
-			outButton = new JButton();
-			outButton.setBounds(new Rectangle(125, 74, 42, 25));
-			outButton.setText("-");
-			outButton.addMouseListener(new java.awt.event.MouseAdapter() {   
-				public void mouseReleased(java.awt.event.MouseEvent e) {    
-					zoom = zoom_cal[1];
-					sendGimbalUpdate();
-				}
-				public void mousePressed(java.awt.event.MouseEvent e) {
-					zoom = zoom_cal[0];
-					sendGimbalUpdate();
-				}
-			});
-		}
-		return outButton;
-	}
-
-	/**
-	 * This method initializes inButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
-	private JButton getInButton() {
-		if (inButton == null) {
-			inButton = new JButton();
-			inButton.setBounds(new Rectangle(175, 75, 44, 24));
-			inButton.setText("+");
-			inButton.addMouseListener(new java.awt.event.MouseAdapter() {   
-				public void mouseReleased(java.awt.event.MouseEvent e) {    
-					zoom = zoom_cal[1];
-					sendGimbalUpdate();
-				}
-				public void mousePressed(java.awt.event.MouseEvent e) {
-					zoom = zoom_cal[2];
-					sendGimbalUpdate();
-				}
-			});
-			
-		}
-		return inButton;
-	}
-
-	/**
-	 * This method initializes heightLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getHeightLabel() {
-		if (heightLabel == null) {
-			heightLabel = new JLabel();
-			heightLabel.setText("0");
-			heightLabel.setBounds(new Rectangle(130, 271, 50, 20));
-		}
-		return heightLabel;
 	}
 
 	/**
@@ -686,8 +436,7 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField getHeadingField() {
 		if (headingField == null) {
 			headingField = new JTextField();
-			headingField.setLocation(new Point(130, 107));
-			headingField.setSize(new Dimension(90, 20));
+			headingField.setBounds(new Rectangle(132, 109, 90, 20));
 		}
 		return headingField;
 	}
@@ -700,8 +449,7 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField getCamAzField() {
 		if (camAzField == null) {
 			camAzField = new JTextField();
-			camAzField.setLocation(new Point(129, 162));
-			camAzField.setSize(new Dimension(90, 20));
+			camAzField.setBounds(new Rectangle(131, 164, 90, 20));
 		}
 		return camAzField;
 	}
@@ -714,8 +462,7 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField getCamElField() {
 		if (camElField == null) {
 			camElField = new JTextField();
-			camElField.setLocation(new Point(129, 192));
-			camElField.setSize(new Dimension(90, 20));
+			camElField.setBounds(new Rectangle(131, 194, 90, 20));
 		}
 		return camElField;
 	}
@@ -728,8 +475,7 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField getMousexField() {
 		if (mousexField == null) {
 			mousexField = new JTextField();
-			mousexField.setLocation(new Point(129, 222));
-			mousexField.setSize(new Dimension(90, 20));
+			mousexField.setBounds(new Rectangle(131, 224, 90, 20));
 		}
 		return mousexField;
 	}
@@ -742,21 +488,26 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField getMouseyField() {
 		if (mouseyField == null) {
 			mouseyField = new JTextField();
-			mouseyField.setLocation(new Point(129, 249));
-			mouseyField.setSize(new Dimension(90, 20));
+			mouseyField.setBounds(new Rectangle(131, 251, 90, 20));
 		}
 		return mouseyField;
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-		Number phi = (Number)(phiSpinner.getValue());
-		gimbr = phi.floatValue();
-		
-		Number theta = (Number)(phiSpinner1.getValue());
-		gimbe = theta.floatValue();
-		
-		sendGimbalUpdate();
+		if(arg0.getSource() == zoomSpinner){
+			Number z = (Number)(zoomSpinner.getValue());
+			zoom = z.floatValue();
+			sendZoomUpdate();
+		}else{
+			Number phi = (Number)(phiSpinner.getValue());
+			gimbr = phi.floatValue();
+			
+			Number theta = (Number)(phiSpinner1.getValue());
+			gimbe = theta.floatValue();
+			
+			sendGimbalUpdate();
+		}
 	}
 
 	@Override
@@ -774,10 +525,74 @@ public class SurveyPortal extends Portal implements ChangeListener, GPSHandler {
 	private JTextField getElevationField() {
 		if (elevationField == null) {
 			elevationField = new JTextField();
-			elevationField.setLocation(new Point(131, 134));
-			elevationField.setSize(new Dimension(90, 20));
+			elevationField.setBounds(new Rectangle(133, 136, 90, 20));
 		}
 		return elevationField;
+	}
+
+	/**
+	 * This method initializes zoomSpinner	
+	 * 	
+	 * @return javax.swing.JSpinner	
+	 */
+	private JSpinner getZoomSpinner() {
+		if (zoomSpinner == null) {
+			zoomSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 34, .5));
+			zoomSpinner.setBounds(new Rectangle(130, 76, 86, 21));
+			zoomSpinner.addChangeListener(this);
+		}
+		return zoomSpinner;
+	}
+
+	/**
+	 * This method initializes java2DRenderer	
+	 * 	
+	 * @return rover.video.Java2DRenderer	
+	 */
+	private Java2DRenderer getJava2DRenderer() {
+		if (java2DRenderer == null) {
+			java2DRenderer = new Java2DRenderer();
+		}
+		return java2DRenderer;
+	}
+
+	/**
+	 * This method initializes jPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJPanel() {
+		if (jPanel == null) {
+			jPanel = new JPanel();
+			jPanel.setLayout(null);
+			jPanel.add(jLabel2, null);
+			jPanel.add(jLabel3, null);
+			jPanel.add(getPhiSpinner(), null);
+			jPanel.add(getPhiSpinner1(), null);
+			jPanel.add(jLabel, null);
+			jPanel.add(jLabel1, null);
+			jPanel.add(jLabel4, null);
+			jPanel.add(jLabel5, null);
+			jPanel.add(jLabel8, null);
+			jPanel.add(jLabel9, null);
+			jPanel.add(getHeadingField(), null);
+			jPanel.add(getCamAzField(), null);
+			jPanel.add(getCamElField(), null);
+			jPanel.add(getMousexField(), null);
+			jPanel.add(getMouseyField(), null);
+			jPanel.add(gimbr_chan, null);
+			jPanel.add(gimbe_chan, null);
+			jPanel.add(jLabel10, null);
+			jPanel.add(getElevationField(), null);
+			jPanel.add(getZoomSpinner(), null);
+		}
+		return jPanel;
+	}
+
+	@Override
+	public void nextFrameReady(Buffer current_frame, int channel) {
+		java2DRenderer.process(current_frame);
+		
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

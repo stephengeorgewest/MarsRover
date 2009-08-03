@@ -1,9 +1,15 @@
 package rover.network;
-
-import java.util.ArrayList;
-
 import rover.utils.BinUtils;
 
+
+/*
+ * Name: ControlPacket
+ * Author: Travis L Brown
+ * Description: 
+ * Represents a packet designed to servo control information. Provides packet header 
+ * generation and parsing capability.
+ * 
+ */
 public class ControlPacket extends Packet {
 	
 	public static byte CONTROL_HEADER = 32;

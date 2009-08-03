@@ -34,7 +34,7 @@ import java.text.DecimalFormat;
 import rover.Main;
 import rover.guistuff.ArmSimulationPanel3D;
 import rover.guistuff.FloatSpinner;
-import rover.guistuff.RoverSimulationPanel3D;
+import rover.guistuff.EarthSimPanel3D;
 import rover.network.ArmPacket;
 import rover.network.ControlPacket;
 import rover.network.SocketInfo;
@@ -187,7 +187,7 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 		
 		try{
 			arm_address = InetAddress.getByName(Main.props.getProperty("arm_address"));
-			arm_port = Integer.parseInt(Main.props.getProperty("control_port"));
+			arm_port = Integer.parseInt(Main.props.getProperty("arm_port"));
 			
 			servo_address = InetAddress.getByName(Main.props.getProperty("control_address"));
 			servo_port = Integer.parseInt(Main.props.getProperty("control_port"));
@@ -305,7 +305,7 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 					}
 					app.bytes = pack.getLength();
 					app.packet = pack.getData();
-					app.FromByteArray();
+					app.fillData();
 					
 					count++;
 				}
@@ -408,6 +408,9 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 				DatagramPacket pack = new DatagramPacket(acp.packet, acp.bytes,
 						 arm_address, arm_port);
 				System.out.println("Sending out joint command");
+				for(int i = 0;i<acp.Channels;i++){
+					System.out.println("Joint " + acp.Channel_list[i] + " = " + acp.Value_list[i]);
+				}
 				armSocket.send(pack);
 			}
 		}catch(Exception e){
@@ -427,7 +430,7 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 				cp.ToByteArray();
 				
 				DatagramPacket pack = new DatagramPacket(cp.packet, cp.bytes,
-						 arm_address, arm_port);
+						 servo_address, servo_port);
 				System.out.println("Sending out tool command");
 				servoSocket.send(pack);
 			}
@@ -516,13 +519,14 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 	
 	private void PositionPacketReceived(ArmPositionPacket app) {
 		
-		
-		
-		getJ1TextField().setText(df.format(app.positions[0]));
-		getJ2TextField().setText(df.format(app.positions[1]));
-		getJ3TextField().setText(df.format(app.positions[2]));
-		getJ4TextField().setText(df.format(app.positions[3]));
-		getJ5TextField().setText(df.format(app.positions[4]));
+		boolean worked = app.fillData();
+		if(worked){
+			getJ1TextField().setText(df.format(app.positions[0]));
+			getJ2TextField().setText(df.format(app.positions[1]));
+			getJ3TextField().setText(df.format(app.positions[2]));
+			getJ4TextField().setText(df.format(app.positions[3]));
+			getJ5TextField().setText(df.format(app.positions[4]));
+		}
 	}
 
 	private void updateKinematics(){
@@ -1288,8 +1292,9 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 		if (toolSlider == null) {
 			toolSlider = new JSlider();
 			toolSlider.setBounds(new Rectangle(12, 41, 46, 300));
-			toolSlider.setValue(0);
+			toolSlider.setMinimum(0);
 			toolSlider.setMaximum(10000);
+			toolSlider.setValue(5000);
 			toolSlider.setMinorTickSpacing(100);
 			toolSlider.setMajorTickSpacing(1000);
 			toolSlider.setPaintTicks(true);
@@ -1301,6 +1306,7 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 					Float f = new Float(toolSlider.getValue());
 					f/=100;
 					toolTextField.setText(f.toString());
+					toolValue = f;
 					sendToolUpdate();
 				}
 			});
@@ -1392,7 +1398,7 @@ public class ArmPortal extends Portal implements ActionListener, ChangeListener 
 		if (toolTextField == null) {
 			toolTextField = new JTextField();
 			toolTextField.setBounds(new Rectangle(9, 22, 61, 19));
-			toolTextField.setText("0.0");
+			toolTextField.setText("50.0");
 			toolTextField.setEditable(false);
 		}
 		return toolTextField;

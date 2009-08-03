@@ -9,10 +9,11 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import rover.guistuff.RoverSimulationPanel3D;
+import rover.guistuff.EarthSimPanel3D;
 
 public class TexTileDB extends Thread{
 
@@ -21,6 +22,9 @@ public class TexTileDB extends Thread{
 	static String folder;
 	public static boolean FETCH_TILES = false;
 	public static int TILE_THROTTLE = 0;
+	
+	//if the garbage_render function is called x times without the tile being rendered it is unloaded
+	public static int GARBAGE_RENDER_COUNT = 100;
 	
 	private static Queue<LoadRequest> requestQueue = new LinkedList<LoadRequest>();
 	private static ArrayList<TileLoadListener> listenerlist = new ArrayList<TileLoadListener>();
@@ -43,7 +47,28 @@ public class TexTileDB extends Thread{
 		}
 	}
 	
-	
+	//go through all the tiles and decriment the garbage counter, 
+	//unload tiles that have a render counter less than zero
+	public static void garbage_render(){
+		
+		Collection<TexTile> vals = Tiles.values();
+		Iterator<TexTile> itr = vals.iterator();
+		while(itr.hasNext()){
+			TexTile t = itr.next();
+			t.garbage_counter--;
+			if((t.loaded || t.preloaded) && t.garbage_counter < 0 && t.address.length() > 3){
+				System.out.println("Unloading " + t.address);
+				//itr.remove();
+				t.teximage = null;
+				if(t.texture != null){
+					t.texture.dispose();
+					t.texture = null;
+				}
+				t.loaded = false;
+				t.preloaded = false;
+			}
+		}
+	}
 	
 	public void run(){
 		sleeping = false;
@@ -92,7 +117,7 @@ public class TexTileDB extends Thread{
 		return get(address, address.length());
 	}
 	
-	public static TexTile get(String full_address, int LOD){
+public static TexTile get(String full_address, int LOD){
 		
 		//System.out.println("get called on " + full_address + " LOD = " + LOD);
 		
@@ -100,58 +125,23 @@ public class TexTileDB extends Thread{
 		if(LOD < 1 || LOD > full_address.length()) return null;
 		//LOD = Math.min(address.length(), LOD);
 		String address = full_address.substring(0, LOD);
+		//System.out.println("get called on " + address);
 		
-		//find deepest currently renderable tile, dt
 		TexTile dt = Tiles.get(address);
-		while(dt == null || !(dt.loaded||dt.preloaded)){
-			//System.out.println("Checking depth = " + address);
-			address = address.substring(0, address.length()-1);
-			if(address.length() == 0) return null;
-			dt = Tiles.get(address);
-		}
-		
-		//System.out.println("Deepest node = " + address);
-
-		//If we can't return the requested tile let's 
-		//descend into this part of the tree so that next time
-		//we'll be a little closer to being able to render the tile
-		if(!dt.isLeaf && address.length() != LOD) { //preload child tiles;
-			TexTile t = CreateTileFromAddress(full_address.substring(0, address.length()+1));
-			if(t.fileExists()){ //if we alread have the file in the cache preload it
-				LoadRequest lr = new LoadRequest();
-				lr.address = t.address;
-				addRequest(lr);
-			//}else if(!notavailable.containsKey(t.address)){
-			}else if(dt.parent != null && !dt.parent.isLeaf){ //otherwise put in a request to have it downloaded
-				FetchRequest fr = new FetchRequest();
-				fr.address = t.address;
-				//System.out.println("a: DL request for " + fr.address);
-				AsyncTileFetcher.addRequest(fr);
-			}
-		}
-		
-		
-		//if we have found the requested tile
-		if(address.length() == LOD){//if dt.LOD == LOD return dt
-			//if it's preloaded but not loaded, go ahead and load it
-			if(!dt.loaded && dt.preloaded) dt.loadTex();
-			
-			//if it's not preloaded but the file exists in the cache, put in a preload request
-//			if(!dt.preloaded && dt.fileExists()){
-//				LoadRequest lr = new LoadRequest();
-//				lr.address = address;
-//				addRequest(lr);
-//			//}else if(!notavailable.containsKey(t.address)){
-//			//if the file doesn't exist in the cache put in a download request
-//			}else if(! dt.fileExists() && dt.parent != null && !dt.parent.isLeaf){
-//				FetchRequest fr = new FetchRequest();
-//				fr.address = dt.address;
-//				System.out.println("b: DL request for " + fr.address);
-//				AsyncTileFetcher.addRequest(fr);
-//			}
-		} //else if(address.length() == LOD-1) dt = Tiles.get(address);
-		else dt = null;
-		
+		if(dt == null) dt = CreateTileFromAddress(address);
+		if(!dt.loaded && dt.preloaded) dt.loadTex();
+		else if(!(dt.loaded || dt.preloaded) && dt.fileExists()){ //if we already have the file in the cache preload it
+			System.out.println("Putting in load request for " + address);
+			LoadRequest lr = new LoadRequest();
+			lr.address = dt.address;
+			addRequest(lr);
+		//}else if(!notavailable.containsKey(t.address)){
+		} else if(dt.parent != null && !dt.parent.isLeaf){ //otherwise put in a request to have it downloaded
+			FetchRequest fr = new FetchRequest();
+			fr.address = dt.address;
+			//System.out.println("a: DL request for " + fr.address);
+			AsyncTileFetcher.addRequest(fr);
+		}		
 		return dt;
 	}
 	
@@ -268,7 +258,7 @@ public class TexTileDB extends Thread{
 	public static String GetQuadtreeAddressNormal(double x, double y){
 		String quad = "t";// google addresses start with t
 		char[] lookup = {'q', 'r', 't', 's'}; // tl tr bl br
-		for (int digits = 0; digits < 23; digits++)
+		for (int digits = 0; digits < 25; digits++)
 		{
 			// make sure we only look at fractional part
 			x -= Math.floor(x);

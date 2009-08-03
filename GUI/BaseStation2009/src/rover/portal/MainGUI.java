@@ -64,10 +64,12 @@ public class MainGUI extends JFrame {
 	
 	private PortalInit[] pinit = {new ControllerPortal.ControllerPortalInit(),
 			new ServoPortal.ServoPortalInit(), 
-			new VideoPortal.VideoPortalInit(), 
+//			new VideoPortal.VideoPortalInit(),
+			new VideoPortal2.VideoPortalInit(), 
 			new MapPortal.MapPortalInit(),
 			new ArmPortal.ArmPortalInit(),
-			new SurveyPortal.SurveyPortalInit()};
+			new SurveyPortal.SurveyPortalInit(), 
+			new GlassesPortal.GlassesPortalInit()};
 	
 	
 	/**

@@ -1,17 +1,30 @@
 package rover.network;
-
 import rover.utils.BinUtils;
 
+
+/*
+ * Name: ArmPacket
+ * Author: Travis L Brown
+ * Description: 
+ * The ArmPacket class is a container class for several different subclasses. Calling the 
+ * getArmPacket function will return the correct arm packet subclass depending on the header
+ * information inside the byte[]
+ * 
+ * Each subclass represents a packet designed to carry arm related information and provides 
+ * corresponding packet header generation and parsing. Each subclass
+ * represents a different packet format from the rover packet spec.
+ * 
+ */
 public class ArmPacket{
 	
 	public static final byte ARM_PACKET_HEADER = 42;
 	public static final byte ARM_JOINTS = 5;
-	public static final byte TYPE_ONOFF = 1;
-	public static final byte TYPE_GAINS = 2;
-	public static final byte TYPE_CONTROL = 3;
-	public static final byte TYPE_POSITION = 4;
+	public static final byte TYPE_ONOFF = 0;
+	public static final byte TYPE_GAINS = 1;
+	public static final byte TYPE_CONTROL = 2;
+	public static final byte TYPE_POSITION = 3;
 		
-	public Packet getArmPacket(byte[] packet, int bytes){
+	public static Packet getArmPacket(byte[] packet, int bytes){
 		if(packet == null || bytes == 0) return null;
 		Packet p = null;
 		switch(packet[2]){
@@ -173,7 +186,7 @@ public class ArmPacket{
 			bytes = header+5*Channels;
 			packet[0] = ARM_PACKET_HEADER;
 			packet[1] = TYPE_CONTROL;
-			packet[1] = Channels;
+			packet[2] = Channels;
 			for(int i = 0;i<Channels;i++){
 				packet[header+5*i] = Channel_list[i];
 				
@@ -186,46 +199,65 @@ public class ArmPacket{
 		}
 	}
 
-	//[ARM_PACKET_HEADER][TYPE_POSITION][P0, P1, P2, P3][P0, P1, P2, P3].... for all channels
-	public static class ArmPositionPacket extends Packet{
-
-		private static final int length = 2+4*ARM_JOINTS;
+	//[ARM_PACKET_HEADER][TYPE_POSITION][P0, P1, P2, P3][indexed?][P0, P1, P2, P3][indexed?].... for all channels
+public static class ArmPositionPacket extends Packet{
 		
+		static final int header = 2;
+		
+		public byte Channels = 5;
+		public byte[] indexed;
 		public float[] positions;
-
-		public ArmPositionPacket(byte[] packet, int bytes) {
+		
+		public ArmPositionPacket(byte[] packet, int bytes){
 			super(packet, bytes);
 		}
 		
-		public boolean FromByteArray(){
-			if(packet == null || bytes != length) return false;
+		public ArmPositionPacket(byte channels){
+			super(null, 0);
+			Channels = channels;
+			indexed = new byte[Channels];
+        	positions = new float[Channels];
+		}
+		
+		public boolean fillData(){
+			return FromByteArray(packet, bytes);
+		}
+		
+		public boolean FromByteArray(byte[] packet, int bytes)
+		{
+			if(packet == null || bytes < header + 5*5) return false;
 			if(packet[0] != ARM_PACKET_HEADER || packet[1] != TYPE_POSITION) return false;
-			
-			//parse packet
-			for(int i = 0;i<ARM_JOINTS;i++){
-				positions[i] = Float.intBitsToFloat(BinUtils.byteArrayToInt(packet, 2+4*i));
-			}
-
-			return true;
+		    try
+		    {
+		        for(int i = 0;i<Channels;i++){
+		        	positions[i] = Float.intBitsToFloat(BinUtils.byteArrayToInt(packet, header+5*i));
+		        	indexed[i] = packet[header+5*i + 4];
+		        }
+		        return true;
+		    }
+		    catch(Exception e){
+		    	return false;
+		    }
 		}
 		
-		public void ToByteArray(){
-			
-			if(packet == null || packet.length != length){
-				packet = new byte[length];
-				bytes = length;
+		public boolean ToByteArray(){
+			if(packet == null || packet.length < header+5*Channels){
+				packet = new byte[header+5*Channels];
 			}
+			
+			bytes = header+5*Channels;
 			packet[0] = ARM_PACKET_HEADER;
-			packet[1] = TYPE_POSITION;
-			for(int j = 0;j<ARM_JOINTS;j++){
-				int p = Float.floatToIntBits(positions[j]);
-				BinUtils.intToByteArray(p, packet, 2+4*j);       
-			}
+			packet[1] = TYPE_CONTROL;
+			for(int i = 0;i<Channels;i++){
+				int val = Float.floatToIntBits(positions[i]);
+				BinUtils.intToByteArray(val, packet, header+5*i);
+				packet[header+5*i+4] = indexed[i];
+	        }
+			return true;
 			
 		}
-		
-		
 	}
+
 	
 	
 }

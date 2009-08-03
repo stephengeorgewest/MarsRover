@@ -44,20 +44,59 @@ public class SingleJoystickDevice implements InputDevice {
 		if(controller != null){
 			controller.poll();
 
-			float[] axes = new float[3];
+			float x = 0,y = 0,z = 0, rz = 0;
+			float[] buttons = new float[12];
 			Component[] comps = controller.getComponents();
             int i = 0;
             for(Component comp : comps){
-    			if(comp.isAnalog()){
-    				axes[i] = comp.getPollData();
-    				i++;
-    				if(i >= axes.length) break;
-    			}
+            	String ID = comp.getIdentifier().getName();
+            	//System.out.println(ID);
+            	if(Character.isDigit(ID.charAt(0))){
+            		int b;
+            		try{b = Integer.parseInt(ID);}
+            		catch (Exception e){ continue;}
+            		buttons[b] = comp.getPollData();
+            		//System.out.println(buttons[b]);
+            	}
+            	else if(ID.compareTo("x") == 0){
+            		x = comp.getPollData();
+            	}
+            	else if(ID.compareTo("y") == 0){
+            		y = comp.getPollData();
+            	}
+            	else if(ID.compareTo("z") == 0 || ID.compareTo("slider") == 0){
+            		z = comp.getPollData();
+            	}
+            	else if(ID.compareTo("rz") == 0){
+            		rz = comp.getPollData();
+            	}
+            	//System.out.println(comp.getName());
+            	//System.out.println();
+            	//if(comp.getName().compareTo("))
+//    			if(comp.isAnalog()){
+//    				axes[i] = comp.getPollData();
+//    				i++;
+//    				if(i >= axes.length) break;
+//    			}
     		}
             
-            state.axes[0] = state.axes[2] = -1*axes[0]*(axes[1]+1)/2f;
-    		state.axes[1] = state.axes[3] = axes[0]*(axes[1]-1)/2f;
-            state.axes[4] = axes[2];
+//            state.axes[0] = state.axes[2] = -1*axes[0]*(axes[1]+1)/2f;
+//    		state.axes[1] = state.axes[3] = axes[0]*(axes[1]-1)/2f;
+//            state.axes[4] = axes[2];
+            state.axes[0] = state.axes[2] = -1*y*(x+1)/2f;
+    		state.axes[1] = state.axes[3] = y*(x-1)/2f;
+            state.axes[4] = z;
+            
+            
+            if(buttons[0] == 1){ //boost
+            	state.axes[0] = Math.max(-1, Math.min(1, state.axes[0] * 2));
+            	state.axes[1] = Math.max(-1, Math.min(1, state.axes[1] * 2));
+            	state.axes[2] = Math.max(-1, Math.min(1, state.axes[2] * 2));
+            	state.axes[3] = Math.max(-1, Math.min(1, state.axes[3] * 2));
+            } else if(buttons[1] == 1){ //in place rotation
+            	state.axes[0] = state.axes[2] = rz;
+        		state.axes[1] = state.axes[3] = -1*rz;
+            }
 		}
 		
 		

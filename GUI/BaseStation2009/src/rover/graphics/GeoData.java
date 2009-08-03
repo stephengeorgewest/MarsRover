@@ -4,11 +4,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
 
+/*
+ * Name: GeoData
+ * Author: Travis L Brown
+ * Description: 
+ * Represents a set of topographical information and provides convenience functions for
+ * making calculations relating to the earth. It is designed to parse the GridFloat format
+ * provided by the USGS server. The gridfloat format primarily consists of .hdr and .flt files.
+ * The .hdr file provides all the header information and the .flt file contains the raw data.
+ * 
+ */
 public class GeoData {
 
 	private static final double m_nm = 1852f;

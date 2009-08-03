@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BaseStation2009/lib/JMF/JMF-2.1.1e/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/JInput/jinput.jar" sourcepath="lib/JInput/JInput_src.zip">
 		<attributes>
@@ -15,5 +19,16 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/JOGL/gluegen-rt.jar"/>
 	<classpathentry kind="con" path="SWT_CONTAINER/PLATFORM"/>
+	<classpathentry kind="lib" path="lib/GeoTools/geoapi-2.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/GeoTools/gt-api-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/GeoTools/gt-main-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/GeoTools/gt-metadata-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/GeoTools/gt-referencing-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/GeoTools/vecmath-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/JMF/JMF-2.1.1e/lib/jmf.jar" sourcepath="C:/Documents and Settings/Travix/Desktop/jmf-2_1_1e-scsl-src/src/"/>
+	<classpathentry kind="lib" path="lib/JMF/jffmpeg-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/JMF/JMF-2.1.1e/lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/JMF/JMF-2.1.1e/lib/jogl.jar"/>
+	<classpathentry kind="lib" path="lib/JMF/JMF-2.1.1e/lib/fobs4jmf.jar" sourcepath="/fobs4jmf/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

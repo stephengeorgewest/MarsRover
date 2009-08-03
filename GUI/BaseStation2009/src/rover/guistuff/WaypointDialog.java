@@ -4,6 +4,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
+import java.awt.Insets;
+
 import javax.swing.JLabel;
 import java.awt.Rectangle;
 import javax.swing.JRadioButton;
@@ -24,10 +26,8 @@ public class WaypointDialog extends JDialog{
 	private JPanel jPanel = null;
 	private JSpinner jSpinner = null;
 	private JLabel jLabel1 = null;
-	private JTextField latitudeTextField = null;
-	private JTextField longitudeTextField = null;
+	private JTextField coordTextField = null;
 	private JLabel jLabel = null;
-	private JLabel jLabel2 = null;
 	private JLabel jLabel3 = null;
 	private JButton averageButton = null;
 	private JButton cancelButton = null;
@@ -63,8 +63,7 @@ public class WaypointDialog extends JDialog{
 	public void showDialog(){
 		setVisible(true);
 		nameTextField.setText("waypoint" + waypoint_count);
-		latitudeTextField.setText(GpsData.formatLat(lat));
-		longitudeTextField.setText(GpsData.formatLon(lon));
+		coordTextField.setText(GpsData.formatCoordinates(lat, lon));
 	}
 	
 	/**
@@ -72,7 +71,7 @@ public class WaypointDialog extends JDialog{
 	 * 
 	 */
 	private void initialize() {
-        this.setSize(new Dimension(275, 221));
+        this.setSize(new Dimension(275, 174));
         this.setTitle("Add Waypoint");
         this.setContentPane(getJPanel());
 			
@@ -89,25 +88,20 @@ public class WaypointDialog extends JDialog{
 			jLabel4.setBounds(new Rectangle(10, 10, 75, 16));
 			jLabel4.setText("Name");
 			jLabel3 = new JLabel();
-			jLabel3.setBounds(new Rectangle(187, 124, 73, 13));
+			jLabel3.setBounds(new Rectangle(185, 89, 73, 13));
 			jLabel3.setText("readings");
-			jLabel2 = new JLabel();
-			jLabel2.setBounds(new Rectangle(12, 73, 73, 16));
-			jLabel2.setText("Longitude");
 			jLabel = new JLabel();
 			jLabel.setBounds(new Rectangle(11, 42, 74, 14));
-			jLabel.setText("Latitude");
+			jLabel.setText("Coordinates");
 			jLabel1 = new JLabel();
-			jLabel1.setBounds(new Rectangle(134, 100, 98, 18));
+			jLabel1.setBounds(new Rectangle(132, 65, 98, 18));
 			jLabel1.setText("Average");
 			jPanel = new JPanel();
 			jPanel.setLayout(null);
 			jPanel.add(getJSpinner(), null);
 			jPanel.add(jLabel1, null);
 			jPanel.add(getLatitudeTextField(), null);
-			jPanel.add(getLongitudeTextField(), null);
 			jPanel.add(jLabel, null);
-			jPanel.add(jLabel2, null);
 			jPanel.add(jLabel3, null);
 			jPanel.add(getAverageButton(), null);
 			jPanel.add(getCancelButton(), null);
@@ -126,7 +120,7 @@ public class WaypointDialog extends JDialog{
 	private JSpinner getJSpinner() {
 		if (jSpinner == null) {
 			jSpinner = new JSpinner(new SpinnerNumberModel(4, 0, 15, 1));
-			jSpinner.setBounds(new Rectangle(137, 121, 40, 19));
+			jSpinner.setBounds(new Rectangle(135, 86, 40, 19));
 		}
 		return jSpinner;
 	}
@@ -137,26 +131,12 @@ public class WaypointDialog extends JDialog{
 	 * @return javax.swing.JTextField	
 	 */
 	private JTextField getLatitudeTextField() {
-		if (latitudeTextField == null) {
-			latitudeTextField = new JTextField();
-			latitudeTextField.setSize(new Dimension(160, 20));
-			latitudeTextField.setLocation(new Point(90, 40));
+		if (coordTextField == null) {
+			coordTextField = new JTextField();
+			coordTextField.setSize(new Dimension(160, 20));
+			coordTextField.setLocation(new Point(90, 40));
 		}
-		return latitudeTextField;
-	}
-
-	/**
-	 * This method initializes longitudeTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */
-	private JTextField getLongitudeTextField() {
-		if (longitudeTextField == null) {
-			longitudeTextField = new JTextField();
-			longitudeTextField.setSize(new Dimension(160, 20));
-			longitudeTextField.setLocation(new Point(90, 70));
-		}
-		return longitudeTextField;
+		return coordTextField;
 	}
 
 	/**
@@ -167,7 +147,8 @@ public class WaypointDialog extends JDialog{
 	private JButton getAverageButton() {
 		if (averageButton == null) {
 			averageButton = new JButton();
-			averageButton.setBounds(new Rectangle(17, 106, 101, 28));
+			averageButton.setMargin(new Insets(0,0,0,0));
+			averageButton.setBounds(new Rectangle(8, 65, 101, 28));
 			averageButton.setText("Average GPS");
 		}
 		return averageButton;
@@ -181,7 +162,7 @@ public class WaypointDialog extends JDialog{
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new JButton();
-			cancelButton.setBounds(new Rectangle(134, 154, 105, 30));
+			cancelButton.setBounds(new Rectangle(130, 108, 105, 30));
 			cancelButton.setText("Close");
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -200,30 +181,26 @@ public class WaypointDialog extends JDialog{
 	private JButton getAddButton() {
 		if (addButton == null) {
 			addButton = new JButton();
-			addButton.setBounds(new Rectangle(13, 154, 113, 30));
+			addButton.setBounds(new Rectangle(9, 108, 113, 30));
 			addButton.setText("Add Waypoint");
 			addButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					try{
-						lat = Double.parseDouble(latitudeTextField.getText());
-
+						GpsData data = GpsData.parseCoordinates(coordTextField.getText());
+						if(data.Longitude == Double.NaN) throw new Exception("Parseing error");
+						String name = nameTextField.getText();
+						//Waypoint wp = new Waypoint(name, lat, lon, 0);
+						Waypoint wp = new Waypoint(data);
+						wp.name = name;
+						portal.addWaypoint(wp);
+						waypoint_count++;
+						nameTextField.setText("waypoint" + waypoint_count);
+						//setVisible(false);
 					}catch (Exception ex){
-						latitudeTextField.setText(GpsData.formatLat(lat));
+						coordTextField.setText(GpsData.formatCoordinates(lat, lon));
 						return;
 					}
-					try{
-						lon = Double.parseDouble(longitudeTextField.getText());
-
-					}catch (Exception ex){
-						longitudeTextField.setText(GpsData.formatLon(lon));
-						return;
-					}
-					String name = nameTextField.getText();
-					Waypoint wp = new Waypoint(name, lat, lon, 0);
-					portal.addWaypoint(wp);
-					waypoint_count++;
-					nameTextField.setText("waypoint" + waypoint_count);
-					//setVisible(false);
+					
 				}
 			});
 		}

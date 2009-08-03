@@ -36,7 +36,7 @@ import java.awt.event.ItemListener;
 
 public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 
-	public static int CHANNELS = 20;
+	public static int CHANNELS = 32;
 	private JPanel jContentPane = null;
 	
 	ArrayList<JSpinner> spinlist = null;  //  @jve:decl-index=0:
@@ -184,7 +184,7 @@ public class ServoPortal extends Portal implements ChangeListener, ItemListener{
 	 */
 	private void initialize(int channels) {
 		this.channels = channels;
-		this.setSize(305, channels * 30);
+		this.setSize(305, channels * 25);
 		//this.setResizable(false);
 		this.setTitle("Servo Portal");
 		
